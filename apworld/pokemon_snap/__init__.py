@@ -8,6 +8,14 @@ from .locations import PokemonSnapLocation, PokemonSnapLocationCategory, locatio
 from .options import PokemonSnapOption
 from .rules import set_rules
 
+def run_client(*args):
+    from .PokeSnap_Client import main  # lazy import
+    launch_subprocess(main, name="PokemonSnapClient", args=args)
+
+# Adds the launcher for our component and our client logo.
+components.append(
+    Component("Pokemon Snap Client", func=run_client, component_type=Type.CLIENT))
+
 
 class PokemonSnapWeb(WebWorld):
     bug_report_page = ""
