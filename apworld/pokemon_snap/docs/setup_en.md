@@ -3,8 +3,8 @@
 ## Required Software
 
 - [BizHawk](https://www.epsxe.com/download.php)
-- [Pokemon Snap Client](https://github.com/ArsonAssassin/DWAP/releases)
-- [Pokemon Snap APWorld] (https://github.com/ArsonAssassin/DWAP/releases)
+- [Pokemon Snap Client](https://github.com/ArsonAssassin/PSAP/releases)
+- [Pokemon Snap APWorld] (https://github.com/ArsonAssassin/PSAP/releases)
 - Pokemon Snap US ROM. The Archipelago community cannot provide this.
 
 <!-- ## Optional Software
