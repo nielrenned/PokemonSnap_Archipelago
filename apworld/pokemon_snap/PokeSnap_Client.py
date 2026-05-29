@@ -1,11 +1,12 @@
 from typing import Optional
+import re, time, asyncio, sys
 
 from PyMemoryEditor import OpenProcess
 
 import Utils
-
-import re, time, asyncio, sys
 from CommonClient import logger, server_loop, get_base_parser, gui_enabled
+
+from .constants import *
 
 _tracker_loaded = False
 try:
@@ -14,12 +15,6 @@ try:
     _tracker_loaded = True
 except ImportError:
     from CommonClient import CommonContext, ClientCommandProcessor
-
-CLIENT_NAME: str = "Pokemon_Snap_Client"
-
-INITIAL_STATUS: str = "Waiting to connect to Project 64"
-WRONG_GAME: str = "Wrong game was detected, please load a North American version of Pokemon Snap"
-CONNECTED_STATUS: str = "Successfully connected to Project64 and detected Pokemon Snap."
 
 class PokemonSnapCommandProcessor(ClientCommandProcessor):
     def __init__(self, ctx: CommonContext, server_address: str = None):
