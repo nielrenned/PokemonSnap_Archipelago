@@ -2,6 +2,7 @@ from typing import Dict, Set, List
 
 from BaseClasses import MultiWorld, Region, Entrance, Tutorial, ItemClassification
 from worlds.AutoWorld import World, WebWorld
+from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess
 from .items import PokemonSnapItem, PokemonSnapItemCategory, item_dictionary, key_item_names, item_descriptions, \
     _all_items, build_item_pool
 from .locations import PokemonSnapLocation, PokemonSnapLocationCategory, location_tables, location_dictionary
