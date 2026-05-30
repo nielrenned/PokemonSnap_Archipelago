@@ -36,8 +36,9 @@ class PokemonSnapContext(CommonContext):
     instance_id: float | None
     pj64_sync_task: Optional[asyncio.Task[None]] = None
     pj64_status: str
+    ap_port: int
 
-    def __init__(self, server_address, password):
+    def __init__(self, server_address, password, ap_port):
         """
         Initialize the Pokemon Snap Universal Context.
 
@@ -48,6 +49,7 @@ class PokemonSnapContext(CommonContext):
         self.instance_id = None
         self.tracker_enabled = _tracker_loaded
         self.pj64_status = INITIAL_STATUS
+        self.ap_port = ap_port
 
     def on_package(self, cmd: str, args: dict):
         """
@@ -180,10 +182,10 @@ def main(*launch_args: str):
 
     async def _main(connect, password):
         try:
-            ctx = PokemonSnapContext(server_address if server_address else connect, password)
+            ap_port = safe_load_pj64_config()
+            ctx = PokemonSnapContext(server_address if server_address else connect, password, ap_port)
             ctx.server_task = asyncio.create_task(server_loop(ctx), name="ServerLoop")
 
-            safe_load_pj64_config()
             ctx.pj64_sync_task = asyncio.create_task(ctx.pj64_sync_main_task(), name="PokemonSnap_PJ64Sync")
 
             # Runs Universal Tracker's internal generator

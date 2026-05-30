@@ -8,7 +8,7 @@ from logging import getLogger
 logger = getLogger(CLIENT_NAME)
 pj64_encoding: str = "cp1252"
 
-def safe_load_pj64_config():
+def safe_load_pj64_config() -> int:
     # Through some various controller setup testing, PJ64 does some weird formatting and sometimes
     #   pushes values to new lines. allow_no_value=True stops crashes on these corrupted/stray lines
     config: ConfigParser = ConfigParser(allow_no_value=True)
@@ -31,6 +31,8 @@ def safe_load_pj64_config():
         logger.info("Set port to " + str(port))
         config_updated = True
 
+    ap_port: int = int(config.get("Debugger", "ap_port"))
+
     if config_updated:
         try:
             with open(pj64_cfg_path, 'w', encoding=pj64_encoding) as f:
@@ -40,6 +42,8 @@ def safe_load_pj64_config():
             logger.error("Error while updated PJ64 configuration. If this is your first time playing Pokemon Snap AP, "
                 "you may need to close PJ64 and open the Pokemon Snap client first to update PJ64's settings file.")
             logger.error(f"Additional details about failure: {str(e)}")
+
+    return ap_port
 
 if __name__ == "__main__":
     use_pj64 = True
