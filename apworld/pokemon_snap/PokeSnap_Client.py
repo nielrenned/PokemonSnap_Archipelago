@@ -1,11 +1,10 @@
 from typing import Optional
 import re, time, asyncio, sys
 
-from PyMemoryEditor import OpenProcess
-
 import Utils
 from CommonClient import logger, server_loop, get_base_parser, gui_enabled
 
+from .pj64_connector import PJ64Context, pj64connect
 from .constants import *
 from .update_pj64_config import safe_load_pj64_config
 
@@ -28,7 +27,7 @@ class PokemonSnapCommandProcessor(ClientCommandProcessor):
         if isinstance(self.ctx, PokemonSnapContext):
             logger.info(f"Project64 Status: {self.ctx.pj64_status}")
 
-class PokemonSnapContext(CommonContext):
+class PokemonSnapContext(CommonContext, PJ64Context):
     command_processor = PokemonSnapCommandProcessor
     game = "Pokemon Snap"
     items_handling = 0b111
@@ -36,7 +35,6 @@ class PokemonSnapContext(CommonContext):
     instance_id: float | None
     pj64_sync_task: Optional[asyncio.Task[None]] = None
     pj64_status: str
-    ap_port: int
 
     def __init__(self, server_address, password, ap_port):
         """
@@ -45,7 +43,8 @@ class PokemonSnapContext(CommonContext):
         :param server_address: Address of the Archipelago server.
         :param password: Password for server authentication.
         """
-        super().__init__(server_address, password)
+        CommonContext.__init__(self, server_address, password)
+        PJ64Context.__init__(self, ap_port)
         self.instance_id = None
         self.tracker_enabled = _tracker_loaded
         self.pj64_status = INITIAL_STATUS
@@ -110,7 +109,7 @@ class PokemonSnapContext(CommonContext):
         pass
 
     async def disconnect(self, allow_autoreconnect: bool = False):
-        await super().disconnect(allow_autoreconnect)
+        await CommonContext.disconnect(allow_autoreconnect)
         self.pj64_status = INITIAL_STATUS
 
     async def wait_for_next_loop(self, time_to_wait: float):
@@ -124,19 +123,17 @@ class PokemonSnapContext(CommonContext):
             while not self.exit_event.is_set():
                 try:
                     if not self.pj64_status == CONNECTED_STATUS:
-                        # TODO validate game ID here
-                        if not self.auth:
-                            await self.get_username()
-                            await self.server_auth()
+                        await pj64connect(self)
 
-                        if not self.slot:
-                            await self.wait_for_next_loop(5)
-                            continue
-
-                        # TODO validate seed here
                         self.pj64_status = CONNECTED_STATUS
                         logger.info(self.pj64_status)
 
+                    if not self.slot:
+                        await self.wait_for_next_loop(5)
+                        continue
+
+                    # TODO validate seed here
+                    # TODO validate GameID here or in PJ64 loop
                     # TODO check for in_game or something similar?
 
                     await self.check_snap_locations()
@@ -144,7 +141,8 @@ class PokemonSnapContext(CommonContext):
 
                 except Exception as ex:
                     logger.error(str(ex))
-                    logger.info("Connection to Project64 Failed, retrying in 5 seconds...")
+                    self.pj64_status = DISCONNECTED_STATUS
+                    logger.info(DISCONNECTED_STATUS)
                     await self.disconnect()
                     await self.wait_for_next_loop(5)
                     continue
