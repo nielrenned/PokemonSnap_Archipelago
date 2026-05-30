@@ -7,6 +7,7 @@ import Utils
 from CommonClient import logger, server_loop, get_base_parser, gui_enabled
 
 from .constants import *
+from .update_pj64_config import safe_load_pj64_config
 
 _tracker_loaded = False
 try:
@@ -113,7 +114,7 @@ class PokemonSnapContext(CommonContext):
     async def wait_for_next_loop(self, time_to_wait: float):
         await asyncio.sleep(time_to_wait)
 
-    async def pj64_sync_main_task(self, pj64_process: OpenProcess):
+    async def pj64_sync_main_task(self):
         logger.info(f"Using {CLIENT_NAME} client...")
         logger.info("Starting Project64 connector. Use /project64 for status information.")
 
@@ -121,9 +122,6 @@ class PokemonSnapContext(CommonContext):
             while not self.exit_event.is_set():
                 try:
                     if not self.pj64_status == CONNECTED_STATUS:
-                        var = pj64_process.read_process_memory(0xDFE40000, int, 4)
-                        print(str(var))
-
                         # TODO validate game ID here
                         if not self.auth:
                             await self.get_username()
@@ -185,9 +183,8 @@ def main(*launch_args: str):
             ctx = PokemonSnapContext(server_address if server_address else connect, password)
             ctx.server_task = asyncio.create_task(server_loop(ctx), name="ServerLoop")
 
-            # TODO Need to have Project64 open prior to running this client.
-            pj64_process: OpenProcess = OpenProcess(process_name="Project64.exe")
-            ctx.pj64_sync_task = asyncio.create_task(ctx.pj64_sync_main_task(pj64_process), name="PokemonSnap_PJ64Sync")
+            safe_load_pj64_config()
+            ctx.pj64_sync_task = asyncio.create_task(ctx.pj64_sync_main_task(), name="PokemonSnap_PJ64Sync")
 
             # Runs Universal Tracker's internal generator
             ctx._main()

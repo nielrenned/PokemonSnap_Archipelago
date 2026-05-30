@@ -1,13 +1,15 @@
-from typing import Dict, Set, List
+from typing import Dict, Set, List, ClassVar
 
 from BaseClasses import MultiWorld, Region, Entrance, Tutorial, ItemClassification
 from worlds.AutoWorld import World, WebWorld
 from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess
+
 from .items import PokemonSnapItem, PokemonSnapItemCategory, item_dictionary, key_item_names, item_descriptions, \
     _all_items, build_item_pool
 from .locations import PokemonSnapLocation, PokemonSnapLocationCategory, location_tables, location_dictionary
 from .options import PokemonSnapOption
 from .rules import set_rules
+from .psnap_settings import PokemonSnapSettings
 
 def run_client(*args):
     from .PokeSnap_Client import main  # lazy import
@@ -51,6 +53,7 @@ class PokemonSnapWorld(World):
     item_name_groups = {
     }
     item_descriptions = item_descriptions
+    settings: ClassVar[PokemonSnapSettings]
 
     def __init__(self, multiworld: MultiWorld, player: int):
         super().__init__(multiworld, player)
