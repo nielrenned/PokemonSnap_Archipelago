@@ -125,16 +125,20 @@ class PokemonSnapContext(CommonContext, PJ64Context):
                     if not self.pj64_status == CONNECTED_STATUS:
                         await pj64connect(self)
 
+                        if not self.pj64_status == CONNECTING_STATUS:
+                            self.pj64_status = CONNECTING_STATUS
+                            logger.info(self.pj64_status)
+
+                        if not self.slot:
+                            await self.wait_for_next_loop(5)
+                            continue
+
+                        # TODO validate seed here
+                        # TODO validate GameID here or in PJ64 loop
+                        # TODO check for in_game or something similar?
+
                         self.pj64_status = CONNECTED_STATUS
                         logger.info(self.pj64_status)
-
-                    if not self.slot:
-                        await self.wait_for_next_loop(5)
-                        continue
-
-                    # TODO validate seed here
-                    # TODO validate GameID here or in PJ64 loop
-                    # TODO check for in_game or something similar?
 
                     await self.check_snap_locations()
                     await self.receive_snap_items()
