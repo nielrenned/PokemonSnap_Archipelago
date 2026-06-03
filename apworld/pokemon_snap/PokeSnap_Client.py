@@ -109,7 +109,7 @@ class PokemonSnapContext(CommonContext, PJ64Context):
         pass
 
     async def disconnect(self, allow_autoreconnect: bool = False):
-        await CommonContext.disconnect(allow_autoreconnect)
+        await CommonContext.disconnect(self, allow_autoreconnect)
         self.pj64_status = INITIAL_STATUS
 
     async def wait_for_next_loop(self, time_to_wait: float):
