@@ -57,7 +57,7 @@ class PokemonSnapContext(CommonContext, PJ64Context):
         :param cmd: The command received from the server.
         :param args: The command arguments.
         """
-        super().on_package(cmd, args)
+        CommonContext.on_package(cmd, args)
         match cmd:
             case "PrintJSON":
                 if args.get("type", "") == "Countdown" and len(list(args.get("data", []))) > 0 and \
@@ -90,7 +90,7 @@ class PokemonSnapContext(CommonContext, PJ64Context):
         # Performing local import to prevent additional UIs to appear during the patching process.
         # This appears to be occurring if a spawned process does not have a UI element when importing kvui/kivymd.
         from kvui import GameManager
-        ui: type[GameManager] = super().make_gui()
+        ui: type[GameManager] = CommonContext.make_gui()
         class UniversalWrapper(ui):
             base_title: str = "Pokemon Snap Client"
 

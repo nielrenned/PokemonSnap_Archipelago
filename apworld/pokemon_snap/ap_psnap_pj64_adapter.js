@@ -11,7 +11,7 @@ try {
     var lines = file.split("\n");
     for (var i = 0; i < lines.length; i++) {
         var cleanLine = lines[i].trim().toLowerCase();
-        if (cleanLine.indexOf("ap_port=") === 0) {
+        if (cleanLine.indexOf("psnap_ap_port=") === 0) {
             var portVal = lines[i].split("=")[1].trim();
             var parsedPort = parseInt(portVal, 10);
             if (!isNaN(parsedPort)) {

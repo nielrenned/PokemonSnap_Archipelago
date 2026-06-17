@@ -1,21 +1,31 @@
 # Massive credit to Donkey Kong 64 Randomizer for figuring out PJ64 LUA support.
+import os.path
 from configparser import ConfigParser
 import uuid
-from .constants import CLIENT_NAME
+from .constants import CLIENT_NAME, ADAPTER_SCRIPT_NAME, PJ64_ENCODING, PJ64_PORT_KEY_NAME
 import Utils
+
+from pathlib import Path
+from settings import get_settings, Settings
 
 from logging import getLogger
 logger = getLogger(CLIENT_NAME)
-pj64_encoding: str = "cp1252"
 
 def safe_load_pj64_config() -> int:
+    options: Settings = get_settings()
+    # use_pj64: bool = bool(options["pokemon_snap_options"]["use_pj64"]) To be used maybe later
+    pj64_exe_path: str = str(options["pokemon_snap_options"]["emulator_settings"])
+    pj64_parent_folder: Path = Path(pj64_exe_path).parent
+    pj64_cfg_path: str = str(Path.joinpath(pj64_parent_folder, "Config", "Project64.cfg"))
+    pj64_scripts_path: Path = Path.joinpath(pj64_parent_folder, "Scripts", ADAPTER_SCRIPT_NAME)
+
     # Through some various controller setup testing, PJ64 does some weird formatting and sometimes
     #   pushes values to new lines. allow_no_value=True stops crashes on these corrupted/stray lines
     config: ConfigParser = ConfigParser(allow_no_value=True)
     config.optionxform = str # Forces output in the same format as the input in cfg
     config_updated: bool = False
 
-    with open(pj64_cfg_path, 'r', encoding=pj64_encoding) as f:
+    with open(pj64_cfg_path, 'r', encoding=PJ64_ENCODING) as f:
         config.read_file(f)
 
     if "Basic Mode" not in config["Settings"]:
@@ -24,18 +34,38 @@ def safe_load_pj64_config() -> int:
 
     if "Debugger" not in config:
         config.add_section("Debugger")
+        config_updated = True
+
+    if not "Debugger" in  config["Debugger"]:
         config.set("Debugger", "Debugger", "1")
-        config.set("Debugger", "Autorun Scripts", "ap_pj64_adapter.js")
+        config_updated = True
+
+    if not "Autorun Scripts" in config["Debugger"]:
+        config.set("Debugger", "Autorun Scripts", ADAPTER_SCRIPT_NAME)
+        config_updated = True
+
+    if not ADAPTER_SCRIPT_NAME in config["Debugger"]["Autorun Scripts"]:
+        autorun_script_val: str = config.get("Debugger", "Autorun Scripts", raw=True)
+        config.set("Debugger", "Autorun Scripts", autorun_script_val + ", " + ADAPTER_SCRIPT_NAME)
+        config_updated = True
+
+    if not PJ64_PORT_KEY_NAME in config["Debugger"]:
         port = str(40000 + (uuid.uuid4().int % 10000))
-        config.set("Debugger", "ap_port", port)
+        config.set("Debugger", PJ64_PORT_KEY_NAME, port)
         logger.info("Set port to " + str(port))
         config_updated = True
 
-    ap_port: int = int(config.get("Debugger", "ap_port"))
+    if not Path.exists(pj64_scripts_path):
+        from importlib import resources
+        adapter_str: str = resources.files("worlds.pokemon_snap").joinpath(ADAPTER_SCRIPT_NAME).read_text("utf-8")
+        with open(str(pj64_scripts_path), 'w', encoding="utf-8") as f:
+            f.write(adapter_str)
+
+    ap_port: int = int(config.get("Debugger", PJ64_PORT_KEY_NAME))
 
     if config_updated:
         try:
-            with open(pj64_cfg_path, 'w', encoding=pj64_encoding) as f:
+            with open(pj64_cfg_path, 'w', encoding=PJ64_ENCODING) as f:
                 config.write(f, space_around_delimiters=False)
             logger.info("Config successfully updated.")
         except Exception as e:
@@ -44,17 +74,3 @@ def safe_load_pj64_config() -> int:
             logger.error(f"Additional details about failure: {str(e)}")
 
     return ap_port
-
-if __name__ == "__main__":
-    use_pj64 = True
-    pj64_cfg_path = r"C:\Users\jackm\Desktop\PJ64\Config\Project64.cfg"
-    safe_load_pj64_config()
-
-else:
-    from settings import get_settings, Settings
-
-    options: Settings = get_settings()
-    use_pj64: bool = bool(options["pokemon_snap_options"]["use_pj64"])
-    pj64_cfg_path: str = str(options["pokemon_snap_options"]["emulator_settings"]["cfg_path"])
-    if not pj64_cfg_path:
-        pj64_cfg_path = Utils.user_path(pj64_cfg_path)
