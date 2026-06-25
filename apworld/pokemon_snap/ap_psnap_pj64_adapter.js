@@ -163,8 +163,16 @@ function startServer() {
             }
         }
 
-        client.on('end', disconnect);
-        client.on('close', disconnect);
+        client.on('end', function() {
+            console.log("Client has ended connection")
+            disconnect();
+        });
+
+        client.on('close', function() {
+            console.log("Client has closed connection")
+            disconnect();
+        });
+
         client.on('error', function(err) {
             console.log("Connection error: " + err.message);
             disconnect();
