@@ -57,7 +57,7 @@ class PokemonSnapContext(CommonContext, PJ64Context):
         :param cmd: The command received from the server.
         :param args: The command arguments.
         """
-        CommonContext.on_package(cmd, args)
+        CommonContext.on_package(self, cmd, args)
         match cmd:
             case "PrintJSON":
                 if args.get("type", "") == "Countdown" and len(list(args.get("data", []))) > 0 and \
