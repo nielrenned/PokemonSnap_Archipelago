@@ -90,7 +90,7 @@ class PokemonSnapContext(CommonContext, PJ64Context):
         # Performing local import to prevent additional UIs to appear during the patching process.
         # This appears to be occurring if a spawned process does not have a UI element when importing kvui/kivymd.
         from kvui import GameManager
-        ui: type[GameManager] = CommonContext.make_gui()
+        ui: type[GameManager] = CommonContext.make_gui(self)
         class UniversalWrapper(ui):
             base_title: str = "Pokemon Snap Client"
 
