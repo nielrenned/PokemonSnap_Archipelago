@@ -14,7 +14,7 @@ logger = getLogger(CLIENT_NAME)
 def safe_load_pj64_config() -> int:
     options: Settings = get_settings()
     # use_pj64: bool = bool(options["pokemon_snap_options"]["use_pj64"]) To be used maybe later
-    pj64_exe_path: str = str(options["pokemon_snap_options"]["emulator_settings"])
+    pj64_exe_path: str = str(options["pokemon_snap_options"]["emulator_settings"]["path"])
     if not os.path.exists(pj64_exe_path):
         pj64_exe_path = Utils.user_path(pj64_exe_path)
 
