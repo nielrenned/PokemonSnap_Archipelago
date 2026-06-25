@@ -130,6 +130,7 @@ class PokemonSnapContext(CommonContext, PJ64Context):
                             logger.info(self.pj64_status)
 
                         if not self.slot:
+                            await CommonContext.get_username(self) #TODO remove once read from rom
                             await self.wait_for_next_loop(5)
                             continue
 
