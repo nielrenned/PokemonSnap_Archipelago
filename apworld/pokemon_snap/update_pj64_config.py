@@ -15,6 +15,9 @@ def safe_load_pj64_config() -> int:
     options: Settings = get_settings()
     # use_pj64: bool = bool(options["pokemon_snap_options"]["use_pj64"]) To be used maybe later
     pj64_exe_path: str = str(options["pokemon_snap_options"]["emulator_settings"])
+    if not os.path.exists(pj64_exe_path):
+        pj64_exe_path = Utils.user_path(pj64_exe_path)
+
     pj64_parent_folder: Path = Path(pj64_exe_path).parent
     pj64_cfg_path: str = str(Path.joinpath(pj64_parent_folder, "Config", "Project64.cfg"))
     pj64_scripts_path: Path = Path.joinpath(pj64_parent_folder, "Scripts", ADAPTER_SCRIPT_NAME)
