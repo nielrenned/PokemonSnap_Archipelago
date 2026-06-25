@@ -123,9 +123,8 @@ class PokemonSnapContext(CommonContext, PJ64Context):
             while not self.exit_event.is_set():
                 try:
                     if not self.pj64_status == CONNECTED_STATUS:
-                        await pj64connect(self)
-
                         if not self.pj64_status == CONNECTING_STATUS:
+                            await pj64connect(self)
                             self.pj64_status = CONNECTING_STATUS
                             logger.info(self.pj64_status)
 
