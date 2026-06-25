@@ -1,5 +1,4 @@
 # Massive credit to Donkey Kong 64 Randomizer for figuring out PJ64 LUA support.
-import os.path
 from configparser import ConfigParser
 import uuid
 from .constants import CLIENT_NAME, ADAPTER_SCRIPT_NAME, PJ64_ENCODING, PJ64_PORT_KEY_NAME
@@ -15,12 +14,13 @@ def safe_load_pj64_config() -> int:
     options: Settings = get_settings()
     # use_pj64: bool = bool(options["pokemon_snap_options"]["use_pj64"]) To be used maybe later
     pj64_exe_path: str = str(options["pokemon_snap_options"]["emulator_settings"]["path"])
-    if not os.path.exists(pj64_exe_path):
+    if not Path.exists(Path(pj64_exe_path)):
         pj64_exe_path = Utils.user_path(pj64_exe_path)
 
     pj64_parent_folder: Path = Path(pj64_exe_path).parent
     pj64_cfg_path: str = str(Path.joinpath(pj64_parent_folder, "Config", "Project64.cfg"))
-    pj64_scripts_path: Path = Path.joinpath(pj64_parent_folder, "Scripts", ADAPTER_SCRIPT_NAME)
+    pj64_scripts_dir_path: Path = Path.joinpath(pj64_parent_folder, "Scripts")
+    pj64_scripts_path: Path = Path.joinpath(pj64_scripts_dir_path, ADAPTER_SCRIPT_NAME)
 
     # Through some various controller setup testing, PJ64 does some weird formatting and sometimes
     #   pushes values to new lines. allow_no_value=True stops crashes on these corrupted/stray lines
@@ -59,6 +59,7 @@ def safe_load_pj64_config() -> int:
         config_updated = True
 
     if not Path.exists(pj64_scripts_path):
+        Path.mkdir(pj64_scripts_dir_path, exist_ok=True)
         from importlib import resources
         adapter_str: str = resources.files("worlds.pokemon_snap").joinpath(ADAPTER_SCRIPT_NAME).read_text("utf-8")
         with open(str(pj64_scripts_path), 'w', encoding="utf-8") as f:
