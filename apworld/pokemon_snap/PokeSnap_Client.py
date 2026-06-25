@@ -143,6 +143,7 @@ class PokemonSnapContext(CommonContext, PJ64Context):
 
                     await self.check_snap_locations()
                     await self.receive_snap_items()
+                    await self.wait_for_next_loop(0.125)
 
                 except Exception as ex:
                     logger.error(str(ex))
