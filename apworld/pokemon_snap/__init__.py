@@ -1,15 +1,18 @@
+import os
+import pkgutil
 from typing import Dict, Set, List, ClassVar
 
 from BaseClasses import MultiWorld, Region, Entrance, Tutorial, ItemClassification
 from worlds.AutoWorld import World, WebWorld
 from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess
 
-from .items import PokemonSnapItem, PokemonSnapItemCategory, item_dictionary, key_item_names, item_descriptions, \
-    _all_items, build_item_pool
+from .items import PokemonSnapItem, PokemonSnapItemCategory, item_dictionary, key_item_names, useful_item_names, \
+    item_descriptions, _all_items, build_item_pool
 from .locations import PokemonSnapLocation, PokemonSnapLocationCategory, location_tables, location_dictionary
 from .options import PokemonSnapOption
 from .rules import set_rules
 from .psnap_settings import PokemonSnapSettings
+from .rom import PokemonSnapProcedurePatch
 
 def run_client(*args):
     from .PokeSnap_Client import main  # lazy import
@@ -17,7 +20,8 @@ def run_client(*args):
 
 # Adds the launcher for our component and our client logo.
 components.append(
-    Component("Pokemon Snap Client", func=run_client, component_type=Type.CLIENT))
+    Component("Pokemon Snap Client", func=run_client, component_type=Type.CLIENT,
+              file_identifier=SuffixIdentifier(".apsnap")))
 
 
 class PokemonSnapWeb(WebWorld):
@@ -68,6 +72,17 @@ class PokemonSnapWorld(World):
         self.enabled_location_categories.add(PokemonSnapLocationCategory.EVENT)
         self.enabled_location_categories.add(PokemonSnapLocationCategory.PHOTO)
 
+        # Per-seed connect token, baked into the ROM and registered server-side.
+        self.auth = self.random.randbytes(16)
+
+        # Starting course as precollected (build_item_pool excludes it). Exclude
+        # Rainbow Cloud so the goal course can't be the start.
+        areas = [item for item in _all_items
+                 if item.category == PokemonSnapItemCategory.AREA
+                 and item.name != "Rainbow Cloud Unlocked"]
+        self.start_area = self.random.choice(areas)
+        self.multiworld.push_precollected(self.create_item(self.start_area.name))
+
     def create_regions(self):
         # Create Regions
         regions = {"Menu": self.create_region("Menu", [])}
@@ -115,20 +130,7 @@ class PokemonSnapWorld(World):
     def create_region(self, region_name, location_table) -> Region:
         new_region = Region(region_name, self.player, self.multiworld)
         for location in location_table:
-            if location.name == "Start Area":
-                areas = [item for item in _all_items if item.category == PokemonSnapItemCategory.AREA]
-                self.start_area = self.random.choice(areas)
-                start_item = self.create_item(self.start_area.name)
-                new_location = PokemonSnapLocation(
-                    self.player,
-                    location.name,
-                    location.category,
-                    location.default_item,
-                    None,
-                    new_region
-                )
-                new_location.place_locked_item(start_item)
-            elif location.category in self.enabled_location_categories:
+            if location.category in self.enabled_location_categories:
                 new_location = PokemonSnapLocation(
                     self.player,
                     location.name,
@@ -161,8 +163,6 @@ class PokemonSnapWorld(World):
         itempool_size = 0
 
         for location in self.get_locations():
-            if location.name == "Start Area":
-                continue
             item_data = item_dictionary[location.default_item_name]
             if item_data.category in [PokemonSnapItemCategory.SKIP, PokemonSnapItemCategory.EVENT]:
                 skip_items.append(self.create_item(location.default_item_name))
@@ -188,12 +188,11 @@ class PokemonSnapWorld(World):
             location.place_locked_item(skip_item)
 
     def create_item(self, name: str) -> PokemonSnapItem:
-        useful_categories = {}
         data = self.item_name_to_id[name]
 
         if name in key_item_names:
             item_classification = ItemClassification.progression
-        elif item_dictionary[name].category in useful_categories:
+        elif name in useful_item_names:
             item_classification = ItemClassification.useful
         else:
             item_classification = ItemClassification.filler
@@ -205,6 +204,26 @@ class PokemonSnapWorld(World):
 
     def set_rules(self) -> None:
         set_rules(self)
+
+    def modify_multidata(self, multidata: Dict[str, object]) -> None:
+        import base64
+        # Let the client connect with base64(token); a wrong-seed ROM's token
+        # isn't registered here, so the server rejects it.
+        multidata["connect_names"][base64.b64encode(self.auth).decode("ascii")] = \
+            multidata["connect_names"][self.player_name]
+
+    def generate_output(self, output_directory: str) -> None:
+        from . import addresses as addr
+        from worlds.Files import APTokenTypes
+
+        patch = PokemonSnapProcedurePatch(player=self.player, player_name=self.player_name)
+        patch.write_file("basepatch.bsdiff4", pkgutil.get_data(__name__, "data/basepatch.bsdiff4"))
+        patch.write_token(APTokenTypes.WRITE, addr.AUTH_ROM, self.auth)
+        patch.write_file("token_patch.bin", patch.get_token_binary())
+        out_path = os.path.join(
+            output_directory,
+            f"{self.multiworld.get_out_file_name_base(self.player)}{patch.patch_file_ending}")
+        patch.write(out_path)
 
     def fill_slot_data(self) -> Dict[str, object]:
         name_to_ps_code = {item.name: item.ps_code for item in item_dictionary.values()}

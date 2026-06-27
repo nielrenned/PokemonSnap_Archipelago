@@ -31,7 +31,11 @@ class PokemonSnapItem(Item):
 key_item_names = {
     "Beach Unlocked", "Tunnel Unlocked", "Volcano Unlocked", "River Unlocked", "Cave Unlocked", "Valley Unlocked",
     "Rainbow Cloud Unlocked",
-    "Apple Unlocked", "Pester Ball Unlocked", "Flute Unlocked"
+    "Apple Unlocked", "Pester Ball Unlocked", "Flute Unlocked", "Speed Boost Unlocked"
+}
+
+useful_item_names = {
+    "Film Capacity Upgrade"
 }
 
 _all_items = [PokemonSnapItemData(row[0], row[1], row[2]) for row in [
@@ -99,6 +103,11 @@ def build_item_pool(count, start_area) -> list[PokemonSnapItemData]:
     item_pool.append(PokemonSnapItemData("Point Modifier", 3000, PokemonSnapItemCategory.MISC))
     item_pool.append(PokemonSnapItemData("Point Modifier", 3000, PokemonSnapItemCategory.MISC))
     remaining_count = remaining_count - 5
+
+    # Nine +5 film upgrades take the cap from 15 up to the max of 60.
+    for _ in range(9):
+        item_pool.append(PokemonSnapItemData("Film Capacity Upgrade", 3001, PokemonSnapItemCategory.MISC))
+    remaining_count = remaining_count - 9
 
     for i in range(remaining_count):
         random_trash_item = random.choice(trash_items)

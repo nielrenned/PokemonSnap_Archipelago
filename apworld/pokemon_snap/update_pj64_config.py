@@ -39,17 +39,19 @@ def safe_load_pj64_config() -> int:
         config.add_section("Debugger")
         config_updated = True
 
-    if not "Debugger" in  config["Debugger"]:
+    # PJ64 only runs the autorun list when the debugger is enabled.
+    if config.get("Debugger", "Debugger", fallback="0") != "1":
         config.set("Debugger", "Debugger", "1")
         config_updated = True
 
-    if not "Autorun Scripts" in config["Debugger"]:
-        config.set("Debugger", "Autorun Scripts", ADAPTER_SCRIPT_NAME)
-        config_updated = True
-
-    if not ADAPTER_SCRIPT_NAME in config["Debugger"]["Autorun Scripts"]:
-        autorun_script_val: str = config.get("Debugger", "Autorun Scripts", raw=True)
-        config.set("Debugger", "Autorun Scripts", autorun_script_val + ", " + ADAPTER_SCRIPT_NAME)
+    # Pipe-delimited list; keep other scripts, drop stale PSAP adapters.
+    existing: str = config.get("Debugger", "Autorun Scripts", fallback="")
+    entries = [e.strip() for e in existing.split("|")
+               if e.strip() and not e.strip().startswith("ap_psnap_pj64_adapter")]
+    entries.append(ADAPTER_SCRIPT_NAME)
+    autorun_val = "|".join(entries)
+    if existing != autorun_val:
+        config.set("Debugger", "Autorun Scripts", autorun_val)
         config_updated = True
 
     if not PJ64_PORT_KEY_NAME in config["Debugger"]:

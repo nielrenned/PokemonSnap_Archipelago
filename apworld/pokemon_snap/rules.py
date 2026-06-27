@@ -18,6 +18,9 @@ def set_rules(world: "PokemonSnapWorld"):
     set_rule(world.get_entrance("Start Game -> Rainbow Cloud"),
              lambda state: state.has("Rainbow Cloud Unlocked", world.player))
 
+    # Mew (goal) must have its shield broken with Pester Balls to be photographed.
+    set_rule(world.get_location("Mew"), lambda state: state.has("Pester Ball Unlocked", world.player))
+
     set_rule(world.get_entrance("Beach -> Magikarp"),
              lambda state: state.has("Pester Ball Unlocked", world.player) or state.has("Apple Unlocked", world.player))
     set_rule(world.get_entrance("Volcano -> Magikarp"),

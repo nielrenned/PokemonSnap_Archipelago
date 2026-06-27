@@ -1,0 +1,73 @@
+"""Game memory addresses for the client, loaded from the ROM build's export.
+
+`pokemonsnap.symbols.json` is emitted by the decomp build (tools/export_symbols.py)
+and copied here, so the addresses stay in sync with the ROM.
+"""
+import json
+from pathlib import Path
+
+_SYMBOLS_PATH = Path(__file__).parent / "pokemonsnap.symbols.json"
+
+with open(_SYMBOLS_PATH) as _f:
+    _data = json.load(_f)
+
+
+def _addr(section: str, name: str) -> int:
+    return int(_data[section][name]["addr"], 16)
+
+
+def _ident(name: str):
+    e = _data["idents"][name]
+    return int(e["addr"], 16), int(e["rom_offset"], 16), e["len"]
+
+
+# Expansion interface (volatile, written by the client to drive unlocks)
+EXPANSION_MAGIC = _addr("symbols", "gExpansionMagic")
+MAX_FILM = _addr("symbols", "gMaxFilm")
+CAN_USE_OVERRIDE = _addr("symbols", "gCanUseOverride")
+CAN_USE_MASK = _addr("symbols", "gCanUseMask")
+COURSE_OVERRIDE = _addr("symbols", "gCourseOverride")
+COURSE_UNLOCK_MASK = _addr("symbols", "gCourseUnlockMask")
+
+# Vanilla save block (read-only)
+SAVE_BASE = _addr("save", "saveBase")
+RANK = _addr("save", "rank")
+REPORT_SCORES = _addr("save", "reportScores")
+
+# Per-seed auth token: RAM addr (read), ROM offset (write), length.
+AUTH_ADDR, AUTH_ROM, AUTH_LEN = _ident("auth")
+UNPATCHED_AUTH = b"PSAP-UNPATCHED!!"
+
+# gExpansionMagic reads as 'OKAY' once the expansion segment has booted.
+EXPANSION_LOADED = 0x4F4B4159
+
+# 63 snappable Pokemon; AP location id N maps to save slot (N - 1).
+NUM_SPECIES = 63
+
+# Photographing Mew (the last species) is the goal.
+MEW_LOCATION = 63
+
+# Item name -> bit in gCanUseMask.
+CAN_USE_BITS = {
+    "Apple Unlocked": 0,
+    "Pester Ball Unlocked": 1,
+    "Flute Unlocked": 2,
+    "Speed Boost Unlocked": 3,
+}
+
+# Item name -> bit in gCourseUnlockMask. Note Cave/River are swapped relative to
+# the apworld's sequential area codes, so this maps by name deliberately.
+COURSE_BITS = {
+    "Beach Unlocked": 0,
+    "Tunnel Unlocked": 1,
+    "Volcano Unlocked": 2,
+    "Cave Unlocked": 3,
+    "River Unlocked": 4,
+    "Valley Unlocked": 5,
+    "Rainbow Cloud Unlocked": 6,
+}
+
+FILM_ITEM = "Film Capacity Upgrade"
+FILM_BASE = 15
+FILM_STEP = 5
+FILM_CAP = 60

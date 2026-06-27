@@ -61,9 +61,7 @@ class PokemonSnapLocation(Location):
 
 
 location_tables = {
-    "Start Game": [
-        PokemonSnapLocationData(9999, "Start Area", "Point Modifier", PokemonSnapLocationCategory.MISC),
-    ],
+    "Start Game": [],
     "Beach": [
         PokemonSnapLocationData(7, "Butterfree", "Point Modifier", PokemonSnapLocationCategory.PHOTO),
         PokemonSnapLocationData(9, "Pidgey", "Point Modifier", PokemonSnapLocationCategory.PHOTO),
