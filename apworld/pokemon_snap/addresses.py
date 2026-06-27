@@ -6,7 +6,7 @@ and copied here, so the addresses stay in sync with the ROM.
 import json
 from pathlib import Path
 
-_SYMBOLS_PATH = Path(__file__).parent / "pokemonsnap.symbols.json"
+_SYMBOLS_PATH = Path(__file__).parent / "data" / "pokemonsnap.symbols.json"
 
 with open(_SYMBOLS_PATH) as _f:
     _data = json.load(_f)

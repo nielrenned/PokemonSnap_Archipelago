@@ -63,7 +63,7 @@ def safe_load_pj64_config() -> int:
     if not Path.exists(pj64_scripts_path):
         Path.mkdir(pj64_scripts_dir_path, exist_ok=True)
         from importlib import resources
-        adapter_str: str = resources.files("worlds.pokemon_snap").joinpath(ADAPTER_SCRIPT_NAME).read_text("utf-8")
+        adapter_str: str = resources.files("worlds.pokemon_snap").joinpath("data", ADAPTER_SCRIPT_NAME).read_text("utf-8")
         with open(str(pj64_scripts_path), 'w', encoding="utf-8") as f:
             f.write(adapter_str)
 
