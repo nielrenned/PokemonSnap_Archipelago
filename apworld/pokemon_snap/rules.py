@@ -1,75 +1,61 @@
 from typing import TYPE_CHECKING
 
-from ..generic.Rules import set_rule
+from rule_builder.rules import CanReachLocation, Has, HasAll, HasAny
 
 if TYPE_CHECKING:
     from . import PokemonSnapWorld
 
 
 def set_rules(world: "PokemonSnapWorld"):
-    world.multiworld.completion_condition[world.player] = lambda state: state.can_reach_location("Mew", world.player)
+    world.set_completion_rule(CanReachLocation("Mew"))
 
-    set_rule(world.get_entrance("Start Game -> Beach"), lambda state: state.has("Beach Unlocked", world.player))
-    set_rule(world.get_entrance("Start Game -> Tunnel"), lambda state: state.has("Tunnel Unlocked", world.player))
-    set_rule(world.get_entrance("Start Game -> Volcano"), lambda state: state.has("Volcano Unlocked", world.player))
-    set_rule(world.get_entrance("Start Game -> River"), lambda state: state.has("River Unlocked", world.player))
-    set_rule(world.get_entrance("Start Game -> Cave"), lambda state: state.has("Cave Unlocked", world.player))
-    set_rule(world.get_entrance("Start Game -> Valley"), lambda state: state.has("Valley Unlocked", world.player))
-    set_rule(world.get_entrance("Start Game -> Rainbow Cloud"),
-             lambda state: state.has("Rainbow Cloud Unlocked", world.player))
+    world.set_rule(world.get_entrance("Start Game -> Beach"), Has("Beach Unlocked"))
+    world.set_rule(world.get_entrance("Start Game -> Tunnel"), Has("Tunnel Unlocked"))
+    world.set_rule(world.get_entrance("Start Game -> Volcano"), Has("Volcano Unlocked"))
+    world.set_rule(world.get_entrance("Start Game -> River"), Has("River Unlocked"))
+    world.set_rule(world.get_entrance("Start Game -> Cave"), Has("Cave Unlocked"))
+    world.set_rule(world.get_entrance("Start Game -> Valley"), Has("Valley Unlocked"))
+    world.set_rule(world.get_entrance("Start Game -> Rainbow Cloud"), Has("Rainbow Cloud Unlocked"))
 
     # Mew (goal) must have its shield broken with Pester Balls to be photographed.
-    set_rule(world.get_location("Mew"), lambda state: state.has("Pester Ball Unlocked", world.player))
+    world.set_rule(world.get_location("Mew"), Has("Pester Ball Unlocked"))
 
-    set_rule(world.get_entrance("Beach -> Magikarp"),
-             lambda state: state.has("Pester Ball Unlocked", world.player) or state.has("Apple Unlocked", world.player))
-    set_rule(world.get_entrance("Volcano -> Magikarp"),
-             lambda state: state.has("Pester Ball Unlocked", world.player) or state.has("Apple Unlocked", world.player))
-    set_rule(world.get_entrance("River -> Magikarp"),
-             lambda state: state.has("Pester Ball Unlocked", world.player) or state.has("Apple Unlocked", world.player))
-    set_rule(world.get_entrance("Cave -> Magikarp"),
-             lambda state: state.has("Pester Ball Unlocked", world.player) or state.has("Apple Unlocked", world.player))
+    apple_or_pester = HasAny("Pester Ball Unlocked", "Apple Unlocked")
+    world.set_rule(world.get_entrance("Beach -> Magikarp"), apple_or_pester)
+    world.set_rule(world.get_entrance("Volcano -> Magikarp"), apple_or_pester)
+    world.set_rule(world.get_entrance("River -> Magikarp"), apple_or_pester)
+    world.set_rule(world.get_entrance("Cave -> Magikarp"), apple_or_pester)
 
     # beach
-    set_rule(world.get_location("Scyther"), lambda state: state.has("Pester Ball Unlocked", world.player))
-    set_rule(world.get_location("Chansey"),
-             lambda state: state.has("Pester Ball Unlocked", world.player) or state.has("Apple Unlocked", world.player))
-    set_rule(world.get_location("Snorlax"),
-             lambda state: state.has("Pester Ball Unlocked", world.player) or state.has("Flute Unlocked", world.player))
+    world.set_rule(world.get_location("Scyther"), Has("Pester Ball Unlocked"))
+    world.set_rule(world.get_location("Chansey"), apple_or_pester)
+    world.set_rule(world.get_location("Snorlax"), HasAny("Pester Ball Unlocked", "Flute Unlocked"))
 
     # tunnel
-    set_rule(world.get_location("Magnemite"), lambda state: state.has("Apple Unlocked", world.player))
-    set_rule(world.get_location("Magneton"), lambda state: state.has("Apple Unlocked", world.player))
-    set_rule(world.get_location("Zapdos"),
-             lambda state: state.has("Apple Unlocked", world.player) and state.has("Flute Unlocked", world.player))
+    world.set_rule(world.get_location("Magnemite"), Has("Apple Unlocked"))
+    world.set_rule(world.get_location("Magneton"), Has("Apple Unlocked"))
+    world.set_rule(world.get_location("Zapdos"), HasAll("Apple Unlocked", "Flute Unlocked"))
 
     # volcano
-    set_rule(world.get_location("Charmeleon"),
-             lambda state: state.has("Pester Ball Unlocked", world.player) or state.has("Apple Unlocked", world.player))
-    set_rule(world.get_location("Charizard"),
-             lambda state: state.has("Pester Ball Unlocked", world.player) or state.has("Apple Unlocked", world.player))
-    set_rule(world.get_location("Growlithe"), lambda state: state.has("Pester Ball Unlocked", world.player))
-    set_rule(world.get_location("Arcanine"), lambda state: state.has("Pester Ball Unlocked", world.player))
-    set_rule(world.get_location("Moltres"),
-             lambda state: state.has("Pester Ball Unlocked", world.player) or state.has("Apple Unlocked", world.player))
+    world.set_rule(world.get_location("Charmeleon"), apple_or_pester)
+    world.set_rule(world.get_location("Charizard"), apple_or_pester)
+    world.set_rule(world.get_location("Growlithe"), Has("Pester Ball Unlocked"))
+    world.set_rule(world.get_location("Arcanine"), Has("Pester Ball Unlocked"))
+    world.set_rule(world.get_location("Moltres"), apple_or_pester)
 
     # river
-    set_rule(world.get_location("Vileplume"), lambda state: state.has("Flute Unlocked", world.player))
-    set_rule(world.get_location("Slowbro"), lambda state: state.has("Apple Unlocked", world.player))
-    set_rule(world.get_location("Porygon"), lambda state: state.has("Pester Ball Unlocked", world.player))
+    world.set_rule(world.get_location("Vileplume"), Has("Flute Unlocked"))
+    world.set_rule(world.get_location("Slowbro"), Has("Apple Unlocked"))
+    world.set_rule(world.get_location("Porygon"), Has("Pester Ball Unlocked"))
 
     # cave
-    set_rule(world.get_location("Victreebel"),
-             lambda state: state.has("Pester Ball Unlocked", world.player) or state.has("Apple Unlocked", world.player))
-    set_rule(world.get_location("Ditto"), lambda state: state.has("Pester Ball Unlocked", world.player))
-    set_rule(world.get_location("Articuno"), lambda state: state.has("Flute Unlocked", world.player))
-    set_rule(world.get_location("Muk"), lambda state: state.has("Pester Ball Unlocked", world.player))
+    world.set_rule(world.get_location("Victreebel"), apple_or_pester)
+    world.set_rule(world.get_location("Ditto"), Has("Pester Ball Unlocked"))
+    world.set_rule(world.get_location("Articuno"), Has("Flute Unlocked"))
+    world.set_rule(world.get_location("Muk"), Has("Pester Ball Unlocked"))
 
     # valley
-    set_rule(world.get_location("Goldeen"),
-             lambda state: state.has("Pester Ball Unlocked", world.player) or state.has("Apple Unlocked", world.player))
-    set_rule(world.get_location("Gyarados"), lambda state: state.has("Pester Ball Unlocked", world.player))
-    set_rule(world.get_location("Dragonite"), lambda state: state.has("Pester Ball Unlocked", world.player))
-    set_rule(world.get_location("Sandshrew"),
-             lambda state: state.has("Pester Ball Unlocked", world.player)
-                           or state.has("Speed Boost Unlocked", world.player))
+    world.set_rule(world.get_location("Goldeen"), apple_or_pester)
+    world.set_rule(world.get_location("Gyarados"), Has("Pester Ball Unlocked"))
+    world.set_rule(world.get_location("Dragonite"), Has("Pester Ball Unlocked"))
+    world.set_rule(world.get_location("Sandshrew"), HasAny("Pester Ball Unlocked", "Speed Boost Unlocked"))
