@@ -2,7 +2,7 @@ import random
 from enum import IntEnum
 from typing import NamedTuple
 
-from BaseClasses import Item
+from BaseClasses import Item, MultiWorld
 
 
 class PokemonSnapItemCategory(IntEnum):
@@ -29,9 +29,8 @@ class PokemonSnapItem(Item):
 
 
 key_item_names = {
-    "Beach Unlocked", "Tunnel Unlocked", "Volcano Unlocked", "River Unlocked", "Cave Unlocked", "Valley Unlocked",
-    "Rainbow Cloud Unlocked",
-    "Apple Unlocked", "Pester Ball Unlocked", "Flute Unlocked", "Speed Boost Unlocked"
+    "Beach", "Tunnel", "Volcano", "River", "Cave", "Valley", "Rainbow Cloud",
+    "Apple", "Pester Ball", "Flute", "Dash Engine"
 }
 
 useful_item_names = {
@@ -39,22 +38,22 @@ useful_item_names = {
 }
 
 _all_items = [PokemonSnapItemData(row[0], row[1], row[2]) for row in [
-    ("Apple Unlocked", 1000, PokemonSnapItemCategory.TOOL),  # 803AE51F
-    ("Pester Ball Unlocked", 1001, PokemonSnapItemCategory.TOOL),  # 803AE51F
-    ("Flute Unlocked", 1002, PokemonSnapItemCategory.TOOL),  # 803AE51F
-    ("Speed Boost Unlocked", 1003, PokemonSnapItemCategory.TOOL),  # 803AE51F
+    ("Apple", 1000, PokemonSnapItemCategory.TOOL),  # 803AE51F
+    ("Pester Ball", 1001, PokemonSnapItemCategory.TOOL),  # 803AE51F
+    ("Flute", 1002, PokemonSnapItemCategory.TOOL),  # 803AE51F
+    ("Dash Engine", 1003, PokemonSnapItemCategory.TOOL),  # 803AE51F
 
-    ("Beach Unlocked", 2000, PokemonSnapItemCategory.AREA),
-    ("Tunnel Unlocked", 2001, PokemonSnapItemCategory.AREA),
-    ("Volcano Unlocked", 2002, PokemonSnapItemCategory.AREA),
-    ("River Unlocked", 2003, PokemonSnapItemCategory.AREA),
-    ("Cave Unlocked", 2004, PokemonSnapItemCategory.AREA),
-    ("Valley Unlocked", 2005, PokemonSnapItemCategory.AREA),
-    ("Rainbow Cloud Unlocked", 2006, PokemonSnapItemCategory.AREA),
+    ("Beach", 2000, PokemonSnapItemCategory.AREA),
+    ("Tunnel", 2001, PokemonSnapItemCategory.AREA),
+    ("Volcano", 2002, PokemonSnapItemCategory.AREA),
+    ("River", 2003, PokemonSnapItemCategory.AREA),
+    ("Cave", 2004, PokemonSnapItemCategory.AREA),
+    ("Valley", 2005, PokemonSnapItemCategory.AREA),
+    ("Rainbow Cloud", 2006, PokemonSnapItemCategory.AREA),
 
-    ("Point Modifier", 3000, PokemonSnapItemCategory.MISC),  # 81232E6A
+    # ("Point Modifier", 3000, PokemonSnapItemCategory.MISC),  # 81232E6A
     ("Film Capacity Upgrade", 3001, PokemonSnapItemCategory.MISC),  # 800AC0E3
-    ("Rapid Fire Upgrade", 3002, PokemonSnapItemCategory.MISC),  # 80382CB7
+    # ("Rapid Fire Upgrade", 3002, PokemonSnapItemCategory.MISC),  # 80382CB7
 
     ("ArsonAssassin's pokemon card collection", 4000, PokemonSnapItemCategory.TRASH),
     ("A used reel of film", 4001, PokemonSnapItemCategory.TRASH),
@@ -65,51 +64,45 @@ _all_items = [PokemonSnapItemData(row[0], row[1], row[2]) for row in [
     ("A super close-up of a thumb", 4006, PokemonSnapItemCategory.TRASH),
 ]]
 
-item_descriptions = {
-}
+filler_items = {}
+
+item_name_groups = {}
+
+item_descriptions = {}
 
 item_dictionary = {item_data.name: item_data for item_data in _all_items}
 
 
-def build_item_pool(count, start_area) -> list[PokemonSnapItemData]:
+def build_item_pool(world) -> list[PokemonSnapItemData]:
     item_pool = []
     trash_items = [item for item in _all_items if item.category == PokemonSnapItemCategory.TRASH]
 
-    remaining_count = count
-    item_pool.append(PokemonSnapItemData("Apple Unlocked", 1000, PokemonSnapItemCategory.TOOL))
-    item_pool.append(PokemonSnapItemData("Pester Ball Unlocked", 1001, PokemonSnapItemCategory.TOOL))
-    item_pool.append(PokemonSnapItemData("Flute Unlocked", 1002, PokemonSnapItemCategory.TOOL))
-    item_pool.append(PokemonSnapItemData("Speed Boost Unlocked", 1003, PokemonSnapItemCategory.TOOL))
-    remaining_count = remaining_count - 4
-    start_areas = [
-        PokemonSnapItemData("Beach Unlocked", 2000, PokemonSnapItemCategory.AREA),
-        PokemonSnapItemData("Tunnel Unlocked", 2001, PokemonSnapItemCategory.AREA),
-        PokemonSnapItemData("Volcano Unlocked", 2002, PokemonSnapItemCategory.AREA),
-        PokemonSnapItemData("River Unlocked", 2003, PokemonSnapItemCategory.AREA),
-        PokemonSnapItemData("Cave Unlocked", 2004, PokemonSnapItemCategory.AREA),
-        PokemonSnapItemData("Valley Unlocked", 2005, PokemonSnapItemCategory.AREA),
-        PokemonSnapItemData("Rainbow Cloud Unlocked", 2006, PokemonSnapItemCategory.AREA)
+    item_pool.append(PokemonSnapItemData("Apple", 1000, PokemonSnapItemCategory.TOOL))
+    item_pool.append(PokemonSnapItemData("Pester Ball", 1001, PokemonSnapItemCategory.TOOL))
+    item_pool.append(PokemonSnapItemData("Flute", 1002, PokemonSnapItemCategory.TOOL))
+    item_pool.append(PokemonSnapItemData("Dash Engine", 1003, PokemonSnapItemCategory.TOOL))
+
+    all_areas = [
+        PokemonSnapItemData("Beach", 2000, PokemonSnapItemCategory.AREA),
+        PokemonSnapItemData("Tunnel", 2001, PokemonSnapItemCategory.AREA),
+        PokemonSnapItemData("Volcano", 2002, PokemonSnapItemCategory.AREA),
+        PokemonSnapItemData("River", 2003, PokemonSnapItemCategory.AREA),
+        PokemonSnapItemData("Cave", 2004, PokemonSnapItemCategory.AREA),
+        PokemonSnapItemData("Valley", 2005, PokemonSnapItemCategory.AREA),
+        PokemonSnapItemData("Rainbow Cloud", 2006, PokemonSnapItemCategory.AREA)
     ]
-    for area in start_areas:
-        if area.name == start_area.name:
+
+    for area in all_areas:
+        if area.name == world.start_area.name:
             continue
         else:
             item_pool.append(area)
-    remaining_count = remaining_count - 6
-
-    item_pool.append(PokemonSnapItemData("Point Modifier", 3000, PokemonSnapItemCategory.MISC))
-    item_pool.append(PokemonSnapItemData("Point Modifier", 3000, PokemonSnapItemCategory.MISC))
-    item_pool.append(PokemonSnapItemData("Point Modifier", 3000, PokemonSnapItemCategory.MISC))
-    item_pool.append(PokemonSnapItemData("Point Modifier", 3000, PokemonSnapItemCategory.MISC))
-    item_pool.append(PokemonSnapItemData("Point Modifier", 3000, PokemonSnapItemCategory.MISC))
-    remaining_count = remaining_count - 5
 
     # Nine +5 film upgrades take the cap from 15 up to the max of 60.
     for _ in range(9):
         item_pool.append(PokemonSnapItemData("Film Capacity Upgrade", 3001, PokemonSnapItemCategory.MISC))
-    remaining_count = remaining_count - 9
 
-    for i in range(remaining_count):
+    for i in range(len(world.multiworld.get_unfilled_locations(world.player)) - len(item_pool)):
         random_trash_item = random.choice(trash_items)
         item_pool.append(
             PokemonSnapItemData(random_trash_item.name, random_trash_item.ps_code, random_trash_item.category))

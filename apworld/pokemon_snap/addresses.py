@@ -49,22 +49,22 @@ MEW_LOCATION = 63
 
 # Item name -> bit in gCanUseMask.
 CAN_USE_BITS = {
-    "Apple Unlocked": 0,
-    "Pester Ball Unlocked": 1,
-    "Flute Unlocked": 2,
-    "Speed Boost Unlocked": 3,
+    "Apple": 0,
+    "Pester Ball": 1,
+    "Flute": 2,
+    "Dash Engine": 3,
 }
 
 # Item name -> bit in gCourseUnlockMask. Note Cave/River are swapped relative to
 # the apworld's sequential area codes, so this maps by name deliberately.
 COURSE_BITS = {
-    "Beach Unlocked": 0,
-    "Tunnel Unlocked": 1,
-    "Volcano Unlocked": 2,
-    "Cave Unlocked": 3,
-    "River Unlocked": 4,
-    "Valley Unlocked": 5,
-    "Rainbow Cloud Unlocked": 6,
+    "Beach": 0,
+    "Tunnel": 1,
+    "Volcano": 2,
+    "Cave": 3,
+    "River": 4,
+    "Valley": 5,
+    "Rainbow Cloud": 6,
 }
 
 FILM_ITEM = "Film Capacity Upgrade"

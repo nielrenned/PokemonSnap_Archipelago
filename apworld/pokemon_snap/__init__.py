@@ -1,21 +1,21 @@
 import os
 import pkgutil
-from typing import Dict, Set, List, ClassVar
+from typing import Dict, Set, ClassVar
 
 from BaseClasses import MultiWorld, Region, Entrance, Tutorial, ItemClassification
 from worlds.AutoWorld import World, WebWorld
 from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess
-
-from .items import PokemonSnapItem, PokemonSnapItemCategory, item_dictionary, key_item_names, useful_item_names, \
+from .items import PokemonSnapItem, PokemonSnapItemCategory, key_item_names, useful_item_names, \
     item_descriptions, _all_items, build_item_pool
 from .locations import PokemonSnapLocation, PokemonSnapLocationCategory, location_tables, location_dictionary
 from .options import PokemonSnapOption
-from .rules import set_rules
 from .psnap_settings import PokemonSnapSettings
 from .rom import PokemonSnapProcedurePatch
+from .rules import set_rules
+
 
 def run_client(*args):
-    from .PokeSnap_Client import main  # lazy import
+    from .client import main  # lazy import
     launch_subprocess(main, name="PokemonSnapClient", args=args)
 
 # Adds the launcher for our component and our client logo.
@@ -29,11 +29,11 @@ class PokemonSnapWeb(WebWorld):
     theme = "stone"
     setup_en = Tutorial(
         "Multiworld Setup Guide",
-        "A guide to setting up the Archipelago Pokemon Snap randomizer on your computer.",
+        "A guide to setting up the Archipelago Pokemon Snap randomizer.",
         "English",
         "setup_en.md",
         "setup/en",
-        ["ArsonAssassin"]
+        ["ArsonAssassin", "SomeJakeGuy", "gerbiljames"]
     )
 
     tutorials = [setup_en]
@@ -45,19 +45,20 @@ class PokemonSnapWorld(World):
     """
 
     game = "Pokemon Snap"
+    web = PokemonSnapWeb()
+
     options_dataclass = PokemonSnapOption
     options: PokemonSnapOption
     topology_present: bool = True
-    web = PokemonSnapWeb()
-    data_version = 0
+
+
     enabled_location_categories: Set[PokemonSnapLocationCategory]
-    required_client_version = (0, 5, 0)
+    required_client_version = (0, 6, 7)
     item_name_to_id = PokemonSnapItem.get_name_to_id()
     location_name_to_id = PokemonSnapLocation.get_name_to_id()
-    item_name_groups = {
-    }
-    item_descriptions = item_descriptions
+    item_name_groups = items.item_name_groups
     settings: ClassVar[PokemonSnapSettings]
+    auth: bytes
 
     def __init__(self, multiworld: MultiWorld, player: int):
         super().__init__(multiworld, player)
@@ -68,8 +69,6 @@ class PokemonSnapWorld(World):
         self.start_area = None
 
     def generate_early(self):
-        self.enabled_location_categories.add(PokemonSnapLocationCategory.MISC)
-        self.enabled_location_categories.add(PokemonSnapLocationCategory.EVENT)
         self.enabled_location_categories.add(PokemonSnapLocationCategory.PHOTO)
 
         # Per-seed connect token, baked into the ROM and registered server-side.
@@ -79,7 +78,7 @@ class PokemonSnapWorld(World):
         # Rainbow Cloud so the goal course can't be the start.
         areas = [item for item in _all_items
                  if item.category == PokemonSnapItemCategory.AREA
-                 and item.name != "Rainbow Cloud Unlocked"]
+                 and item.name != "Rainbow Cloud"]
         self.start_area = self.random.choice(areas)
         self.multiworld.push_precollected(self.create_item(self.start_area.name))
 
@@ -135,7 +134,6 @@ class PokemonSnapWorld(World):
                     self.player,
                     location.name,
                     location.category,
-                    location.default_item,
                     self.location_name_to_id[location.name],
                     new_region
                 )
@@ -146,7 +144,6 @@ class PokemonSnapWorld(World):
                     self.player,
                     location.name,
                     location.category,
-                    location.default_item,
                     None,
                     new_region
                 )
@@ -158,34 +155,8 @@ class PokemonSnapWorld(World):
         return new_region
 
     def create_items(self):
-        skip_items: List[PokemonSnapItem] = []
-        itempool: List[PokemonSnapItem] = []
-        itempool_size = 0
-
-        for location in self.get_locations():
-            item_data = item_dictionary[location.default_item_name]
-            if item_data.category in [PokemonSnapItemCategory.SKIP, PokemonSnapItemCategory.EVENT]:
-                skip_items.append(self.create_item(location.default_item_name))
-            elif location.category in self.enabled_location_categories:
-                itempool_size += 1
-                itempool.append(self.create_item(location.default_item_name))
-
-        additional_items = build_item_pool(itempool_size, self.start_area)
-
-        removable_items = [item for item in itempool if item.classification != ItemClassification.progression]
-
-        for item in removable_items:
-            itempool.remove(item)
-            itempool.append(self.create_item(additional_items.pop().name))
-
-        # Add regular items to itempool
-        self.multiworld.itempool.extend(itempool)
-
-        # Handle SKIP items separately
-        for skip_item in skip_items:
-            location = next(loc for loc in self.get_locations()
-                            if loc.default_item_name == skip_item.name)
-            location.place_locked_item(skip_item)
+        item_pool = build_item_pool(self)
+        self.multiworld.itempool.extend(self.create_item(item.name) for item in item_pool)
 
     def create_item(self, name: str) -> PokemonSnapItem:
         data = self.item_name_to_id[name]
@@ -224,43 +195,3 @@ class PokemonSnapWorld(World):
             output_directory,
             f"{self.multiworld.get_out_file_name_base(self.player)}{patch.patch_file_ending}")
         patch.write(out_path)
-
-    def fill_slot_data(self) -> Dict[str, object]:
-        name_to_ps_code = {item.name: item.ps_code for item in item_dictionary.values()}
-        # Create the mandatory lists to generate the player's output file
-        items_id = []
-        items_address = []
-        locations_id = []
-        locations_address = []
-        locations_target = []
-        for location in self.multiworld.get_filled_locations():
-
-            if location.item.player == self.player:
-                # we are the receiver of the item
-                items_id.append(location.item.code)
-                items_address.append(name_to_ps_code[location.item.name])
-
-            if location.player == self.player:
-                # we are the sender of the location check
-                locations_address.append(item_dictionary[location_dictionary[location.name].default_item].ps_code)
-                locations_id.append(location.address)
-                if location.item.player == self.player:
-                    locations_target.append(name_to_ps_code[location.item.name])
-                else:
-                    locations_target.append(0)
-
-        slot_data = {
-            "options": {
-                "guaranteed_items": self.options.guaranteed_items.value,
-            },
-            "seed": self.multiworld.seed_name,  # to verify the server's multiworld
-            "slot": self.multiworld.player_name[self.player],  # to connect to server
-            "base_id": 0,  # to merge location and items lists
-            "locationsId": locations_id,
-            "locationsAddress": locations_address,
-            "locationsTarget": locations_target,
-            "itemsId": items_id,
-            "itemsAddress": items_address
-        }
-
-        return slot_data
