@@ -1,5 +1,5 @@
 from enum import IntEnum
-from typing import Optional, NamedTuple, Dict
+from typing import NamedTuple
 
 from BaseClasses import Location, Region
 from .items import PokemonSnapItem
@@ -25,8 +25,8 @@ class PokemonSnapLocation(Location):
             player: int,
             name: str,
             category: PokemonSnapLocationCategory,
-            address: Optional[int] = None,
-            parent: Optional[Region] = None):
+            address: int | None = None,
+            parent: Region | None = None):
         super().__init__(player, name, address, parent)
         self.category = category
         self.id = id
@@ -143,6 +143,6 @@ location_tables = {
     ]
 }
 
-location_dictionary: Dict[str, PokemonSnapLocationData] = {}
+location_dictionary: dict[str, PokemonSnapLocationData] = {}
 for location_table in location_tables.values():
     location_dictionary.update({location_data.name: location_data for location_data in location_table})

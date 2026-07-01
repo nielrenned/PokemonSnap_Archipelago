@@ -1,12 +1,13 @@
 import os
 import pkgutil
-from typing import Dict, Set, ClassVar
+from typing import ClassVar
 
 from BaseClasses import MultiWorld, Region, Entrance, Tutorial, ItemClassification
+from NetUtils import MultiData
 from worlds.AutoWorld import World, WebWorld
 from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess
 from .items import PokemonSnapItem, PokemonSnapItemCategory, key_item_names, useful_item_names, \
-    item_descriptions, _all_items, build_item_pool
+    _all_items, build_item_pool, PokemonSnapItemData
 from .locations import PokemonSnapLocation, PokemonSnapLocationCategory, location_tables, location_dictionary
 from .options import PokemonSnapOption
 from .psnap_settings import PokemonSnapSettings
@@ -51,22 +52,18 @@ class PokemonSnapWorld(World):
     options: PokemonSnapOption
     topology_present: bool = True
 
-
-    enabled_location_categories: Set[PokemonSnapLocationCategory]
+    enabled_location_categories: set[PokemonSnapLocationCategory]
     required_client_version = (0, 6, 7)
     item_name_to_id = PokemonSnapItem.get_name_to_id()
     location_name_to_id = PokemonSnapLocation.get_name_to_id()
     item_name_groups = items.item_name_groups
     settings: ClassVar[PokemonSnapSettings]
+    start_area: PokemonSnapItemData
     auth: bytes
 
     def __init__(self, multiworld: MultiWorld, player: int):
         super().__init__(multiworld, player)
-        self.locked_items = []
-        self.locked_locations = []
-        self.main_path_locations = []
         self.enabled_location_categories = set()
-        self.start_area = None
 
     def generate_early(self):
         self.enabled_location_categories.add(PokemonSnapLocationCategory.PHOTO)
@@ -85,10 +82,8 @@ class PokemonSnapWorld(World):
     def create_regions(self):
         # Create Regions
         regions = {"Menu": self.create_region("Menu", [])}
-        regions.update({region_name: self.create_region(region_name, location_tables[region_name]) for region_name in [
-            "Start Game", "Beach", "Tunnel", "Volcano", "River", "Cave", "Valley", "Rainbow Cloud", "Bulbasaur",
-            "Pikachu", "Zubat", "Magikarp"
-        ]})
+        regions.update({region_name: self.create_region(region_name, region_entry)
+                        for region_name, region_entry in location_tables.items()})
 
         # Connect Regions
         def create_connection(from_region: str, to_region: str):
@@ -129,27 +124,13 @@ class PokemonSnapWorld(World):
     def create_region(self, region_name, location_table) -> Region:
         new_region = Region(region_name, self.player, self.multiworld)
         for location in location_table:
-            if location.category in self.enabled_location_categories:
-                new_location = PokemonSnapLocation(
-                    self.player,
-                    location.name,
-                    location.category,
-                    self.location_name_to_id[location.name],
-                    new_region
-                )
-            else:
-                # Replace non-randomized progression items with events
-                event_item = self.create_item(location.default_item)
-                new_location = PokemonSnapLocation(
-                    self.player,
-                    location.name,
-                    location.category,
-                    None,
-                    new_region
-                )
-                event_item.code = None
-                new_location.place_locked_item(event_item)
-
+            new_location = PokemonSnapLocation(
+                self.player,
+                location.name,
+                location.category,
+                self.location_name_to_id[location.name],
+                new_region
+            )
             new_region.locations.append(new_location)
         self.multiworld.regions.append(new_region)
         return new_region
@@ -171,12 +152,12 @@ class PokemonSnapWorld(World):
         return PokemonSnapItem(name, item_classification, data, self.player)
 
     def get_filler_item_name(self) -> str:
-        return "Nothing, literally nothing at all"
+        return self.random.choice(items.filler_item_names)
 
     def set_rules(self) -> None:
         set_rules(self)
 
-    def modify_multidata(self, multidata: Dict[str, object]) -> None:
+    def modify_multidata(self, multidata: MultiData) -> None:
         import base64
         # Let the client connect with base64(token); a wrong-seed ROM's token
         # isn't registered here, so the server rejects it.
