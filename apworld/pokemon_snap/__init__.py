@@ -34,7 +34,7 @@ class PokemonSnapWeb(WebWorld):
         "English",
         "setup_en.md",
         "setup/en",
-        ["ArsonAssassin", "SomeJakeGuy", "gerbiljames"]
+        ["ArsonAssassin", "SomeJakeGuy", "gerbiljames", "nielrenned"]
     )
 
     tutorials = [setup_en]
