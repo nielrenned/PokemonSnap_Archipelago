@@ -6,7 +6,7 @@
   - 3.0.1 the last tested version the devs have personally checked
   - Dev / 4.0 versions currently do NOT work with Pokemon Snap, as the emulator fails to load this game properly.
   - It has been confirmed to work with Linux systems using Wine
-- [Pokemon Snap APWorld](https://github.com/gerbiljames/PSAP/releases/latest)
+- [Pokemon Snap APWorld](https://github.com/nielrenned/PokemonSnap_Archipelago/releases/latest)
 - An American/US version of Pokemon Snap
 
 ## General Concept
@@ -15,7 +15,7 @@
 
 1. Download and install the most recent Archipelago Multiworld Suite from the link above, making sure to install the most recent version.
 
-2. Acquire the most recent APWorld from the [Releases page](https://github.com/gerbiljames/PSAP/releases/latest) and place the pokemon_snap.apworld in the custom_worlds folder of your Archipelago install
+2. Acquire the most recent APWorld from the [Releases page](https://github.com/nielrenned/PokemonSnap_Archipelago/releases/latest) and place the pokemon_snap.apworld in the custom_worlds folder of your Archipelago install
 
 3. Download and install the PJ64 Emulator from the link above. Run the emulator at least once to make sure it is working.
 
