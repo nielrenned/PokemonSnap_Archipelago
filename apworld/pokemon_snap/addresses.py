@@ -4,12 +4,11 @@
 and copied here, so the addresses stay in sync with the ROM.
 """
 import json
-from pathlib import Path
+from importlib.resources import files
 
-_SYMBOLS_PATH = Path(__file__).parent / "data" / "pokemonsnap.symbols.json"
-
-with open(_SYMBOLS_PATH) as _f:
-    _data = json.load(_f)
+_data = json.loads(
+    files(__package__).joinpath("data/pokemonsnap.symbols.json").read_text(encoding="utf-8")
+)
 
 
 def _addr(section: str, name: str) -> int:
@@ -33,6 +32,7 @@ COURSE_UNLOCK_MASK = _addr("symbols", "gCourseUnlockMask")
 SAVE_BASE = _addr("save", "saveBase")
 RANK = _addr("save", "rank")
 REPORT_SCORES = _addr("save", "reportScores")
+SPECIES_SCORES = _addr("symbols", "speciesScores")
 
 # Per-seed auth token: RAM addr (read), ROM offset (write), length.
 AUTH_ADDR, AUTH_ROM, AUTH_LEN = _ident("auth")

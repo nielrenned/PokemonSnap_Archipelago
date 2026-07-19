@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, NamedTuple
 import base64, os, re, time, asyncio, sys
 
 import Utils
@@ -20,6 +20,29 @@ try:
     _tracker_loaded = True
 except ImportError:
     from CommonClient import CommonContext, ClientCommandProcessor
+
+class PokemonSnapReportScore(NamedTuple):
+    special_bonus: int
+    pose_score: int
+    size_score: int
+    technique_score: int
+    same_pokemon_score: int
+    special_pose_bits: int
+
+    def poses(self) -> list[int]:
+        pose_list = []
+        for i in range(12):
+            if self.special_pose_bits & (1 << i) != 0:
+                pose_list.append(i + 1)
+        return pose_list
+
+    def score(self) -> int:
+        # Note: this is probably inaccurate
+        score = self.special_bonus + self.pose_score + self.size_score
+        if self.technique_score != 0:
+            score *= 2
+        score += self.same_pokemon_score
+        return score
 
 class PokemonSnapCommandProcessor(ClientCommandProcessor):
     def __init__(self, ctx: CommonContext, server_address: str = None):
@@ -148,13 +171,18 @@ class PokemonSnapContext(CommonContext, PJ64Context):
         if not self.slot or not await self._expansion_loaded():
             return
 
-        scores = await pj64_read_memory(self, "u32", addr.REPORT_SCORES, addr.NUM_SPECIES * 4)
+        scores = []
+        raw_scores = await pj64_read_memory(self, "u16", addr.SPECIES_SCORES, addr.NUM_SPECIES * 6 * 2)
+        for i in range(0, addr.NUM_SPECIES * 6, 6):
+            report_score = PokemonSnapReportScore(*raw_scores[i:i+6])
+            scores.append(report_score)
 
         new_checks = set()
-        for slot, score in enumerate(scores):
-            if score != 0:
+        for slot, report in enumerate(scores):
+            if report.score() != 0:
                 location_id = slot + 1
                 if location_id not in self.checked_snap_locations:
+                    logger.info(f'Slot {slot + 1}: {report}')
                     new_checks.add(location_id)
 
         if new_checks:
