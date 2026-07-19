@@ -1,0 +1,22 @@
+name: Build AP World
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Build
+        run: |
+          cd apworld
+          zip -r ../pokemon_snap.apworld pokemon_snap
+      - name: Attach apworld to release
+        uses: softprops/action-gh-release@v3
+        with:
+          files: pokemon_snap.apworld
