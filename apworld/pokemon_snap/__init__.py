@@ -102,26 +102,6 @@ class PokemonSnapWorld(World):
         create_connection(START_GAME, LVL_VALLEY)
         create_connection(START_GAME, LVL_CLOUD)
 
-        create_connection(LVL_RIVER, "Bulbasaur")
-        create_connection(LVL_CAVE, "Bulbasaur")
-
-        create_connection(LVL_TUNNEL, "Zubat")
-        create_connection(LVL_CAVE, "Zubat")
-
-        create_connection(LVL_BEACH, "Pikachu")
-        create_connection(LVL_RIVER, "Pikachu")
-        create_connection(LVL_TUNNEL, "Pikachu")
-        create_connection(LVL_CAVE, "Pikachu")
-
-        create_connection(LVL_BEACH, "Magikarp")
-        create_connection(LVL_TUNNEL, "Magikarp")
-        create_connection(LVL_VOLCANO, "Magikarp")
-        create_connection(LVL_RIVER, "Magikarp")
-        create_connection(LVL_CAVE, "Magikarp")
-        create_connection(LVL_VALLEY, "Magikarp")
-
-        # For each region, add the associated locations retrieved from the corresponding location_table
-
     def create_region(self, region_name, location_table) -> Region:
         new_region = Region(region_name, self.player, self.multiworld)
         for location in location_table:

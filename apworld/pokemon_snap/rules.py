@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
 from rule_builder.rules import CanReachLocation, Has, HasAll, HasAny
-from .locations import wonderful as wdfl, multiple as mult
+from .locations import wonderful as wdfl, multiple as mult, regional as rgnl
 from .constants import *
 
 if TYPE_CHECKING:
@@ -20,11 +20,8 @@ def set_rules(world: "PokemonSnapWorld"):
     for level in [LVL_BEACH, LVL_TUNNEL, LVL_VOLCANO, LVL_RIVER, LVL_CAVE, LVL_VALLEY, LVL_CLOUD]:
         world.set_rule(world.get_entrance(f'{START_GAME} -> {level}'), Has(level))
 
-
-    world.set_rule(world.get_entrance("Beach -> Magikarp"), _HAS_APPLE_OR_PESTER)
-    world.set_rule(world.get_entrance("Volcano -> Magikarp"), _HAS_APPLE_OR_PESTER)
-    world.set_rule(world.get_entrance("River -> Magikarp"), _HAS_APPLE_OR_PESTER)
-    world.set_rule(world.get_entrance("Cave -> Magikarp"), _HAS_APPLE_OR_PESTER)
+    # TODO: Add rules for multiple pokemon in photo
+    # TODO: Test River and Cave regional forms are working
 
     # beach
     world.set_rule(world.get_location("Scyther"), _HAS_PESTER)
@@ -37,6 +34,9 @@ def set_rules(world: "PokemonSnapWorld"):
     world.set_rule(world.get_location(wdfl("Snorlax")), HasAny(PESTER_BALL, POKEFLUTE))
 
     world.set_rule(world.get_location(wdfl("Kangaskhan")), _HAS_APPLE_OR_PESTER)
+
+    world.set_rule(world.get_location(rgnl("Magikarp", LVL_BEACH)), _HAS_APPLE_OR_PESTER)
+    world.set_rule(world.get_location(wdfl(rgnl("Magikarp", LVL_BEACH))), _HAS_APPLE_OR_PESTER)
 
 
     # tunnel
@@ -66,6 +66,9 @@ def set_rules(world: "PokemonSnapWorld"):
     world.set_rule(world.get_location("Moltres"), _HAS_APPLE_OR_PESTER)
     world.set_rule(world.get_location(wdfl("Moltres")), _HAS_APPLE_OR_PESTER)
 
+    world.set_rule(world.get_location(rgnl("Magikarp", LVL_VOLCANO)), _HAS_APPLE_OR_PESTER)
+    world.set_rule(world.get_location(wdfl(rgnl("Magikarp", LVL_VOLCANO))), _HAS_APPLE_OR_PESTER)
+
 
     # river
     world.set_rule(world.get_location("Vileplume"), _HAS_FLUTE)
@@ -76,6 +79,12 @@ def set_rules(world: "PokemonSnapWorld"):
 
     world.set_rule(world.get_location("Porygon"), _HAS_PESTER)
     world.set_rule(world.get_location(wdfl("Porygon")), _HAS_PESTER)
+
+    world.set_rule(world.get_location(wdfl(rgnl("Bulbasaur", LVL_RIVER))), _HAS_APPLE_OR_PESTER)
+
+    world.set_rule(world.get_location(rgnl("Magikarp", LVL_RIVER)), _HAS_APPLE_OR_PESTER)
+    world.set_rule(world.get_location(wdfl(rgnl("Magikarp", LVL_RIVER))), _HAS_APPLE_OR_PESTER)
+
 
     # cave
     world.set_rule(world.get_location("Victreebel"), _HAS_APPLE_OR_PESTER)
@@ -90,9 +99,19 @@ def set_rules(world: "PokemonSnapWorld"):
     world.set_rule(world.get_location("Muk"), _HAS_PESTER)
     world.set_rule(world.get_location(wdfl("Muk")), _HAS_PESTER)
 
+    world.set_rule(world.get_location(rgnl("Magikarp", LVL_CAVE)), _HAS_APPLE_OR_PESTER)
+    world.set_rule(world.get_location(wdfl(rgnl("Magikarp", LVL_CAVE))), _HAS_APPLE_OR_PESTER)
+
+    world.set_rule(world.get_location(wdfl(rgnl("Pikachu", LVL_CAVE))), _HAS_APPLE_OR_PESTER)
+
+
     # valley
     world.set_rule(world.get_location("Goldeen"), _HAS_APPLE_OR_PESTER)
     world.set_rule(world.get_location(wdfl("Goldeen")), _HAS_APPLE_OR_PESTER)
+
+    # TODO: Ali's logic claims we can get Valley karp without Apple/Pester, but I couldn't do it
+    world.set_rule(world.get_location(rgnl("Magikarp", LVL_VALLEY)), _HAS_APPLE_OR_PESTER)
+    world.set_rule(world.get_location(wdfl(rgnl("Magikarp", LVL_VALLEY))), _HAS_APPLE_OR_PESTER)
 
     world.set_rule(world.get_location("Gyarados"), _HAS_PESTER)
     world.set_rule(world.get_location(wdfl("Gyarados")), _HAS_PESTER)
@@ -104,6 +123,7 @@ def set_rules(world: "PokemonSnapWorld"):
     world.set_rule(world.get_location(wdfl("Sandshrew")), _HAS_PESTER)
 
     world.set_rule(world.get_location(wdfl("Sandslash")), HasAny(PESTER_BALL, DASH_ENGINE))
+
 
     # rainbow cloud
     world.set_rule(world.get_location("Mew"), _HAS_PESTER)

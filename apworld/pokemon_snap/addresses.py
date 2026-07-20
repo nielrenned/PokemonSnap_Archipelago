@@ -58,7 +58,7 @@ CAN_USE_BITS = {
 
 # Item name -> bit in gCourseUnlockMask. Note Cave/River are swapped relative to
 # the apworld's sequential area codes, so this maps by name deliberately.
-COURSE_BITS = {
+COURSE_UNLOCK_BITS = {
     LVL_BEACH:   0,
     LVL_TUNNEL:  1,
     LVL_VOLCANO: 2,

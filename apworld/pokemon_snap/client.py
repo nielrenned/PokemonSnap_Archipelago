@@ -7,7 +7,7 @@ from NetUtils import ClientStatus
 
 from .pj64_connector import PJ64Context, pj64connect, pj64disconnect, pj64_read_memory, pj64_write_memory
 from .constants import *
-from .locations import wonderful_id as wdfl_id, multiple_id as mult_id
+from .locations import wonderful_id as wdfl_id, multiple_id as mult_id, regional_id as rgnl_id
 from .update_pj64_config import safe_load_pj64_config
 from .items import item_dictionary
 from . import addresses as addr
@@ -29,6 +29,8 @@ class PokemonSnapReportScore(NamedTuple):
     technique_score: int
     same_pokemon_score: int
     special_pose_bits: int
+    courses_seen_bits: int # bit field containing what courses photos have been taken in
+    unused: int
 
     def poses(self) -> list[int]:
         pose_list = []
@@ -173,15 +175,18 @@ class PokemonSnapContext(CommonContext, PJ64Context):
             return
 
         scores = []
-        raw_scores = await pj64_read_memory(self, "u16", addr.SPECIES_SCORES, addr.NUM_SPECIES * 6 * 2)
-        for i in range(0, addr.NUM_SPECIES * 6, 6):
-            report_score = PokemonSnapReportScore(*raw_scores[i:i+6])
+        raw_scores = await pj64_read_memory(self, "u16", addr.SPECIES_SCORES, addr.NUM_SPECIES * 8 * 2)
+        for i in range(0, addr.NUM_SPECIES * 8, 8):
+            report_score = PokemonSnapReportScore(*raw_scores[i:i+8])
             scores.append(report_score)
 
         new_checks = set()
         for slot, report in enumerate(scores):
-            if report.score() != 0:
-                location_id = slot + 1
+            if report.score() == 0: continue
+
+            courses_seen_ids = [i for i in range(7) if ((1 << i) & report.courses_seen_bits) != 0]
+            for course_id in courses_seen_ids:
+                location_id = rgnl_id(slot + 1, course_id)
                 if location_id not in self.checked_snap_locations:
                     logger.info(f'Slot {slot + 1}: {report}')
                     new_checks.add(location_id)
@@ -215,8 +220,8 @@ class PokemonSnapContext(CommonContext, PJ64Context):
                 continue
             if name in addr.CAN_USE_BITS:
                 can_use_mask |= 1 << addr.CAN_USE_BITS[name]
-            elif name in addr.COURSE_BITS:
-                course_mask |= 1 << addr.COURSE_BITS[name]
+            elif name in addr.COURSE_UNLOCK_BITS:
+                course_mask |= 1 << addr.COURSE_UNLOCK_BITS[name]
             elif name == addr.FILM_UPGRADE:
                 film = min(film + addr.FILM_STEP, addr.FILM_CAP)
 

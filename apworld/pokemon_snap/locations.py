@@ -46,8 +46,7 @@ class PokemonSnapLocation(Location):
         table_offset = 1000
 
         table_order = [
-            START_GAME, LVL_BEACH, LVL_TUNNEL, LVL_VOLCANO, LVL_RIVER, LVL_CAVE, LVL_VALLEY, LVL_CLOUD, 
-            "Bulbasaur", "Pikachu", "Zubat", "Magikarp"
+            START_GAME, LVL_BEACH, LVL_TUNNEL, LVL_VOLCANO, LVL_RIVER, LVL_CAVE, LVL_VALLEY, LVL_CLOUD
         ]
 
         output = {}
@@ -63,6 +62,18 @@ class PokemonSnapLocation(Location):
         self.locked = True
         item.location = self
 
+
+LEVEL_IDS = {
+    LVL_BEACH:   0,
+    LVL_TUNNEL:  1,
+    LVL_VOLCANO: 2,
+    LVL_RIVER:   3,
+    LVL_CAVE:    4,
+    LVL_VALLEY:  5,
+    LVL_CLOUD:   6,
+}
+
+POKEMON_IN_MULTIPLE_LEVELS = ["Pikachu", "Bulbasaur", "Zubat", "Magikarp"]
 
 def wonderful(pokemon_name: str):
     return f'{pokemon_name}: Wonderful!'
@@ -80,22 +91,33 @@ def multiple_id(id: int):
     return id + 200
 
 
+def regional(pokemon_name: str, region_name: str):
+    return f'{pokemon_name} (in {region_name})'
+
+
+def regional_id(id: int, region_id: int):
+    return 1000*(region_id + 1) + id
+
+
 species_data_tables = {
-    START_GAME: [],
     LVL_BEACH: [
         PokemonSnapSpeciesData(id=7,  name="Butterfree", multiple=True),
         PokemonSnapSpeciesData(id=9,  name="Pidgey", multiple=True),
+        PokemonSnapSpeciesData(id=10, name="Pikachu", multiple=True),
         PokemonSnapSpeciesData(id=19, name="Meowth"),
         PokemonSnapSpeciesData(id=34, name="Doduo"),
         PokemonSnapSpeciesData(id=42, name="Chansey"),
         PokemonSnapSpeciesData(id=43, name="Kangaskhan"),
         PokemonSnapSpeciesData(id=47, name="Scyther"),
+        PokemonSnapSpeciesData(id=51, name="Magikarp"),
         PokemonSnapSpeciesData(id=53, name="Lapras", multiple=True),
         PokemonSnapSpeciesData(id=55, name="Eevee"),
         PokemonSnapSpeciesData(id=57, name="Snorlax"),
     ],
     LVL_TUNNEL: [
         PokemonSnapSpeciesData(id=8,  name="Kakuna", multiple=True),
+        PokemonSnapSpeciesData(id=10, name="Pikachu"),
+        PokemonSnapSpeciesData(id=15, name="Zubat"),
         PokemonSnapSpeciesData(id=17, name="Diglett"),
         PokemonSnapSpeciesData(id=18, name="Dugtrio", multiple=True),
         PokemonSnapSpeciesData(id=32, name="Magnemite", multiple=True),
@@ -103,6 +125,7 @@ species_data_tables = {
         PokemonSnapSpeciesData(id=39, name="Haunter"),
         PokemonSnapSpeciesData(id=40, name="Electrode", multiple=True),
         PokemonSnapSpeciesData(id=49, name="Electabuzz", multiple=True),
+        PokemonSnapSpeciesData(id=51, name="Magikarp"),
         PokemonSnapSpeciesData(id=59, name="Zapdos"),
     ],
     LVL_VOLCANO: [
@@ -114,10 +137,13 @@ species_data_tables = {
         PokemonSnapSpeciesData(id=23, name="Arcanine", multiple=True),
         PokemonSnapSpeciesData(id=29, name="Rapidash", multiple=True),
         PokemonSnapSpeciesData(id=50, name="Magmar", multiple=True),
+        PokemonSnapSpeciesData(id=51, name="Magikarp"),
         PokemonSnapSpeciesData(id=60, name="Moltres"),
     ],
     LVL_RIVER: [
+        PokemonSnapSpeciesData(id=1,  name="Bulbasaur", multiple=True),
         PokemonSnapSpeciesData(id=6,  name="Metapod", multiple=True),
+        PokemonSnapSpeciesData(id=10, name="Pikachu"),
         PokemonSnapSpeciesData(id=16, name="Vileplume"),
         PokemonSnapSpeciesData(id=20, name="Psyduck", multiple=True),
         PokemonSnapSpeciesData(id=24, name="Poliwag", multiple=True),
@@ -125,15 +151,20 @@ species_data_tables = {
         PokemonSnapSpeciesData(id=31, name="Slowbro"),
         PokemonSnapSpeciesData(id=37, name="Shellder", multiple=True),
         PokemonSnapSpeciesData(id=38, name="Cloyster", multiple=True),
+        PokemonSnapSpeciesData(id=51, name="Magikarp"),
         PokemonSnapSpeciesData(id=56, name="Porygon", multiple=True),
     ],
     LVL_CAVE: [
+        PokemonSnapSpeciesData(id=1,  name="Bulbasaur", multiple=True),
+        PokemonSnapSpeciesData(id=10, name="Pikachu"),
         PokemonSnapSpeciesData(id=14, name="Jigglypuff", multiple=True),
+        PokemonSnapSpeciesData(id=15, name="Zubat", multiple=True),
         PokemonSnapSpeciesData(id=25, name="Weepinbell"),
         PokemonSnapSpeciesData(id=26, name="Victreebel"),
         PokemonSnapSpeciesData(id=35, name="Grimer"),
         PokemonSnapSpeciesData(id=36, name="Muk"),
         PokemonSnapSpeciesData(id=48, name="Jynx", multiple=True),
+        PokemonSnapSpeciesData(id=51, name="Magikarp"),
         PokemonSnapSpeciesData(id=54, name="Ditto", multiple=True),
         PokemonSnapSpeciesData(id=58, name="Articuno"),
         PokemonSnapSpeciesData(id=41, name="Koffing"),
@@ -148,6 +179,7 @@ species_data_tables = {
         PokemonSnapSpeciesData(id=44, name="Goldeen"),
         PokemonSnapSpeciesData(id=45, name="Staryu", multiple=True),
         PokemonSnapSpeciesData(id=46, name="Starmie", multiple=True),
+        PokemonSnapSpeciesData(id=51, name="Magikarp", multiple=True),
         PokemonSnapSpeciesData(id=52, name="Gyarados"),
         PokemonSnapSpeciesData(id=61, name="Dratini", multiple=True),
         PokemonSnapSpeciesData(id=62, name="Dragonite"),
@@ -155,27 +187,20 @@ species_data_tables = {
     LVL_CLOUD: [
         PokemonSnapSpeciesData(id=63, name="Mew", wonderful=False, multiple=False),
     ],
-    "Bulbasaur": [
-        PokemonSnapSpeciesData(id=1, name="Bulbasaur", wonderful=False),
-    ],
-    "Pikachu": [
-        PokemonSnapSpeciesData(id=10, name="Pikachu", wonderful=False),
-    ],
-    "Zubat": [
-        PokemonSnapSpeciesData(id=15, name="Zubat", wonderful=False),
-    ],
-    "Magikarp": [
-        PokemonSnapSpeciesData(id=51, name="Magikarp", wonderful=False),
-    ],
-    # TODO: add wonderful and multiple of the four that are in multiple areas
 }
 
 
-location_tables = {}
+location_tables = {
+    START_GAME: [],
+}
 
 for region, species_data_list in species_data_tables.items():
     location_data_list = []
-    for id, name, can_wonderful, can_multiple in species_data_list:
+    region_id = LEVEL_IDS[region]
+    for base_id, name, can_wonderful, can_multiple in species_data_list:
+        id = regional_id(base_id, region_id)
+        if name in POKEMON_IN_MULTIPLE_LEVELS:
+            name = regional(name, region)
         location_data_list.append(PokemonSnapLocationData(id, name, PokemonSnapLocationCategory.PHOTO))
         if can_wonderful:
             location_data_list.append(PokemonSnapLocationData(wonderful_id(id), wonderful(name), _PHOTO))
