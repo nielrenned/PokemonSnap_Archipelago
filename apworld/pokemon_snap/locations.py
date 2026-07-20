@@ -3,16 +3,26 @@ from typing import NamedTuple
 
 from BaseClasses import Location, Region
 from .items import PokemonSnapItem
-
+from .constants import *
 
 class PokemonSnapLocationCategory(IntEnum):
     PHOTO = 0
+
+
+_PHOTO = PokemonSnapLocationCategory.PHOTO
 
 
 class PokemonSnapLocationData(NamedTuple):
     id: int
     name: str
     category: PokemonSnapLocationCategory
+
+
+class PokemonSnapSpeciesData(NamedTuple):
+    id: int
+    name: str
+    wonderful: bool = True
+    multiple: bool = False
 
 
 class PokemonSnapLocation(Location):
@@ -36,8 +46,8 @@ class PokemonSnapLocation(Location):
         table_offset = 1000
 
         table_order = [
-            "Start Game", "Beach", "Tunnel", "Volcano", "River", "Cave", "Valley", "Rainbow Cloud", "Bulbasaur",
-            "Pikachu", "Zubat", "Magikarp"
+            START_GAME, LVL_BEACH, LVL_TUNNEL, LVL_VOLCANO, LVL_RIVER, LVL_CAVE, LVL_VALLEY, LVL_CLOUD, 
+            "Bulbasaur", "Pikachu", "Zubat", "Magikarp"
         ]
 
         output = {}
@@ -54,95 +64,124 @@ class PokemonSnapLocation(Location):
         item.location = self
 
 
-location_tables = {
-    "Start Game": [],
-    "Beach": [
-        PokemonSnapLocationData(7, "Butterfree", PokemonSnapLocationCategory.PHOTO),
-        PokemonSnapLocationData(9, "Pidgey", PokemonSnapLocationCategory.PHOTO),
-        PokemonSnapLocationData(19, "Meowth", PokemonSnapLocationCategory.PHOTO),
-        PokemonSnapLocationData(34, "Doduo", PokemonSnapLocationCategory.PHOTO),
-        PokemonSnapLocationData(42, "Chansey", PokemonSnapLocationCategory.PHOTO),
-        PokemonSnapLocationData(43, "Kangaskhan", PokemonSnapLocationCategory.PHOTO),
-        PokemonSnapLocationData(47, "Scyther", PokemonSnapLocationCategory.PHOTO),
-        PokemonSnapLocationData(53, "Lapras", PokemonSnapLocationCategory.PHOTO),
-        PokemonSnapLocationData(55, "Eevee", PokemonSnapLocationCategory.PHOTO),
-        PokemonSnapLocationData(57, "Snorlax", PokemonSnapLocationCategory.PHOTO),
+def wonderful(pokemon_name: str):
+    return f'{pokemon_name}: Wonderful!'
+
+
+def wonderful_id(id: int):
+    return id + 100
+
+
+def multiple(pokemon_name: str):
+    return f'{pokemon_name}: Multiple'
+
+
+def multiple_id(id: int):
+    return id + 200
+
+
+species_data_tables = {
+    START_GAME: [],
+    LVL_BEACH: [
+        PokemonSnapSpeciesData(id=7,  name="Butterfree", multiple=True),
+        PokemonSnapSpeciesData(id=9,  name="Pidgey", multiple=True),
+        PokemonSnapSpeciesData(id=19, name="Meowth"),
+        PokemonSnapSpeciesData(id=34, name="Doduo"),
+        PokemonSnapSpeciesData(id=42, name="Chansey"),
+        PokemonSnapSpeciesData(id=43, name="Kangaskhan"),
+        PokemonSnapSpeciesData(id=47, name="Scyther"),
+        PokemonSnapSpeciesData(id=53, name="Lapras", multiple=True),
+        PokemonSnapSpeciesData(id=55, name="Eevee"),
+        PokemonSnapSpeciesData(id=57, name="Snorlax"),
     ],
-    "Tunnel": [
-        PokemonSnapLocationData(8, "Kakuna", PokemonSnapLocationCategory.PHOTO),
-        PokemonSnapLocationData(17, "Diglett", PokemonSnapLocationCategory.PHOTO),
-        PokemonSnapLocationData(18, "Dugtrio", PokemonSnapLocationCategory.PHOTO),
-        PokemonSnapLocationData(32, "Magnemite", PokemonSnapLocationCategory.PHOTO),
-        PokemonSnapLocationData(33, "Magneton", PokemonSnapLocationCategory.PHOTO),
-        PokemonSnapLocationData(39, "Haunter", PokemonSnapLocationCategory.PHOTO),
-        PokemonSnapLocationData(40, "Electrode", PokemonSnapLocationCategory.PHOTO),
-        PokemonSnapLocationData(49, "Electabuzz", PokemonSnapLocationCategory.PHOTO),
-        PokemonSnapLocationData(59, "Zapdos", PokemonSnapLocationCategory.PHOTO),
+    LVL_TUNNEL: [
+        PokemonSnapSpeciesData(id=8,  name="Kakuna", multiple=True),
+        PokemonSnapSpeciesData(id=17, name="Diglett"),
+        PokemonSnapSpeciesData(id=18, name="Dugtrio", multiple=True),
+        PokemonSnapSpeciesData(id=32, name="Magnemite", multiple=True),
+        PokemonSnapSpeciesData(id=33, name="Magneton"),
+        PokemonSnapSpeciesData(id=39, name="Haunter"),
+        PokemonSnapSpeciesData(id=40, name="Electrode", multiple=True),
+        PokemonSnapSpeciesData(id=49, name="Electabuzz", multiple=True),
+        PokemonSnapSpeciesData(id=59, name="Zapdos"),
     ],
-    "Volcano": [
-        PokemonSnapLocationData(2, "Charmander", PokemonSnapLocationCategory.PHOTO),
-        PokemonSnapLocationData(3, "Charmeleon", PokemonSnapLocationCategory.PHOTO),
-        PokemonSnapLocationData(4, "Charizard", PokemonSnapLocationCategory.PHOTO),
-        PokemonSnapLocationData(13, "Vulpix", PokemonSnapLocationCategory.PHOTO),
-        PokemonSnapLocationData(22, "Growlithe", PokemonSnapLocationCategory.PHOTO),
-        PokemonSnapLocationData(23, "Arcanine", PokemonSnapLocationCategory.PHOTO),
-        PokemonSnapLocationData(29, "Rapidash", PokemonSnapLocationCategory.PHOTO),
-        PokemonSnapLocationData(50, "Magmar", PokemonSnapLocationCategory.PHOTO),
-        PokemonSnapLocationData(60, "Moltres", PokemonSnapLocationCategory.PHOTO),
+    LVL_VOLCANO: [
+        PokemonSnapSpeciesData(id=2,  name="Charmander", multiple=True),
+        PokemonSnapSpeciesData(id=3,  name="Charmeleon"),
+        PokemonSnapSpeciesData(id=4,  name="Charizard"),
+        PokemonSnapSpeciesData(id=13, name="Vulpix", multiple=True),
+        PokemonSnapSpeciesData(id=22, name="Growlithe", multiple=True),
+        PokemonSnapSpeciesData(id=23, name="Arcanine", multiple=True),
+        PokemonSnapSpeciesData(id=29, name="Rapidash", multiple=True),
+        PokemonSnapSpeciesData(id=50, name="Magmar", multiple=True),
+        PokemonSnapSpeciesData(id=60, name="Moltres"),
     ],
-    "River": [
-        PokemonSnapLocationData(6, "Metapod", PokemonSnapLocationCategory.PHOTO),
-        PokemonSnapLocationData(16, "Vileplume", PokemonSnapLocationCategory.PHOTO),
-        PokemonSnapLocationData(20, "Psyduck", PokemonSnapLocationCategory.PHOTO),
-        PokemonSnapLocationData(24, "Poliwag", PokemonSnapLocationCategory.PHOTO),
-        PokemonSnapLocationData(30, "Slowpoke", PokemonSnapLocationCategory.PHOTO),
-        PokemonSnapLocationData(31, "Slowbro", PokemonSnapLocationCategory.PHOTO),
-        PokemonSnapLocationData(37, "Shellder", PokemonSnapLocationCategory.PHOTO),
-        PokemonSnapLocationData(38, "Cloyster", PokemonSnapLocationCategory.PHOTO),
-        PokemonSnapLocationData(56, "Porygon", PokemonSnapLocationCategory.PHOTO),
+    LVL_RIVER: [
+        PokemonSnapSpeciesData(id=6,  name="Metapod", multiple=True),
+        PokemonSnapSpeciesData(id=16, name="Vileplume"),
+        PokemonSnapSpeciesData(id=20, name="Psyduck", multiple=True),
+        PokemonSnapSpeciesData(id=24, name="Poliwag", multiple=True),
+        PokemonSnapSpeciesData(id=30, name="Slowpoke"),
+        PokemonSnapSpeciesData(id=31, name="Slowbro"),
+        PokemonSnapSpeciesData(id=37, name="Shellder", multiple=True),
+        PokemonSnapSpeciesData(id=38, name="Cloyster", multiple=True),
+        PokemonSnapSpeciesData(id=56, name="Porygon", multiple=True),
     ],
-    "Cave": [
-        PokemonSnapLocationData(14, "Jigglypuff", PokemonSnapLocationCategory.PHOTO),
-        PokemonSnapLocationData(25, "Weepinbell", PokemonSnapLocationCategory.PHOTO),
-        PokemonSnapLocationData(26, "Victreebel", PokemonSnapLocationCategory.PHOTO),
-        PokemonSnapLocationData(35, "Grimer", PokemonSnapLocationCategory.PHOTO),
-        PokemonSnapLocationData(36, "Muk", PokemonSnapLocationCategory.PHOTO),
-        PokemonSnapLocationData(48, "Jynx", PokemonSnapLocationCategory.PHOTO),
-        PokemonSnapLocationData(54, "Ditto", PokemonSnapLocationCategory.PHOTO),
-        PokemonSnapLocationData(58, "Articuno", PokemonSnapLocationCategory.PHOTO),
-        PokemonSnapLocationData(41, "Koffing", PokemonSnapLocationCategory.PHOTO),
+    LVL_CAVE: [
+        PokemonSnapSpeciesData(id=14, name="Jigglypuff", multiple=True),
+        PokemonSnapSpeciesData(id=25, name="Weepinbell"),
+        PokemonSnapSpeciesData(id=26, name="Victreebel"),
+        PokemonSnapSpeciesData(id=35, name="Grimer"),
+        PokemonSnapSpeciesData(id=36, name="Muk"),
+        PokemonSnapSpeciesData(id=48, name="Jynx", multiple=True),
+        PokemonSnapSpeciesData(id=54, name="Ditto", multiple=True),
+        PokemonSnapSpeciesData(id=58, name="Articuno"),
+        PokemonSnapSpeciesData(id=41, name="Koffing"),
     ],
-    "Valley": [
-        PokemonSnapLocationData(5, "Squirtle", PokemonSnapLocationCategory.PHOTO),
-        PokemonSnapLocationData(11, "Sandshrew", PokemonSnapLocationCategory.PHOTO),
-        PokemonSnapLocationData(12, "Sandslash", PokemonSnapLocationCategory.PHOTO),
-        PokemonSnapLocationData(21, "Mankey", PokemonSnapLocationCategory.PHOTO),
-        PokemonSnapLocationData(27, "Geodude", PokemonSnapLocationCategory.PHOTO),
-        PokemonSnapLocationData(28, "Graveler", PokemonSnapLocationCategory.PHOTO),
-        PokemonSnapLocationData(44, "Goldeen", PokemonSnapLocationCategory.PHOTO),
-        PokemonSnapLocationData(45, "Staryu", PokemonSnapLocationCategory.PHOTO),
-        PokemonSnapLocationData(46, "Starmie", PokemonSnapLocationCategory.PHOTO),
-        PokemonSnapLocationData(52, "Gyarados", PokemonSnapLocationCategory.PHOTO),
-        PokemonSnapLocationData(61, "Dratini", PokemonSnapLocationCategory.PHOTO),
-        PokemonSnapLocationData(62, "Dragonite", PokemonSnapLocationCategory.PHOTO),
+    LVL_VALLEY: [
+        PokemonSnapSpeciesData(id=5,  name="Squirtle", multiple=True),
+        PokemonSnapSpeciesData(id=11, name="Sandshrew", multiple=True),
+        PokemonSnapSpeciesData(id=12, name="Sandslash"),
+        PokemonSnapSpeciesData(id=21, name="Mankey"),
+        PokemonSnapSpeciesData(id=27, name="Geodude", multiple=True),
+        PokemonSnapSpeciesData(id=28, name="Graveler", multiple=True),
+        PokemonSnapSpeciesData(id=44, name="Goldeen"),
+        PokemonSnapSpeciesData(id=45, name="Staryu", multiple=True),
+        PokemonSnapSpeciesData(id=46, name="Starmie", multiple=True),
+        PokemonSnapSpeciesData(id=52, name="Gyarados"),
+        PokemonSnapSpeciesData(id=61, name="Dratini", multiple=True),
+        PokemonSnapSpeciesData(id=62, name="Dragonite"),
     ],
-    "Rainbow Cloud": [
-        PokemonSnapLocationData(63, "Mew", PokemonSnapLocationCategory.PHOTO)
+    LVL_CLOUD: [
+        PokemonSnapSpeciesData(id=63, name="Mew", wonderful=False, multiple=False),
     ],
     "Bulbasaur": [
-        PokemonSnapLocationData(1, "Bulbasaur", PokemonSnapLocationCategory.PHOTO),
+        PokemonSnapSpeciesData(id=1, name="Bulbasaur", wonderful=False),
     ],
     "Pikachu": [
-        PokemonSnapLocationData(10, "Pikachu", PokemonSnapLocationCategory.PHOTO),
+        PokemonSnapSpeciesData(id=10, name="Pikachu", wonderful=False),
     ],
     "Zubat": [
-        PokemonSnapLocationData(15, "Zubat", PokemonSnapLocationCategory.PHOTO),
+        PokemonSnapSpeciesData(id=15, name="Zubat", wonderful=False),
     ],
     "Magikarp": [
-        PokemonSnapLocationData(51, "Magikarp", PokemonSnapLocationCategory.PHOTO),
-    ]
+        PokemonSnapSpeciesData(id=51, name="Magikarp", wonderful=False),
+    ],
+    # TODO: add wonderful and multiple of the four that are in multiple areas
 }
 
-location_dictionary: dict[str, PokemonSnapLocationData] = {}
-for location_table in location_tables.values():
-    location_dictionary.update({location_data.name: location_data for location_data in location_table})
+
+location_tables = {}
+
+for region, species_data_list in species_data_tables.items():
+    location_data_list = []
+    for id, name, can_wonderful, can_multiple in species_data_list:
+        location_data_list.append(PokemonSnapLocationData(id, name, PokemonSnapLocationCategory.PHOTO))
+        if can_wonderful:
+            location_data_list.append(PokemonSnapLocationData(wonderful_id(id), wonderful(name), _PHOTO))
+        # if can_multiple:
+        #     location_data_list.append(PokemonSnapLocationData(multiple_id(id), multiple(name), _PHOTO))
+    location_tables[region] = location_data_list
+
+
+# TODO: add special pose pictures here

@@ -5,6 +5,7 @@ and copied here, so the addresses stay in sync with the ROM.
 """
 import json
 from importlib.resources import files
+from .constants import *
 
 _data = json.loads(
     files(__package__).joinpath("data/pokemonsnap.symbols.json").read_text(encoding="utf-8")
@@ -49,25 +50,24 @@ MEW_LOCATION = 63
 
 # Item name -> bit in gCanUseMask.
 CAN_USE_BITS = {
-    "Apple": 0,
-    "Pester Ball": 1,
-    "Flute": 2,
-    "Dash Engine": 3,
+    POKEMON_FOOD: 0,
+    PESTER_BALL:  1,
+    POKEFLUTE:    2,
+    DASH_ENGINE:  3,
 }
 
 # Item name -> bit in gCourseUnlockMask. Note Cave/River are swapped relative to
 # the apworld's sequential area codes, so this maps by name deliberately.
 COURSE_BITS = {
-    "Beach": 0,
-    "Tunnel": 1,
-    "Volcano": 2,
-    "Cave": 3,
-    "River": 4,
-    "Valley": 5,
-    "Rainbow Cloud": 6,
+    LVL_BEACH:   0,
+    LVL_TUNNEL:  1,
+    LVL_VOLCANO: 2,
+    LVL_CAVE:    3,
+    LVL_RIVER:   4,
+    LVL_VALLEY:  5,
+    LVL_CLOUD:   6,
 }
 
-FILM_ITEM = "Film Capacity Upgrade"
 FILM_BASE = 15
 FILM_STEP = 5
 FILM_CAP = 60

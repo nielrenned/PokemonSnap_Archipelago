@@ -7,6 +7,7 @@ from NetUtils import ClientStatus
 
 from .pj64_connector import PJ64Context, pj64connect, pj64disconnect, pj64_read_memory, pj64_write_memory
 from .constants import *
+from .locations import wonderful_id as wdfl_id, multiple_id as mult_id
 from .update_pj64_config import safe_load_pj64_config
 from .items import item_dictionary
 from . import addresses as addr
@@ -184,6 +185,10 @@ class PokemonSnapContext(CommonContext, PJ64Context):
                 if location_id not in self.checked_snap_locations:
                     logger.info(f'Slot {slot + 1}: {report}')
                     new_checks.add(location_id)
+                if report.technique_score != 0 and wdfl_id(location_id) not in self.checked_snap_locations:
+                    new_checks.add(wdfl_id(location_id))
+                # if report.same_pokemon_score != 0 and mult_id(location_id) not in self.checked_snap_locations:
+                #     new_checks.add(mult_id(location_id))
 
         if new_checks:
             self.checked_snap_locations |= new_checks
@@ -212,7 +217,7 @@ class PokemonSnapContext(CommonContext, PJ64Context):
                 can_use_mask |= 1 << addr.CAN_USE_BITS[name]
             elif name in addr.COURSE_BITS:
                 course_mask |= 1 << addr.COURSE_BITS[name]
-            elif name == addr.FILM_ITEM:
+            elif name == addr.FILM_UPGRADE:
                 film = min(film + addr.FILM_STEP, addr.FILM_CAP)
 
         await pj64_write_memory(self, "u32", addr.CAN_USE_MASK, [can_use_mask])

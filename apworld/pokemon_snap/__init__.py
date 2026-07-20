@@ -6,9 +6,10 @@ from BaseClasses import MultiWorld, Region, Entrance, Tutorial, ItemClassificati
 from NetUtils import MultiData
 from worlds.AutoWorld import World, WebWorld
 from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess
+from .constants import *
 from .items import PokemonSnapItem, PokemonSnapItemCategory, key_item_names, useful_item_names, \
     _all_items, build_item_pool, PokemonSnapItemData
-from .locations import PokemonSnapLocation, PokemonSnapLocationCategory, location_tables, location_dictionary
+from .locations import PokemonSnapLocation, PokemonSnapLocationCategory, location_tables
 from .options import PokemonSnapOption
 from .psnap_settings import PokemonSnapSettings
 from .rom import PokemonSnapProcedurePatch
@@ -75,7 +76,7 @@ class PokemonSnapWorld(World):
         # Rainbow Cloud so the goal course can't be the start.
         areas = [item for item in _all_items
                  if item.category == PokemonSnapItemCategory.AREA
-                 and item.name != "Rainbow Cloud"]
+                 and item.name != LVL_CLOUD]
         self.start_area = self.random.choice(areas)
         self.multiworld.push_precollected(self.create_item(self.start_area.name))
 
@@ -91,33 +92,33 @@ class PokemonSnapWorld(World):
             regions[from_region].exits.append(connection)
             connection.connect(regions[to_region])
 
-        create_connection("Menu", "Start Game")
+        create_connection("Menu", START_GAME)
 
-        create_connection("Start Game", "Beach")
-        create_connection("Start Game", "Tunnel")
-        create_connection("Start Game", "Volcano")
-        create_connection("Start Game", "River")
-        create_connection("Start Game", "Cave")
-        create_connection("Start Game", "Valley")
-        create_connection("Start Game", "Rainbow Cloud")
+        create_connection(START_GAME, LVL_BEACH)
+        create_connection(START_GAME, LVL_TUNNEL)
+        create_connection(START_GAME, LVL_VOLCANO)
+        create_connection(START_GAME, LVL_RIVER)
+        create_connection(START_GAME, LVL_CAVE)
+        create_connection(START_GAME, LVL_VALLEY)
+        create_connection(START_GAME, LVL_CLOUD)
 
-        create_connection("River", "Bulbasaur")
-        create_connection("Cave", "Bulbasaur")
+        create_connection(LVL_RIVER, "Bulbasaur")
+        create_connection(LVL_CAVE, "Bulbasaur")
 
-        create_connection("Tunnel", "Zubat")
-        create_connection("Cave", "Zubat")
+        create_connection(LVL_TUNNEL, "Zubat")
+        create_connection(LVL_CAVE, "Zubat")
 
-        create_connection("Beach", "Pikachu")
-        create_connection("River", "Pikachu")
-        create_connection("Tunnel", "Pikachu")
-        create_connection("Cave", "Pikachu")
+        create_connection(LVL_BEACH, "Pikachu")
+        create_connection(LVL_RIVER, "Pikachu")
+        create_connection(LVL_TUNNEL, "Pikachu")
+        create_connection(LVL_CAVE, "Pikachu")
 
-        create_connection("Beach", "Magikarp")
-        create_connection("Tunnel", "Magikarp")
-        create_connection("Volcano", "Magikarp")
-        create_connection("River", "Magikarp")
-        create_connection("Cave", "Magikarp")
-        create_connection("Valley", "Magikarp")
+        create_connection(LVL_BEACH, "Magikarp")
+        create_connection(LVL_TUNNEL, "Magikarp")
+        create_connection(LVL_VOLCANO, "Magikarp")
+        create_connection(LVL_RIVER, "Magikarp")
+        create_connection(LVL_CAVE, "Magikarp")
+        create_connection(LVL_VALLEY, "Magikarp")
 
         # For each region, add the associated locations retrieved from the corresponding location_table
 
