@@ -16,4 +16,6 @@ See [Setup Instructions](apworld/pokemon_snap/docs/setup_en.md).
 
 ## Credit
 
-Thanks to [ArsonAssassin](https://github.com/ArsonAssassin), [@GerbilJames](https://github.com/gerbiljames), and [@SomeJakeGuy](https://github.com/SomeJakeGuy) for initial repository setup and doing 90% of the work to get this functional.
+Thanks to [@ArsonAssassin](https://github.com/ArsonAssassin), [@GerbilJames](https://github.com/gerbiljames), and [@SomeJakeGuy](https://github.com/SomeJakeGuy) for initial repository setup and doing 90% of the work to get this functional.
+
+Thanks to [@AliRobotnik](https://github.com/AliRobotnik) for the Pokemon Snap Manual, which already had all the logic implemented.
