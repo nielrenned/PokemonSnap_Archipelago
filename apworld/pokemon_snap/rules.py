@@ -42,7 +42,7 @@ def set_rules(world: "PokemonSnapWorld"):
 
 
     # tunnel
-    world.set_rule(world.get_location(mult("Electabuzz"), LVL_BEACH), _HAS_APPLE_OR_PESTER)
+    world.set_rule(world.get_location(mult("Electabuzz")), _HAS_APPLE_OR_PESTER)
 
     world.set_rule(world.get_location("Magnemite"), _HAS_APPLE)
     world.set_rule(world.get_location(wdfl("Magnemite")), _HAS_APPLE)
