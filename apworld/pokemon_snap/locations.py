@@ -63,16 +63,6 @@ class PokemonSnapLocation(Location):
         item.location = self
 
 
-LEVEL_IDS = {
-    LVL_BEACH:   0,
-    LVL_TUNNEL:  1,
-    LVL_VOLCANO: 2,
-    LVL_RIVER:   3,
-    LVL_CAVE:    4,
-    LVL_VALLEY:  5,
-    LVL_CLOUD:   6,
-}
-
 POKEMON_IN_MULTIPLE_LEVELS = ["Pikachu", "Bulbasaur", "Zubat", "Magikarp"]
 
 def wonderful(pokemon_name: str):
@@ -200,7 +190,7 @@ location_tables = {
 
 for region, species_data_list in species_data_tables.items():
     location_data_list = []
-    region_id = LEVEL_IDS[region]
+    region_id = COURSE_IDS[region]
     for base_id, name, can_wonderful, can_multiple in species_data_list:
         id = regional_id(base_id, region_id)
         if name in POKEMON_IN_MULTIPLE_LEVELS:

@@ -56,14 +56,13 @@ CAN_USE_BITS = {
     DASH_ENGINE:  3,
 }
 
-# Item name -> bit in gCourseUnlockMask. Note Cave/River are swapped relative to
-# the apworld's sequential area codes, so this maps by name deliberately.
-COURSE_UNLOCK_BITS = {
+# Item name -> bit in gCourseUnlockMask.
+COURSE_IDS = {
     LVL_BEACH:   0,
     LVL_TUNNEL:  1,
     LVL_VOLCANO: 2,
-    LVL_CAVE:    3,
-    LVL_RIVER:   4,
+    LVL_RIVER:   3,
+    LVL_CAVE:    4,
     LVL_VALLEY:  5,
     LVL_CLOUD:   6,
 }
