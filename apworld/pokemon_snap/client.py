@@ -192,8 +192,8 @@ class PokemonSnapContext(CommonContext, PJ64Context):
                     new_checks.add(location_id)
                 if report.technique_score != 0 and wdfl_id(location_id) not in self.checked_snap_locations:
                     new_checks.add(wdfl_id(location_id))
-                # if report.same_pokemon_score != 0 and mult_id(location_id) not in self.checked_snap_locations:
-                #     new_checks.add(mult_id(location_id))
+                if report.same_pokemon_score != 0 and mult_id(location_id) not in self.checked_snap_locations:
+                    new_checks.add(mult_id(location_id))
 
         if new_checks:
             self.checked_snap_locations |= new_checks

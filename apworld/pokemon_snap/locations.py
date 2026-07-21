@@ -92,11 +92,15 @@ def multiple_id(id: int):
 
 
 def regional(pokemon_name: str, region_name: str):
-    return f'{pokemon_name} (in {region_name})'
+    return f'{pokemon_name} ({region_name})'
 
 
 def regional_id(id: int, region_id: int):
     return 1000*(region_id + 1) + id
+
+
+def special_id(pose_id: int):
+    return 10000 + pose_id
 
 
 species_data_tables = {
@@ -201,11 +205,11 @@ for region, species_data_list in species_data_tables.items():
         id = regional_id(base_id, region_id)
         if name in POKEMON_IN_MULTIPLE_LEVELS:
             name = regional(name, region)
-        location_data_list.append(PokemonSnapLocationData(id, name, PokemonSnapLocationCategory.PHOTO))
+        location_data_list.append(PokemonSnapLocationData(id, name, _PHOTO))
         if can_wonderful:
             location_data_list.append(PokemonSnapLocationData(wonderful_id(id), wonderful(name), _PHOTO))
-        # if can_multiple:
-        #     location_data_list.append(PokemonSnapLocationData(multiple_id(id), multiple(name), _PHOTO))
+        if can_multiple:
+            location_data_list.append(PokemonSnapLocationData(multiple_id(id), multiple(name), _PHOTO))
     location_tables[region] = location_data_list
 
 
