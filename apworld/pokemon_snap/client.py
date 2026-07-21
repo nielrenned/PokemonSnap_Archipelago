@@ -7,7 +7,7 @@ from NetUtils import ClientStatus
 
 from .pj64_connector import PJ64Context, pj64connect, pj64disconnect, pj64_read_memory, pj64_write_memory
 from .constants import *
-from .locations import wonderful_id as wdfl_id, multiple_id as mult_id, regional_id as rgnl_id
+from .locations import wonderful_id as wdfl_id, multiple_id as mult_id, regional_id as rgnl_id, special_id
 from .update_pj64_config import safe_load_pj64_config
 from .items import item_dictionary
 from . import addresses as addr
@@ -184,6 +184,11 @@ class PokemonSnapContext(CommonContext, PJ64Context):
         for slot, report in enumerate(scores):
             if report.score() == 0: continue
 
+            poses_seen_ids = [i+1 for i in range(12) if ((1 << i) & report.special_pose_bits) != 0]
+            for pose_id in poses_seen_ids:
+                if special_id(pose_id) not in self.checked_snap_locations:
+                    new_checks.add(special_id(pose_id))
+
             courses_seen_ids = [i for i in range(7) if ((1 << i) & report.courses_seen_bits) != 0]
             for course_id in courses_seen_ids:
                 location_id = rgnl_id(slot + 1, course_id)
@@ -220,8 +225,8 @@ class PokemonSnapContext(CommonContext, PJ64Context):
                 continue
             if name in addr.CAN_USE_BITS:
                 can_use_mask |= 1 << addr.CAN_USE_BITS[name]
-            elif name in addr.COURSE_UNLOCK_BITS:
-                course_mask |= 1 << addr.COURSE_UNLOCK_BITS[name]
+            elif name in addr.COURSE_IDS:
+                course_mask |= 1 << addr.COURSE_IDS[name]
             elif name == addr.FILM_UPGRADE:
                 film = min(film + addr.FILM_STEP, addr.FILM_CAP)
 

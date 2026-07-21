@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from rule_builder.rules import CanReachLocation, Has, HasAll, HasAny
+from rule_builder.rules import CanReachLocation, Has, HasAll, HasAny, And
 from .locations import wonderful as wdfl, multiple as mult, regional as rgnl
 from .constants import *
 
@@ -20,8 +20,6 @@ def set_rules(world: "PokemonSnapWorld"):
     for level in [LVL_BEACH, LVL_TUNNEL, LVL_VOLCANO, LVL_RIVER, LVL_CAVE, LVL_VALLEY, LVL_CLOUD]:
         world.set_rule(world.get_entrance(f'{START_GAME} -> {level}'), Has(level))
 
-    # TODO: Add rules for multiple pokemon in photo
-    # TODO: Test River and Cave regional forms are working
 
     # beach
     world.set_rule(world.get_location("Scyther"), _HAS_PESTER)
@@ -39,6 +37,9 @@ def set_rules(world: "PokemonSnapWorld"):
     world.set_rule(world.get_location(wdfl(rgnl("Magikarp", LVL_BEACH))), _HAS_APPLE_OR_PESTER)
 
     world.set_rule(world.get_location(mult(rgnl("Pikachu", LVL_BEACH))), _HAS_PESTER)
+
+    world.set_rule(world.get_location("Surfing Pikachu"), _HAS_APPLE)
+    world.set_rule(world.get_location("Pikachu on a Stump"), _HAS_PESTER)
 
 
     # tunnel
@@ -81,6 +82,8 @@ def set_rules(world: "PokemonSnapWorld"):
 
     world.set_rule(world.get_location(rgnl("Magikarp", LVL_VOLCANO)), _HAS_APPLE_OR_PESTER)
     world.set_rule(world.get_location(wdfl(rgnl("Magikarp", LVL_VOLCANO))), _HAS_APPLE_OR_PESTER)
+
+    world.set_rule(world.get_location("Fighting Magmar"), _HAS_APPLE)
 
 
     # river
@@ -128,6 +131,11 @@ def set_rules(world: "PokemonSnapWorld"):
 
     world.set_rule(world.get_location(wdfl(rgnl("Pikachu", LVL_CAVE))), _HAS_APPLE_OR_PESTER)
 
+    world.set_rule(world.get_location("Balloon Pikachu"), _HAS_APPLE_OR_PESTER)
+    world.set_rule(world.get_location("Flying Pikachu"), And(_HAS_FLUTE, _HAS_APPLE_OR_PESTER))
+    world.set_rule(world.get_location("Jigglypuff on Stage"), _HAS_APPLE_OR_PESTER)
+    world.set_rule(world.get_location("Jigglypuff Trio on Stage"), _HAS_APPLE_OR_PESTER)
+
 
     # valley
     world.set_rule(world.get_location(mult("Squirtle")), HasAny(PESTER_BALL, DASH_ENGINE))
@@ -153,6 +161,8 @@ def set_rules(world: "PokemonSnapWorld"):
     world.set_rule(world.get_location(wdfl("Sandslash")), HasAny(PESTER_BALL, DASH_ENGINE))
 
     world.set_rule(world.get_location(mult("Dratini")), _HAS_APPLE_OR_PESTER)
+
+    world.set_rule(world.get_location("Graveler's Group Dance"), _HAS_FLUTE)
 
 
     # rainbow cloud
