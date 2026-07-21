@@ -2,6 +2,7 @@ from enum import IntEnum
 from typing import NamedTuple
 
 from BaseClasses import Location, Region
+from .addresses import COURSE_IDS
 from .items import PokemonSnapItem
 from .constants import *
 
