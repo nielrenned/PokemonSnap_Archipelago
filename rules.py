@@ -58,6 +58,7 @@ def set_rules(world: "PokemonSnapWorld"):
 
     # volcano
     world.set_rule(world.get_location(wdfl("Charmander")), _HAS_APPLE)
+    world.set_rule(world.get_location(mult("Charmander")), _HAS_APPLE)
 
     world.set_rule(world.get_location("Charmeleon"), _HAS_APPLE_OR_PESTER)
     world.set_rule(world.get_location(wdfl("Charmeleon")), _HAS_APPLE_OR_PESTER)
