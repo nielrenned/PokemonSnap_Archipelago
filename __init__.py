@@ -112,6 +112,10 @@ class PokemonSnapWorld(World):
                 self.location_name_to_id[location.name],
                 new_region
             )
+            # Eventually this will need to change depending on chosen victory condition.
+            # But we have no options right now, so :chrisShrug:.
+            if location.name == "Mew":
+                new_location.place_locked_item(self.create_item(VICTORY_ITEM_NAME))
             new_region.locations.append(new_location)
         self.multiworld.regions.append(new_region)
         return new_region
