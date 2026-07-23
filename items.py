@@ -79,8 +79,7 @@ item_name_groups = {}
 item_dictionary = {item_data.name: item_data for item_data in _all_items}
 
 def build_item_pool(world: "PokemonSnapWorld") -> list[PokemonSnapItemData]:
-    item_pool = [item for item in _all_items 
-                 if item.category is PokemonSnapItemCategory.TOOL or item.category is PokemonSnapItemCategory.VICTORY]
+    item_pool = [item for item in _all_items if item.category is PokemonSnapItemCategory.TOOL]
 
     trash_items = [item for item in _all_items if item.category is PokemonSnapItemCategory.TRASH]
     all_areas = [item for item in _all_items if item.category is PokemonSnapItemCategory.AREA]
