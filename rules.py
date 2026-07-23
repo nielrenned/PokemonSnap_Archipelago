@@ -15,7 +15,7 @@ _HAS_APPLE_OR_PESTER = HasAny(PESTER_BALL, POKEMON_FOOD)
 
 
 def set_rules(world: "PokemonSnapWorld"):
-    world.set_completion_rule(CanReachLocation("Mew"))
+    world.set_completion_rule(Has(VICTORY_ITEM_NAME))
 
     for level in [LVL_BEACH, LVL_TUNNEL, LVL_VOLCANO, LVL_RIVER, LVL_CAVE, LVL_VALLEY, LVL_CLOUD]:
         world.set_rule(world.get_entrance(f'{START_GAME} -> {level}'), Has(level))

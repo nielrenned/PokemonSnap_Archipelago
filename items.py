@@ -17,6 +17,7 @@ class PokemonSnapItemCategory(IntEnum):
     SKIP = 3,
     EVENT = 4,
     TRASH = 5
+    VICTORY = 6
 
 
 class PokemonSnapItemData(NamedTuple):
@@ -34,6 +35,7 @@ class PokemonSnapItem(Item):
 
 
 key_item_names = {
+    VICTORY_ITEM_NAME,
     LVL_BEACH, LVL_TUNNEL, LVL_VOLCANO, LVL_RIVER, LVL_CAVE, LVL_VALLEY, LVL_CLOUD,
     POKEMON_FOOD, PESTER_BALL, POKEFLUTE, DASH_ENGINE
 }
@@ -43,6 +45,8 @@ useful_item_names = {
 }
 
 _all_items = [PokemonSnapItemData(row[0], row[1], row[2]) for row in [
+    (VICTORY_ITEM_NAME, VICTORY_ITEM_ID, PokemonSnapItemCategory.VICTORY),
+
     (POKEMON_FOOD, 1000, PokemonSnapItemCategory.TOOL),
     (PESTER_BALL,  1001, PokemonSnapItemCategory.TOOL),
     (POKEFLUTE,    1002, PokemonSnapItemCategory.TOOL),
@@ -74,14 +78,12 @@ item_name_groups = {}
 
 item_dictionary = {item_data.name: item_data for item_data in _all_items}
 
-
 def build_item_pool(world: "PokemonSnapWorld") -> list[PokemonSnapItemData]:
-    item_pool = []
+    item_pool = [item for item in _all_items 
+                 if item.category is PokemonSnapItemCategory.TOOL or item.category is PokemonSnapItemCategory.VICTORY]
 
     trash_items = [item for item in _all_items if item.category is PokemonSnapItemCategory.TRASH]
     all_areas = [item for item in _all_items if item.category is PokemonSnapItemCategory.AREA]
-
-    item_pool.extend(item for item in _all_items if item.category is PokemonSnapItemCategory.TOOL)
 
     for area in all_areas:
         if area.name == world.start_area.name:

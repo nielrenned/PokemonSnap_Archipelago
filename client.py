@@ -204,11 +204,6 @@ class PokemonSnapContext(CommonContext, PJ64Context):
             self.checked_snap_locations |= new_checks
             await self.check_locations(list(new_checks))
 
-        if not self.finished_game and addr.MEW_LOCATION in self.checked_snap_locations:
-            await self.send_msgs([{"cmd": "StatusUpdate", "status": ClientStatus.CLIENT_GOAL}])
-            self.finished_game = True
-            logger.info("Mew photographed - goal complete!")
-
     async def receive_snap_items(self):
         if not self.slot or not await self._expansion_loaded():
             return
@@ -227,8 +222,12 @@ class PokemonSnapContext(CommonContext, PJ64Context):
                 can_use_mask |= 1 << addr.CAN_USE_BITS[name]
             elif name in addr.COURSE_IDS:
                 course_mask |= 1 << addr.COURSE_IDS[name]
-            elif name == addr.FILM_UPGRADE:
+            elif name == FILM_UPGRADE:
                 film = min(film + addr.FILM_STEP, addr.FILM_CAP)
+            elif not self.finished_game and net_item == VICTORY_ITEM_ID:
+                await self.send_msgs([{"cmd": "StatusUpdate", "status": ClientStatus.CLIENT_GOAL}])
+                self.finished_game = True
+                logger.info("Mew photographed - goal complete!")
 
         await pj64_write_memory(self, "u32", addr.CAN_USE_MASK, [can_use_mask])
         await pj64_write_memory(self, "u32", addr.COURSE_UNLOCK_MASK, [course_mask])

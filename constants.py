@@ -28,6 +28,9 @@ POKEMON_FOOD = "Apple"
 POKEFLUTE    = "PokeFlute"
 DASH_ENGINE  = "Dash Engine"
 
+VICTORY_ITEM_NAME = "Picture of the Rare Pokémon Mew"
+VICTORY_ITEM_ID = 10000
+
 # Pokemon Species
 ARCANINE = "Arcanine"
 ARTICUNO = "Articuno"
