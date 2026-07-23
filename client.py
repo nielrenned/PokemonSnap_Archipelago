@@ -215,6 +215,11 @@ class PokemonSnapContext(CommonContext, PJ64Context):
         course_mask = 0
         film = addr.FILM_BASE
         for net_item in self.items_received:
+            if not self.finished_game and net_item.item == VICTORY_ITEM_ID:
+                await self.send_msgs([{"cmd": "StatusUpdate", "status": ClientStatus.CLIENT_GOAL}])
+                self.finished_game = True
+                logger.info("Mew photographed - goal complete!")
+
             name = _code_to_name.get(net_item.item)
             if name is None:
                 continue
@@ -224,10 +229,6 @@ class PokemonSnapContext(CommonContext, PJ64Context):
                 course_mask |= 1 << addr.COURSE_IDS[name]
             elif name == FILM_UPGRADE:
                 film = min(film + addr.FILM_STEP, addr.FILM_CAP)
-            elif not self.finished_game and net_item == VICTORY_ITEM_ID:
-                await self.send_msgs([{"cmd": "StatusUpdate", "status": ClientStatus.CLIENT_GOAL}])
-                self.finished_game = True
-                logger.info("Mew photographed - goal complete!")
 
         await pj64_write_memory(self, "u32", addr.CAN_USE_MASK, [can_use_mask])
         await pj64_write_memory(self, "u32", addr.COURSE_UNLOCK_MASK, [course_mask])
