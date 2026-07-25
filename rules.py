@@ -55,6 +55,8 @@ def set_rules(world: "PokemonSnapWorld"):
     world.set_rule(world.get_location("Zapdos"), HasAll(POKEMON_FOOD, POKEFLUTE))
     world.set_rule(world.get_location(wdfl("Zapdos")), HasAll(POKEMON_FOOD, POKEFLUTE))
 
+    world.set_rule(world.get_location(TUNNEL_SIGN), HasAll(POKEMON_FOOD, POKEFLUTE))
+
 
     # volcano
     world.set_rule(world.get_location(wdfl("Charmander")), _HAS_APPLE)
@@ -86,6 +88,8 @@ def set_rules(world: "PokemonSnapWorld"):
 
     world.set_rule(world.get_location("Fighting Magmar"), _HAS_APPLE)
 
+    world.set_rule(world.get_location(VOLCANO_SIGN), _HAS_PESTER)
+
 
     # river
     world.set_rule(world.get_location("Vileplume"), _HAS_FLUTE)
@@ -111,6 +115,8 @@ def set_rules(world: "PokemonSnapWorld"):
 
     world.set_rule(world.get_location(rgnl("Magikarp", LVL_RIVER)), _HAS_APPLE_OR_PESTER)
     world.set_rule(world.get_location(wdfl(rgnl("Magikarp", LVL_RIVER))), _HAS_APPLE_OR_PESTER)
+
+    world.set_rule(world.get_location(TUNNEL_SIGN), _HAS_FLUTE)
 
 
     # cave

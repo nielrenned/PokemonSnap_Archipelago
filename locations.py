@@ -108,6 +108,8 @@ species_data_tables = {
         PokemonSnapSpeciesData(id=53, name="Lapras", multiple=True),
         PokemonSnapSpeciesData(id=55, name="Eevee"),
         PokemonSnapSpeciesData(id=57, name="Snorlax"),
+
+        PokemonSnapSpeciesData(id=64, name=BEACH_SIGN, multiple=False, wonderful=False),
     ],
     LVL_TUNNEL: [
         PokemonSnapSpeciesData(id=8,  name="Kakuna", multiple=True),
@@ -122,6 +124,8 @@ species_data_tables = {
         PokemonSnapSpeciesData(id=49, name="Electabuzz", multiple=True),
         PokemonSnapSpeciesData(id=51, name="Magikarp"),
         PokemonSnapSpeciesData(id=59, name="Zapdos"),
+
+        PokemonSnapSpeciesData(id=65, name=TUNNEL_SIGN, multiple=False, wonderful=False),
     ],
     LVL_VOLCANO: [
         PokemonSnapSpeciesData(id=2,  name="Charmander", multiple=True),
@@ -134,6 +138,8 @@ species_data_tables = {
         PokemonSnapSpeciesData(id=50, name="Magmar", multiple=True),
         PokemonSnapSpeciesData(id=51, name="Magikarp"),
         PokemonSnapSpeciesData(id=60, name="Moltres"),
+
+        PokemonSnapSpeciesData(id=66, name=VOLCANO_SIGN, multiple=False, wonderful=False),
     ],
     LVL_RIVER: [
         PokemonSnapSpeciesData(id=1,  name="Bulbasaur", multiple=True),
@@ -148,6 +154,8 @@ species_data_tables = {
         PokemonSnapSpeciesData(id=38, name="Cloyster", multiple=True),
         PokemonSnapSpeciesData(id=51, name="Magikarp"),
         PokemonSnapSpeciesData(id=56, name="Porygon", multiple=True),
+
+        PokemonSnapSpeciesData(id=67, name=RIVER_SIGN, multiple=False, wonderful=False),
     ],
     LVL_CAVE: [
         PokemonSnapSpeciesData(id=1,  name="Bulbasaur", multiple=True),
@@ -163,6 +171,8 @@ species_data_tables = {
         PokemonSnapSpeciesData(id=54, name="Ditto", multiple=True),
         PokemonSnapSpeciesData(id=58, name="Articuno"),
         PokemonSnapSpeciesData(id=41, name="Koffing"),
+
+        PokemonSnapSpeciesData(id=68, name=CAVE_SIGN, multiple=False, wonderful=False),
     ],
     LVL_VALLEY: [
         PokemonSnapSpeciesData(id=5,  name="Squirtle", multiple=True),
@@ -178,6 +188,8 @@ species_data_tables = {
         PokemonSnapSpeciesData(id=52, name="Gyarados"),
         PokemonSnapSpeciesData(id=61, name="Dratini", multiple=True),
         PokemonSnapSpeciesData(id=62, name="Dragonite"),
+
+        PokemonSnapSpeciesData(id=69, name=VALLEY_SIGN, multiple=False, wonderful=False),
     ],
     LVL_CLOUD: [
         PokemonSnapSpeciesData(id=63, name="Mew", wonderful=False, multiple=False),

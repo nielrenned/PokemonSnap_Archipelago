@@ -31,6 +31,14 @@ DASH_ENGINE  = "Dash Engine"
 VICTORY_ITEM_NAME = "Picture of the Rare Pokémon Mew"
 VICTORY_ITEM_ID = 10000
 
+# Signs
+BEACH_SIGN   = "Sign: Kingler Rock"
+TUNNEL_SIGN  = "Sign: Pinsir Shadow"
+VOLCANO_SIGN = "Sign: Koffing Smoke"
+RIVER_SIGN   = "Sign: Cubone Tree"
+CAVE_SIGN    = "Sign: Mewtwo Constellation"
+VALLEY_SIGN  = "Sign: Dugtrio Mountain"
+
 # Pokemon Species
 ARCANINE = "Arcanine"
 ARTICUNO = "Articuno"

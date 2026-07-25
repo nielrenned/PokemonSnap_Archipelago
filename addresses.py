@@ -42,8 +42,8 @@ UNPATCHED_AUTH = b"PSAP-UNPATCHED!!"
 # gExpansionMagic reads as 'OKAY' once the expansion segment has booted.
 EXPANSION_LOADED = 0x4F4B4159
 
-# 63 snappable Pokemon; AP location id N maps to save slot (N - 1).
-NUM_SPECIES = 63
+# 63 snappable Pokemon + 6 signs; AP location id N maps to save slot (N - 1).
+NUM_SPECIES = 69
 
 # Photographing Mew (the last species) is the goal.
 MEW_LOCATION = 63
