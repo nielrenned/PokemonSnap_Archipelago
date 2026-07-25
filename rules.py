@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING
 
 from rule_builder.rules import CanReachLocation, Has, HasAll, HasAny, And
+from .items import SIGN_PIC_NAMES
 from .locations import wonderful as wdfl, multiple as mult, regional as rgnl
 from .constants import *
 
@@ -17,8 +18,10 @@ _HAS_APPLE_OR_PESTER = HasAny(PESTER_BALL, POKEMON_FOOD)
 def set_rules(world: "PokemonSnapWorld"):
     world.set_completion_rule(Has(VICTORY_ITEM_NAME))
 
-    for level in [LVL_BEACH, LVL_TUNNEL, LVL_VOLCANO, LVL_RIVER, LVL_CAVE, LVL_VALLEY, LVL_CLOUD]:
+    for level in [LVL_BEACH, LVL_TUNNEL, LVL_VOLCANO, LVL_RIVER, LVL_CAVE, LVL_VALLEY]:
         world.set_rule(world.get_entrance(f'{START_GAME} -> {level}'), Has(level))
+
+    world.set_rule(world.get_entrance(f'{START_GAME} -> {LVL_CLOUD}'), HasAll(*SIGN_PIC_NAMES))
 
 
     # beach
@@ -41,6 +44,8 @@ def set_rules(world: "PokemonSnapWorld"):
     world.set_rule(world.get_location("Surfing Pikachu"), _HAS_APPLE)
     world.set_rule(world.get_location("Pikachu on a Stump"), _HAS_PESTER)
 
+    world.set_rule(world.get_location(BEACH_SIGN), Has(SIGN_DETECTOR))
+
 
     # tunnel
     world.set_rule(world.get_location(mult("Electabuzz")), _HAS_APPLE_OR_PESTER)
@@ -55,7 +60,7 @@ def set_rules(world: "PokemonSnapWorld"):
     world.set_rule(world.get_location("Zapdos"), HasAll(POKEMON_FOOD, POKEFLUTE))
     world.set_rule(world.get_location(wdfl("Zapdos")), HasAll(POKEMON_FOOD, POKEFLUTE))
 
-    world.set_rule(world.get_location(TUNNEL_SIGN), HasAll(POKEMON_FOOD, POKEFLUTE))
+    world.set_rule(world.get_location(TUNNEL_SIGN), HasAll(SIGN_DETECTOR, POKEMON_FOOD, POKEFLUTE))
 
 
     # volcano
@@ -88,7 +93,7 @@ def set_rules(world: "PokemonSnapWorld"):
 
     world.set_rule(world.get_location("Fighting Magmar"), _HAS_APPLE)
 
-    world.set_rule(world.get_location(VOLCANO_SIGN), _HAS_PESTER)
+    world.set_rule(world.get_location(VOLCANO_SIGN), HasAll(SIGN_DETECTOR, PESTER_BALL))
 
 
     # river
@@ -116,7 +121,7 @@ def set_rules(world: "PokemonSnapWorld"):
     world.set_rule(world.get_location(rgnl("Magikarp", LVL_RIVER)), _HAS_APPLE_OR_PESTER)
     world.set_rule(world.get_location(wdfl(rgnl("Magikarp", LVL_RIVER))), _HAS_APPLE_OR_PESTER)
 
-    world.set_rule(world.get_location(TUNNEL_SIGN), _HAS_FLUTE)
+    world.set_rule(world.get_location(RIVER_SIGN), HasAll(SIGN_DETECTOR, POKEFLUTE))
 
 
     # cave
@@ -147,6 +152,8 @@ def set_rules(world: "PokemonSnapWorld"):
     world.set_rule(world.get_location("Jigglypuff on Stage"), _HAS_APPLE_OR_PESTER)
     world.set_rule(world.get_location("Jigglypuff Trio on Stage"), _HAS_APPLE_OR_PESTER)
 
+    world.set_rule(world.get_location(CAVE_SIGN), Has(SIGN_DETECTOR))
+
 
     # valley
     world.set_rule(world.get_location(mult("Squirtle")), HasAny(PESTER_BALL, DASH_ENGINE))
@@ -174,6 +181,8 @@ def set_rules(world: "PokemonSnapWorld"):
     world.set_rule(world.get_location(mult("Dratini")), _HAS_APPLE_OR_PESTER)
 
     world.set_rule(world.get_location("Graveler's Group Dance"), _HAS_FLUTE)
+
+    world.set_rule(world.get_location(VALLEY_SIGN), Has(SIGN_DETECTOR))
 
 
     # rainbow cloud

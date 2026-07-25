@@ -9,7 +9,7 @@ from .pj64_connector import PJ64Context, pj64connect, pj64disconnect, pj64_read_
 from .constants import *
 from .locations import wonderful_id as wdfl_id, multiple_id as mult_id, regional_id as rgnl_id, special_id
 from .update_pj64_config import safe_load_pj64_config
-from .items import item_dictionary
+from .items import item_dictionary, SIGN_PIC_NAMES
 from . import addresses as addr
 
 _code_to_name = {data.ps_code: name for name, data in item_dictionary.items()}
@@ -66,6 +66,8 @@ class PokemonSnapContext(CommonContext, PJ64Context):
     instance_id: float | None
     pj64_sync_task: Optional[asyncio.Task[None]] = None
     pj64_status: str
+    finished_game: bool = False
+    should_play_cloud_dialog: bool = True
 
     def __init__(self, server_address, password, ap_port):
         """
@@ -193,7 +195,6 @@ class PokemonSnapContext(CommonContext, PJ64Context):
             for course_id in courses_seen_ids:
                 location_id = rgnl_id(slot + 1, course_id)
                 if location_id not in self.checked_snap_locations:
-                    logger.info(f'Slot {slot + 1}: {report}')
                     new_checks.add(location_id)
                 if report.technique_score != 0 and wdfl_id(location_id) not in self.checked_snap_locations:
                     new_checks.add(wdfl_id(location_id))
@@ -213,7 +214,9 @@ class PokemonSnapContext(CommonContext, PJ64Context):
 
         can_use_mask = 0
         course_mask = 0
+        dialog_flags = (await pj64_read_memory(self, "u32", addr.DIALOG_FLAGS, 4))[0]
         film = addr.FILM_BASE
+        sign_pic_count = 0
         for net_item in self.items_received:
             if not self.finished_game and net_item.item == VICTORY_ITEM_ID:
                 await self.send_msgs([{"cmd": "StatusUpdate", "status": ClientStatus.CLIENT_GOAL}])
@@ -229,9 +232,19 @@ class PokemonSnapContext(CommonContext, PJ64Context):
                 course_mask |= 1 << addr.COURSE_IDS[name]
             elif name == FILM_UPGRADE:
                 film = min(film + addr.FILM_STEP, addr.FILM_CAP)
+            elif name in SIGN_PIC_NAMES:
+                sign_pic_count += 1
+            
+        if sign_pic_count >= 6:
+            course_mask |= 1 << addr.COURSE_IDS[LVL_CLOUD]
+            if self.should_play_cloud_dialog:
+                self.should_play_cloud_dialog = False
+                dialog_flags |= 1
+
 
         await pj64_write_memory(self, "u32", addr.CAN_USE_MASK, [can_use_mask])
         await pj64_write_memory(self, "u32", addr.COURSE_UNLOCK_MASK, [course_mask])
+        await pj64_write_memory(self, "u32", addr.DIALOG_FLAGS, [dialog_flags])
         await pj64_write_memory(self, "u32", addr.MAX_FILM, [film])
 
     async def wait_for_next_loop(self, time_to_wait: float):

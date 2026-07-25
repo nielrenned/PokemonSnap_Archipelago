@@ -18,6 +18,7 @@ class PokemonSnapItemCategory(IntEnum):
     EVENT = 4,
     TRASH = 5
     VICTORY = 6
+    POKEMON_PIC = 7
 
 
 class PokemonSnapItemData(NamedTuple):
@@ -37,20 +38,35 @@ class PokemonSnapItem(Item):
 key_item_names = {
     VICTORY_ITEM_NAME,
     LVL_BEACH, LVL_TUNNEL, LVL_VOLCANO, LVL_RIVER, LVL_CAVE, LVL_VALLEY, LVL_CLOUD,
-    POKEMON_FOOD, PESTER_BALL, POKEFLUTE, DASH_ENGINE
+    POKEMON_FOOD, PESTER_BALL, POKEFLUTE, DASH_ENGINE, SIGN_DETECTOR
 }
 
 useful_item_names = {
     FILM_UPGRADE
 }
 
+pokemon_pics = [
+    PokemonSnapItemData(f"A Picture of {name}", 5000 + i, PokemonSnapItemCategory.POKEMON_PIC)
+    for i, name in enumerate(ALL_POKEMON)
+]
+
+sign_pics = [
+    PokemonSnapItemData(f"A Picture of {name}", 6000 + i, PokemonSnapItemCategory.MISC)
+    for i, name in enumerate(ALL_SIGNS)
+]
+
+SIGN_PIC_NAMES = {item.name for item in sign_pics}
+
+key_item_names |= SIGN_PIC_NAMES
+
 _all_items = [PokemonSnapItemData(row[0], row[1], row[2]) for row in [
     (VICTORY_ITEM_NAME, VICTORY_ITEM_ID, PokemonSnapItemCategory.VICTORY),
 
-    (POKEMON_FOOD, 1000, PokemonSnapItemCategory.TOOL),
-    (PESTER_BALL,  1001, PokemonSnapItemCategory.TOOL),
-    (POKEFLUTE,    1002, PokemonSnapItemCategory.TOOL),
-    (DASH_ENGINE,  1003, PokemonSnapItemCategory.TOOL),
+    (POKEMON_FOOD,  1000, PokemonSnapItemCategory.TOOL),
+    (PESTER_BALL,   1001, PokemonSnapItemCategory.TOOL),
+    (POKEFLUTE,     1002, PokemonSnapItemCategory.TOOL),
+    (DASH_ENGINE,   1003, PokemonSnapItemCategory.TOOL),
+    (SIGN_DETECTOR, 1004, PokemonSnapItemCategory.TOOL),
 
     (LVL_BEACH,   2000, PokemonSnapItemCategory.AREA),
     (LVL_TUNNEL,  2001, PokemonSnapItemCategory.AREA),
@@ -58,9 +74,8 @@ _all_items = [PokemonSnapItemData(row[0], row[1], row[2]) for row in [
     (LVL_RIVER,   2003, PokemonSnapItemCategory.AREA),
     (LVL_CAVE,    2004, PokemonSnapItemCategory.AREA),
     (LVL_VALLEY,  2005, PokemonSnapItemCategory.AREA),
-    (LVL_CLOUD,   2006, PokemonSnapItemCategory.AREA),
 
-    (FILM_UPGRADE, 3000, PokemonSnapItemCategory.MISC),
+    (FILM_UPGRADE,     3000, PokemonSnapItemCategory.MISC),
 
     ("ArsonAssassin's pokemon card collection", 4000, PokemonSnapItemCategory.TRASH),
     ("A used reel of film", 4001, PokemonSnapItemCategory.TRASH),
@@ -70,7 +85,7 @@ _all_items = [PokemonSnapItemData(row[0], row[1], row[2]) for row in [
     ("A burger king voucher", 4005, PokemonSnapItemCategory.TRASH),
     ("A super close-up of a thumb", 4006, PokemonSnapItemCategory.TRASH),
     # TODO: More filler items
-]]
+]] + pokemon_pics + sign_pics
 
 filler_item_names = [item.name for item in _all_items if item.category is PokemonSnapItemCategory.TRASH]
 
@@ -89,6 +104,9 @@ def build_item_pool(world: "PokemonSnapWorld") -> list[PokemonSnapItemData]:
             continue
         else:
             item_pool.append(area)
+
+    item_pool.extend(pokemon_pics)
+    item_pool.extend(sign_pics)
 
     # Nine +5 film upgrades take the cap from 15 up to the max of 60.
     for _ in range(9):
