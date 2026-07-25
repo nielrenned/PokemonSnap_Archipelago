@@ -91,6 +91,10 @@ def set_rules(world: "PokemonSnapWorld"):
     world.set_rule(world.get_location("Vileplume"), _HAS_FLUTE)
     world.set_rule(world.get_location(wdfl("Vileplume")), _HAS_FLUTE)
 
+    # TODO: This is technically possible without pester, but is hard
+    world.set_rule(world.get_location(wdfl("Metapod")), _HAS_PESTER)
+    world.set_rule(world.get_location(mult("Metapod")), _HAS_PESTER)
+
     world.set_rule(world.get_location(mult("Psyduck")), _HAS_APPLE_OR_PESTER)
 
     world.set_rule(world.get_location(mult("Poliwag")), _HAS_PESTER)
