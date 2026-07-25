@@ -12,8 +12,6 @@ jobs:
         uses: actions/checkout@v6
         with:
           path: pokemon_snap
-      - name: List Initial Files
-        run: ls -la pokemon_snap
       - name: Remove Excess Files
         run: |
           cd pokemon_snap
@@ -22,14 +20,8 @@ jobs:
           rm -rf test
           rm -rf .git
           rm -rf .gitignore
-      - name: List Remaining Files
-        run: ls -la pokemon_snap
       - name: Zip apworld
         run: zip -r pokemon_snap.apworld pokemon_snap
-      - name: List Files in working-dir With Zip
-        run: ls -la
-      - name: List Files in Zip
-        run: unzip -l pokemon_snap.apworld
       - name: Attach apworld to release
         uses: softprops/action-gh-release@v3
         with:
