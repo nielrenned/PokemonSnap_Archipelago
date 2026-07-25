@@ -1,8 +1,6 @@
 name: Build AP World
 
-on:
-  release:
-    types: [published]
+on: push
 
 jobs:
   build:
@@ -13,7 +11,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
       - name: List Initial Files
-        run: ls
+        run: ls -la
       - name: Remove Excess Files
         run: |
           rm -rf .github
@@ -22,14 +20,17 @@ jobs:
           rm -rf .git
           rm -rf .gitignore
       - name: List Remaining Files
-        run: ls
+        run: ls -la
       - name: Zip apworld
         run: |
           cd ..
+          ls -la
           zip -r pokemon_snap.apworld ${{ github.event.repository.name }}
           mv pokemon_snap.apworld ${{ github.event.repository.name }}
       - name: List Files With Zip
-        run: ls
+        run: ls -la
+      - name: List Files in Zip
+        run: unzip -l pokemon_snap.apworld
       - name: Attach apworld to release
         uses: softprops/action-gh-release@v3
         with:
