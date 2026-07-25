@@ -38,19 +38,9 @@ Run the ArchipelagoLauncher.exe from your Archipelago install and click `Generat
 This will produce a `/Players/Templates` folder in your Archipelago install, which contains default config files for 
 every game in your `custom_worlds` and `lib/worlds` folder. You can manually edit the config file using a text editor of your choice.
 
-Alternately, the [Player Settings](../player-settings) page on the website allows you to configure
-your personal settings and export a config file from them.
-
-### Verifying your config file
-
-If you would like to validate your config file to make sure it works, you may do so on the
-[YAML Validator](/mysterycheck) page.
-
 ## Generating a Single-Player Game
 
 1. After modifying your yaml, place it into your Archipelago/player folder
-   - Alternately, navigate to the [Player Settings](../player-settings) page, configure your options,
-      and click the "Generate Game" button.
 2. Open the Archipelago Launcher and click "Generate". This will create a zip file in Archipelago/output
    - You will need to open this .zip to get your `.apsnap` patch file if you are not using the Archipelago website
 3. Navigate to the Archipelago website and go to the Host Game page (top right menu)

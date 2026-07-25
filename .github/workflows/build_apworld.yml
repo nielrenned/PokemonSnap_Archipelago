@@ -12,10 +12,18 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
-      - name: Build
+        with:
+          path: pokemon_snap
+      - name: Remove Excess Files
         run: |
-          cd apworld
-          zip -r ../pokemon_snap.apworld pokemon_snap
+          cd pokemon_snap
+          rm -rf .git
+          rm -rf .gitignore
+          rm -rf .github
+          rm -rf docs
+          rm -rf test
+      - name: Zip apworld
+        run: zip -r pokemon_snap.apworld pokemon_snap
       - name: Attach apworld to release
         uses: softprops/action-gh-release@v3
         with:
