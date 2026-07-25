@@ -15,7 +15,13 @@ jobs:
         with:
           path: pokemon_snap
       - name: Remove Excess Files
-        run: rm -rf pokemon_snap/.git pokemon_snap/.gitignore pokemon_snap/.github pokemon_snap/docs pokemon_snap/test
+        run: |
+          cd pokemon_snap
+          rm -rf .git
+          rm -rf .gitignore
+          rm -rf .github
+          rm -rf docs
+          rm -rf test
       - name: Zip apworld
         run: zip -r pokemon_snap.apworld pokemon_snap
       - name: Attach apworld to release
