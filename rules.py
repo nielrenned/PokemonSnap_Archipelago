@@ -15,7 +15,7 @@ _HAS_APPLE_OR_PESTER = HasAny(PESTER_BALL, POKEMON_FOOD)
 
 
 def set_rules(world: "PokemonSnapWorld"):
-    world.set_completion_rule(CanReachLocation("Mew"))
+    world.set_completion_rule(Has(VICTORY_ITEM_NAME))
 
     for level in [LVL_BEACH, LVL_TUNNEL, LVL_VOLCANO, LVL_RIVER, LVL_CAVE, LVL_VALLEY, LVL_CLOUD]:
         world.set_rule(world.get_entrance(f'{START_GAME} -> {level}'), Has(level))
@@ -58,6 +58,7 @@ def set_rules(world: "PokemonSnapWorld"):
 
     # volcano
     world.set_rule(world.get_location(wdfl("Charmander")), _HAS_APPLE)
+    world.set_rule(world.get_location(mult("Charmander")), _HAS_APPLE)
 
     world.set_rule(world.get_location("Charmeleon"), _HAS_APPLE_OR_PESTER)
     world.set_rule(world.get_location(wdfl("Charmeleon")), _HAS_APPLE_OR_PESTER)
@@ -89,6 +90,10 @@ def set_rules(world: "PokemonSnapWorld"):
     # river
     world.set_rule(world.get_location("Vileplume"), _HAS_FLUTE)
     world.set_rule(world.get_location(wdfl("Vileplume")), _HAS_FLUTE)
+
+    # TODO: This is technically possible without pester, but is hard
+    world.set_rule(world.get_location(wdfl("Metapod")), _HAS_PESTER)
+    world.set_rule(world.get_location(mult("Metapod")), _HAS_PESTER)
 
     world.set_rule(world.get_location(mult("Psyduck")), _HAS_APPLE_OR_PESTER)
 
