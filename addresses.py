@@ -28,6 +28,7 @@ CAN_USE_OVERRIDE = _addr("symbols", "gCanUseOverride")
 CAN_USE_MASK = _addr("symbols", "gCanUseMask")
 COURSE_OVERRIDE = _addr("symbols", "gCourseOverride")
 COURSE_UNLOCK_MASK = _addr("symbols", "gCourseUnlockMask")
+DIALOG_FLAGS = _addr("symbols", "gDialogFlags")
 
 # Vanilla save block (read-only)
 SAVE_BASE = _addr("save", "saveBase")
@@ -42,18 +43,19 @@ UNPATCHED_AUTH = b"PSAP-UNPATCHED!!"
 # gExpansionMagic reads as 'OKAY' once the expansion segment has booted.
 EXPANSION_LOADED = 0x4F4B4159
 
-# 63 snappable Pokemon; AP location id N maps to save slot (N - 1).
-NUM_SPECIES = 63
+# 63 snappable Pokemon + 6 signs; AP location id N maps to save slot (N - 1).
+NUM_SPECIES = 69
 
 # Photographing Mew (the last species) is the goal.
 MEW_LOCATION = 63
 
 # Item name -> bit in gCanUseMask.
 CAN_USE_BITS = {
-    POKEMON_FOOD: 0,
-    PESTER_BALL:  1,
-    POKEFLUTE:    2,
-    DASH_ENGINE:  3,
+    POKEMON_FOOD:  0,
+    PESTER_BALL:   1,
+    POKEFLUTE:     2,
+    DASH_ENGINE:   3,
+    SIGN_DETECTOR: 4,
 }
 
 # Item name -> bit in gCourseUnlockMask.
