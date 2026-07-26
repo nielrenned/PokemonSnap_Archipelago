@@ -5,7 +5,7 @@ from Options import (ExcludeLocations, PerGameCommonOptions, Choice)
 class RNGLocations(ExcludeLocations):
     """These photos rely on RNG to capture."""
     display_name = "RNG Required Photos"
-    default = frozenset({"Zubat (Cave): Multiple", "Cloyster: Multiple", "Staryu: Multiple","Dratini: Multiple","Magikarp (Valley): Multiple", "Arcanine: Multiple"})
+    default = frozenset({"Zubat (Cave): Multiple", "Cloyster: Multiple", "Staryu: Multiple", "Starmie: Multiple","Dratini: Multiple","Magikarp (Valley): Multiple", "Arcanine: Multiple"})
 
 class RNGLocationBehaviorOption(Choice):
     """How to choose items for photos marked as requiring RNG in Pokemon Snap.
