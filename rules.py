@@ -106,6 +106,7 @@ def set_rules(world: "PokemonSnapWorld"):
 
     world.set_rule(world.get_location(mult("Psyduck")), _HAS_APPLE_OR_PESTER)
 
+    world.set_rule(world.get_location(wdfl("Poliwag")), _HAS_PESTER)
     world.set_rule(world.get_location(mult("Poliwag")), _HAS_PESTER)
 
     world.set_rule(world.get_location("Slowbro"), _HAS_APPLE)
@@ -120,6 +121,9 @@ def set_rules(world: "PokemonSnapWorld"):
 
     world.set_rule(world.get_location("Magikarp (River)"), _HAS_APPLE_OR_PESTER)
     world.set_rule(world.get_location(wdfl("Magikarp (River)")), _HAS_APPLE_OR_PESTER)
+
+    world.set_rule(world.get_location(wdfl("Pikachu (River)")), _HAS_APPLE_OR_PESTER)
+    world.set_rule(world.get_location("Speed Pikachu"), _HAS_APPLE_OR_PESTER)
 
     world.set_rule(world.get_location(RIVER_SIGN), HasAll(SIGN_DETECTOR, POKEFLUTE))
 
