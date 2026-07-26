@@ -55,34 +55,6 @@ sign_pics = [
     for i, name in enumerate(ALL_SIGNS)
 ]
 
-ORIGINAL_151 = ["Bulbasaur", "Ivysaur", "Venusaur", "Charmander", "Charmeleon", "Charizard", "Squirtle",
-                "Wartortle", "Blastoise", "Caterpie", "Metapod", "Butterfree", "Weedle", "Kakuna",
-                "Beedrill", "Pidgey", "Pidgeotto", "Pidgeot", "Rattata", "Raticate", "Spearow", "Fearow",
-                "Ekans", "Arbok", "Pikachu", "Raichu", "Sandshrew", "Sandslash", "Nidoran", "Nidorina",
-                "Nidoqueen", "Nidorino", "Nidoking", "Clefairy", "Clefable", "Vulpix", "Ninetales",
-                "Jigglypuff", "Wigglytuff", "Zubat", "Golbat", "Oddish", "Gloom", "Vileplume", "Paras",
-                "Parasect", "Venonat", "Venomoth", "Diglett", "Dugtrio", "Meowth", "Persian", "Psyduck",
-                "Golduck", "Mankey", "Primeape", "Growlithe", "Arcanine", "Poliwag", "Poliwhirl",
-                "Poliwrath", "Abra", "Kadabra", "Alakazam", "Machop", "Machoke", "Machamp", "Bellsprout",
-                "Weepinbell", "Victreebel", "Tentacool", "Tentacruel", "Geodude", "Graveler", "Golem",
-                "Ponyta", "Rapidash", "Slowpoke", "Slowbro", "Magnemite", "Magneton", "Farfetch’d",
-                "Doduo", "Dodrio", "Seel", "Dewgong", "Grimer", "Muk", "Shellder", "Cloyster", "Gastly",
-                "Haunter", "Gengar", "Onix", "Drowzee", "Hypno", "Krabby", "Kingler", "Voltorb",
-                "Electrode", "Exeggcute", "Exeggutor", "Cubone", "Marowak", "Hitmonlee", "Hitmonchan",
-                "Lickitung", "Koffing", "Weezing", "Rhyhorn", "Rhydon", "Chansey", "Tangela",
-                "Kangaskhan", "Horsea", "Seadra", "Goldeen", "Seaking", "Staryu", "Starmie",
-                "Mr.Mime", "Scyther", "Jynx", "Electabuzz", "Magmar", "Pinsir", "Tauros", "Magikarp",
-                "Gyarados", "Lapras", "Ditto", "Eevee", "Vaporeon", "Jolteon", "Flareon", "Porygon",
-                "Omanyte", "Omastar", "Kabuto", "Kabutops", "Aerodactyl", "Snorlax", "Articuno",
-                "Zapdos", "Moltres", "Dratini", "Dragonair", "Dragonite", "Mewtwo", "Mew"]
-
-TRASH_PIC_ADJECTIVES = ["Scuffed", "Tarnished", "Torn", "Burned", "Waterlogged", "Damp", "Dusty", "Musty", "Singed", "Faded", "Pretty Bad"]
-
-trash_pokemon_pics = [
-    PokemonSnapItemData(f"A {random.choice(TRASH_PIC_ADJECTIVES)} Picture of {pokemon_name}", 7000 + i, PokemonSnapItemCategory.TRASH)
-    for i, pokemon_name in enumerate(ORIGINAL_151)
-]
-
 SIGN_PIC_NAMES = {item.name for item in sign_pics}
 
 key_item_names |= SIGN_PIC_NAMES
@@ -112,9 +84,8 @@ _all_items = [PokemonSnapItemData(row[0], row[1], row[2]) for row in [
     ("Several decades worth of nostalgia", 4004, PokemonSnapItemCategory.TRASH),
     ("A burger king voucher", 4005, PokemonSnapItemCategory.TRASH),
     ("A super close-up of a thumb", 4006, PokemonSnapItemCategory.TRASH),
-    ("A Futuristic Picture of Mareep", 4007, PokemonSnapItemCategory.TRASH),
-    
-]] + pokemon_pics + sign_pics + trash_pokemon_pics
+    # TODO: More filler items
+]] + pokemon_pics + sign_pics
 
 filler_item_names = [item.name for item in _all_items if item.category is PokemonSnapItemCategory.TRASH]
 
@@ -141,19 +112,9 @@ def build_item_pool(world: "PokemonSnapWorld") -> list[PokemonSnapItemData]:
     for _ in range(9):
         item_pool.append(item_dictionary[FILM_UPGRADE])
 
-    # Add trash items - start with as many trash_pokemon_pics as possible, then fill the rest with trash_items
-    remaining_items = len(world.multiworld.get_unfilled_locations(world.player)) - len(item_pool)
-    if remaining_items < len(trash_pokemon_pics):
-        random.shuffle(trash_pokemon_pics)
-        for i in range(len(world.multiworld.get_unfilled_locations(world.player)) - len(item_pool)):
-            random_trash_item = trash_pokemon_pics[i]
-            item_pool.append(random_trash_item)
-    else:
-        item_pool.append(trash_pokemon_pics)
-        for i in range(len(world.multiworld.get_unfilled_locations(world.player)) - len(item_pool)):
-            random_trash_item = random.choice(trash_items)
-            item_pool.append(random_trash_item)
+    for i in range(len(world.multiworld.get_unfilled_locations(world.player)) - len(item_pool)):
+        random_trash_item = random.choice(trash_items)
+        item_pool.append(random_trash_item)
 
     random.shuffle(item_pool)
     return item_pool
-
