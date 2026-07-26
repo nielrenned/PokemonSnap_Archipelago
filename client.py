@@ -7,7 +7,7 @@ from NetUtils import ClientStatus
 
 from .pj64_connector import PJ64Context, pj64connect, pj64disconnect, pj64_read_memory, pj64_write_memory
 from .constants import *
-from .locations import wonderful_id as wdfl_id, multiple_id as mult_id, regional_id as rgnl_id, special_id
+from .locations import wonderful_id as wdfl_id, multiple_id as mult_id, special_id
 from .update_pj64_config import safe_load_pj64_config
 from .items import item_dictionary, SIGN_PIC_NAMES
 from . import addresses as addr
@@ -29,8 +29,6 @@ class PokemonSnapReportScore(NamedTuple):
     technique_score: int
     same_pokemon_score: int
     special_pose_bits: int
-    courses_seen_bits: int # bit field containing what courses photos have been taken in
-    unused: int
 
     def poses(self) -> list[int]:
         pose_list = []
@@ -177,9 +175,9 @@ class PokemonSnapContext(CommonContext, PJ64Context):
             return
 
         scores = []
-        raw_scores = await pj64_read_memory(self, "u16", addr.SPECIES_SCORES, addr.NUM_SPECIES * 8 * 2)
-        for i in range(0, addr.NUM_SPECIES * 8, 8):
-            report_score = PokemonSnapReportScore(*raw_scores[i:i+8])
+        raw_scores = await pj64_read_memory(self, "u16", addr.SPECIES_SCORES, addr.NUM_SPECIES_SCORES * 6 * 2)
+        for i in range(0, addr.NUM_SPECIES_SCORES * 6, 6):
+            report_score = PokemonSnapReportScore(*raw_scores[i:i+6])
             scores.append(report_score)
 
         new_checks = set()
@@ -191,15 +189,16 @@ class PokemonSnapContext(CommonContext, PJ64Context):
                 if special_id(pose_id) not in self.checked_snap_locations:
                     new_checks.add(special_id(pose_id))
 
-            courses_seen_ids = [i for i in range(7) if ((1 << i) & report.courses_seen_bits) != 0]
-            for course_id in courses_seen_ids:
-                location_id = rgnl_id(slot + 1, course_id)
-                if location_id not in self.checked_snap_locations:
-                    new_checks.add(location_id)
-                if report.technique_score != 0 and wdfl_id(location_id) not in self.checked_snap_locations:
-                    new_checks.add(wdfl_id(location_id))
-                if report.same_pokemon_score != 0 and mult_id(location_id) not in self.checked_snap_locations:
-                    new_checks.add(mult_id(location_id))
+            location_id = slot + 1
+            if location_id not in self.checked_snap_locations:
+                new_checks.add(location_id)
+            if report.technique_score != 0 and wdfl_id(location_id) not in self.checked_snap_locations:
+                new_checks.add(wdfl_id(location_id))
+            if report.same_pokemon_score != 0 and mult_id(location_id) not in self.checked_snap_locations:
+                new_checks.add(mult_id(location_id))
+
+        sign_flags = await pj64_read_memory(self, "u8", addr.SIGN_FLAGS, addr.NUM_SIGNS)
+        new_checks |= {addr.NUM_SPECIES_SCORES + i + 1 for i, f in enumerate(sign_flags) if f != 0}
 
         if new_checks:
             self.checked_snap_locations |= new_checks

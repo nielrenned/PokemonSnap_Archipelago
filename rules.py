@@ -1,8 +1,8 @@
 from typing import TYPE_CHECKING
 
-from rule_builder.rules import CanReachLocation, Has, HasAll, HasAny, And
+from rule_builder.rules import Has, HasAll, HasAny, And
 from .items import SIGN_PIC_NAMES
-from .locations import wonderful as wdfl, multiple as mult, regional as rgnl
+from .locations import wonderful as wdfl, multiple as mult
 from .constants import *
 
 if TYPE_CHECKING:
@@ -36,10 +36,10 @@ def set_rules(world: "PokemonSnapWorld"):
 
     world.set_rule(world.get_location(wdfl("Kangaskhan")), _HAS_APPLE_OR_PESTER)
 
-    world.set_rule(world.get_location(rgnl("Magikarp", LVL_BEACH)), _HAS_APPLE_OR_PESTER)
-    world.set_rule(world.get_location(wdfl(rgnl("Magikarp", LVL_BEACH))), _HAS_APPLE_OR_PESTER)
+    world.set_rule(world.get_location("Magikarp (Beach)"), _HAS_APPLE_OR_PESTER)
+    world.set_rule(world.get_location(wdfl("Magikarp (Beach)")), _HAS_APPLE_OR_PESTER)
 
-    world.set_rule(world.get_location(mult(rgnl("Pikachu", LVL_BEACH))), _HAS_PESTER)
+    world.set_rule(world.get_location(mult("Pikachu (Beach)")), _HAS_PESTER)
 
     world.set_rule(world.get_location("Surfing Pikachu"), _HAS_APPLE)
     world.set_rule(world.get_location("Pikachu on a Stump"), _HAS_PESTER)
@@ -88,8 +88,8 @@ def set_rules(world: "PokemonSnapWorld"):
 
     world.set_rule(world.get_location(mult("Magmar")), _HAS_APPLE_OR_PESTER)
 
-    world.set_rule(world.get_location(rgnl("Magikarp", LVL_VOLCANO)), _HAS_APPLE_OR_PESTER)
-    world.set_rule(world.get_location(wdfl(rgnl("Magikarp", LVL_VOLCANO))), _HAS_APPLE_OR_PESTER)
+    world.set_rule(world.get_location("Magikarp (Volcano)"), _HAS_APPLE_OR_PESTER)
+    world.set_rule(world.get_location(wdfl("Magikarp (Volcano)")), _HAS_APPLE_OR_PESTER)
 
     world.set_rule(world.get_location("Fighting Magmar"), _HAS_APPLE)
 
@@ -115,11 +115,11 @@ def set_rules(world: "PokemonSnapWorld"):
     world.set_rule(world.get_location(wdfl("Porygon")), _HAS_PESTER)
     world.set_rule(world.get_location(mult("Porygon")), HasAll(PESTER_BALL, POKEMON_FOOD))
 
-    world.set_rule(world.get_location(wdfl(rgnl("Bulbasaur", LVL_RIVER))), _HAS_APPLE_OR_PESTER)
-    world.set_rule(world.get_location(mult(rgnl("Bulbasaur", LVL_RIVER))), _HAS_APPLE_OR_PESTER)
+    world.set_rule(world.get_location(wdfl("Bulbasaur (River)")), _HAS_APPLE_OR_PESTER)
+    world.set_rule(world.get_location(mult("Bulbasaur (River)")), _HAS_APPLE_OR_PESTER)
 
-    world.set_rule(world.get_location(rgnl("Magikarp", LVL_RIVER)), _HAS_APPLE_OR_PESTER)
-    world.set_rule(world.get_location(wdfl(rgnl("Magikarp", LVL_RIVER))), _HAS_APPLE_OR_PESTER)
+    world.set_rule(world.get_location("Magikarp (River)"), _HAS_APPLE_OR_PESTER)
+    world.set_rule(world.get_location(wdfl("Magikarp (River)")), _HAS_APPLE_OR_PESTER)
 
     world.set_rule(world.get_location(RIVER_SIGN), HasAll(SIGN_DETECTOR, POKEFLUTE))
 
@@ -142,10 +142,10 @@ def set_rules(world: "PokemonSnapWorld"):
 
     world.set_rule(world.get_location(mult("Jynx")), _HAS_FLUTE)
 
-    world.set_rule(world.get_location(rgnl("Magikarp", LVL_CAVE)), _HAS_APPLE_OR_PESTER)
-    world.set_rule(world.get_location(wdfl(rgnl("Magikarp", LVL_CAVE))), _HAS_APPLE_OR_PESTER)
+    world.set_rule(world.get_location("Magikarp (Cave)"), _HAS_APPLE_OR_PESTER)
+    world.set_rule(world.get_location(wdfl("Magikarp (Cave)")), _HAS_APPLE_OR_PESTER)
 
-    world.set_rule(world.get_location(wdfl(rgnl("Pikachu", LVL_CAVE))), _HAS_APPLE_OR_PESTER)
+    world.set_rule(world.get_location(wdfl("Pikachu (Cave)")), _HAS_APPLE_OR_PESTER)
 
     world.set_rule(world.get_location("Balloon Pikachu"), _HAS_APPLE_OR_PESTER)
     world.set_rule(world.get_location("Flying Pikachu"), And(_HAS_FLUTE, _HAS_APPLE_OR_PESTER))
@@ -162,9 +162,9 @@ def set_rules(world: "PokemonSnapWorld"):
     world.set_rule(world.get_location(wdfl("Goldeen")), _HAS_APPLE_OR_PESTER)
 
     # TODO: Ali's logic claims we can get Valley karp without Apple/Pester, but I couldn't do it
-    world.set_rule(world.get_location(rgnl("Magikarp", LVL_VALLEY)), _HAS_APPLE_OR_PESTER)
-    world.set_rule(world.get_location(wdfl(rgnl("Magikarp", LVL_VALLEY))), _HAS_APPLE_OR_PESTER)
-    world.set_rule(world.get_location(mult(rgnl("Magikarp", LVL_VALLEY))), _HAS_APPLE_OR_PESTER)
+    world.set_rule(world.get_location("Magikarp (Valley)"), _HAS_APPLE_OR_PESTER)
+    world.set_rule(world.get_location(wdfl("Magikarp (Valley)")), _HAS_APPLE_OR_PESTER)
+    world.set_rule(world.get_location(mult("Magikarp (Valley)")), _HAS_APPLE_OR_PESTER)
 
     world.set_rule(world.get_location("Gyarados"), _HAS_PESTER)
     world.set_rule(world.get_location(wdfl("Gyarados")), _HAS_PESTER)
