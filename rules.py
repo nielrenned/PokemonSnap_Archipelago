@@ -12,6 +12,7 @@ if TYPE_CHECKING:
 _HAS_PESTER = Has(PESTER_BALL)
 _HAS_APPLE = Has(POKEMON_FOOD)
 _HAS_FLUTE = Has(POKEFLUTE)
+_HAS_DASH = Has(DASH_ENGINE)
 _HAS_APPLE_OR_PESTER = HasAny(PESTER_BALL, POKEMON_FOOD)
 
 
@@ -97,6 +98,10 @@ def set_rules(world: "PokemonSnapWorld"):
 
 
     # river
+    # TODO: This is technically possible without the dash engine, but is rng based
+    world.set_rule(world.get_location(wdfl("Shellder")), _HAS_DASH)
+    world.set_rule(world.get_location(mult("Shellder")), _HAS_DASH)
+
     world.set_rule(world.get_location("Vileplume"), _HAS_FLUTE)
     world.set_rule(world.get_location(wdfl("Vileplume")), _HAS_FLUTE)
 
