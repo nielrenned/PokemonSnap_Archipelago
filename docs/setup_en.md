@@ -70,7 +70,7 @@ the host will provide you with either a link to download your patch file, or wit
 
 Put your patch file on your desktop or somewhere convenient. Open the ArchipelagoLauncher.exe and click `Open Patch`. 
 This should automatically launch the client, and will also create your ISO in the same place as your patch file. On first time patching, you will be prompted 
-to locate your Pokemon Snap USA Rom
+to locate your Pokemon Snap USA ROM and Project 64 installation.
 
 ### Connect to the client
 
@@ -83,5 +83,7 @@ the background. If it did not, please check the log in your Archipelaog/logs fol
 3. Once you have loaded into the game, the client should log that PJ64 has been connected. Click the `Connect` button
 at the top of the Pokemon Snap Client. If the port number is correct, you are now connected and ready to play!
    - Unfortunately, due to the nature of some checks, you must be connected to a server while playing
+4. Start the connection script in Project 64: Click `Debugger -> Scripts...`, highlight the `ap_snap_pj64_adapter_30.js` script, and click `Run`
+   - If you see "Unable to connect to Project 64. Attempting again in 5 seconds...", do this step.
 
 ### Play the game
