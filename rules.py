@@ -166,6 +166,10 @@ def set_rules(world: "PokemonSnapWorld"):
     world.set_rule(world.get_location(wdfl("Magikarp (Valley)")), _HAS_APPLE_OR_PESTER)
     world.set_rule(world.get_location(mult("Magikarp (Valley)")), _HAS_APPLE_OR_PESTER)
 
+    # TODO: Technically these photos are possible at the bottom of the waterfall, but I couldn't do it
+    world.set_rule(world.get_location(wdfl("Graveler")), HasAny(PESTER_BALL, POKEFLUTE))
+    world.set_rule(world.get_location(mult("Graveler")), _HAS_FLUTE)
+
     world.set_rule(world.get_location("Gyarados"), _HAS_PESTER)
     world.set_rule(world.get_location(wdfl("Gyarados")), _HAS_PESTER)
 
