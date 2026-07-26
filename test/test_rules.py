@@ -1,7 +1,7 @@
 
 from BaseClasses import CollectionState
 from .bases import PokemonSnapTestBase
-from ..locations import POKEMON_IN_MULTIPLE_LEVELS, species_data_tables, regional, wonderful, multiple
+from ..locations import species_data_tables, wonderful, multiple
 from ..items import PokemonSnapItemCategory, item_dictionary
 from itertools import chain, combinations
 
@@ -13,17 +13,13 @@ class TestRuleInheritance(PokemonSnapTestBase):
 
     def test_multiple_implies_wonderful(self):
         '''Professor Oak will not give you the multiple species bonus if the picture is not Wonderful'''
-        for region, species_data_list in species_data_tables.items():
+        for _, species_data_list in species_data_tables.items():
             for species_data in species_data_list:
                 if not (species_data.multiple and species_data.wonderful):
                     continue
 
-                species_name = species_data.name
-                if species_name in POKEMON_IN_MULTIPLE_LEVELS:
-                    species_name = regional(species_name, region)
-
                 with self.subTest(name=species_data.name):
-                    self._assert_multiple_implies_wonderful(species_name)
+                    self._assert_multiple_implies_wonderful(species_data.name)
     
     def _assert_multiple_implies_wonderful(self, species_name):
         mult_rule = self.multiworld.get_location(multiple(species_name), self.player).access_rule

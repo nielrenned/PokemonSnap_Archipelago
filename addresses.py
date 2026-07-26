@@ -35,6 +35,7 @@ SAVE_BASE = _addr("save", "saveBase")
 RANK = _addr("save", "rank")
 REPORT_SCORES = _addr("save", "reportScores")
 SPECIES_SCORES = _addr("symbols", "speciesScores")
+SIGN_FLAGS = _addr("symbols", "signsFound")
 
 # Per-seed auth token: RAM addr (read), ROM offset (write), length.
 AUTH_ADDR, AUTH_ROM, AUTH_LEN = _ident("auth")
@@ -43,8 +44,9 @@ UNPATCHED_AUTH = b"PSAP-UNPATCHED!!"
 # gExpansionMagic reads as 'OKAY' once the expansion segment has booted.
 EXPANSION_LOADED = 0x4F4B4159
 
-# 63 snappable Pokemon + 6 signs; AP location id N maps to save slot (N - 1).
-NUM_SPECIES = 69
+# 63 snappable Pokemon + 10 extra for pokemon that appear in multiple levels
+NUM_SPECIES_SCORES = 73
+NUM_SIGNS = 6
 
 # Photographing Mew (the last species) is the goal.
 MEW_LOCATION = 63
