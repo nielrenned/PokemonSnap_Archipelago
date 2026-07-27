@@ -47,45 +47,21 @@ useful_item_names = {
 
 pokemon_pics = [
     PokemonSnapItemData(f"A Picture of {name}", 5000 + i, PokemonSnapItemCategory.POKEMON_PIC)
-    for i, name in enumerate(ALL_POKEMON)
+    for i, name in enumerate(ALL_INGAME_POKEMON)
 ]
 
 sign_pics = [
     PokemonSnapItemData(f"A Picture of {name}", 6000 + i, PokemonSnapItemCategory.MISC)
     for i, name in enumerate(ALL_SIGNS)
 ]
-
-ORIGINAL_151 = ["Bulbasaur", "Ivysaur", "Venusaur", "Charmander", "Charmeleon", "Charizard", "Squirtle",
-                "Wartortle", "Blastoise", "Caterpie", "Metapod", "Butterfree", "Weedle", "Kakuna",
-                "Beedrill", "Pidgey", "Pidgeotto", "Pidgeot", "Rattata", "Raticate", "Spearow", "Fearow",
-                "Ekans", "Arbok", "Pikachu", "Raichu", "Sandshrew", "Sandslash", "Nidoran", "Nidorina",
-                "Nidoqueen", "Nidorino", "Nidoking", "Clefairy", "Clefable", "Vulpix", "Ninetales",
-                "Jigglypuff", "Wigglytuff", "Zubat", "Golbat", "Oddish", "Gloom", "Vileplume", "Paras",
-                "Parasect", "Venonat", "Venomoth", "Diglett", "Dugtrio", "Meowth", "Persian", "Psyduck",
-                "Golduck", "Mankey", "Primeape", "Growlithe", "Arcanine", "Poliwag", "Poliwhirl",
-                "Poliwrath", "Abra", "Kadabra", "Alakazam", "Machop", "Machoke", "Machamp", "Bellsprout",
-                "Weepinbell", "Victreebel", "Tentacool", "Tentacruel", "Geodude", "Graveler", "Golem",
-                "Ponyta", "Rapidash", "Slowpoke", "Slowbro", "Magnemite", "Magneton", "Farfetch’d",
-                "Doduo", "Dodrio", "Seel", "Dewgong", "Grimer", "Muk", "Shellder", "Cloyster", "Gastly",
-                "Haunter", "Gengar", "Onix", "Drowzee", "Hypno", "Krabby", "Kingler", "Voltorb",
-                "Electrode", "Exeggcute", "Exeggutor", "Cubone", "Marowak", "Hitmonlee", "Hitmonchan",
-                "Lickitung", "Koffing", "Weezing", "Rhyhorn", "Rhydon", "Chansey", "Tangela",
-                "Kangaskhan", "Horsea", "Seadra", "Goldeen", "Seaking", "Staryu", "Starmie",
-                "Mr.Mime", "Scyther", "Jynx", "Electabuzz", "Magmar", "Pinsir", "Tauros", "Magikarp",
-                "Gyarados", "Lapras", "Ditto", "Eevee", "Vaporeon", "Jolteon", "Flareon", "Porygon",
-                "Omanyte", "Omastar", "Kabuto", "Kabutops", "Aerodactyl", "Snorlax", "Articuno",
-                "Zapdos", "Moltres", "Dratini", "Dragonair", "Dragonite", "Mewtwo", "Mew"]
-
-TRASH_PIC_ADJECTIVES = ["Scuffed", "Tarnished", "Torn", "Burned", "Waterlogged", "Damp", "Dusty", "Musty", "Singed", "Faded", "Pretty Bad"]
+SIGN_PIC_NAMES = {item.name for item in sign_pics}
+key_item_names |= SIGN_PIC_NAMES
 
 trash_pokemon_pics = [
     PokemonSnapItemData(f"A {random.choice(TRASH_PIC_ADJECTIVES)} Picture of {pokemon_name}", 7000 + i, PokemonSnapItemCategory.TRASH)
     for i, pokemon_name in enumerate(ORIGINAL_151)
+    if pokemon_name not in ALL_INGAME_POKEMON
 ]
-
-SIGN_PIC_NAMES = {item.name for item in sign_pics}
-
-key_item_names |= SIGN_PIC_NAMES
 
 _all_items = [PokemonSnapItemData(row[0], row[1], row[2]) for row in [
     (VICTORY_ITEM_NAME, VICTORY_ITEM_ID, PokemonSnapItemCategory.VICTORY),
@@ -113,7 +89,8 @@ _all_items = [PokemonSnapItemData(row[0], row[1], row[2]) for row in [
     ("A burger king voucher", 4005, PokemonSnapItemCategory.TRASH),
     ("A super close-up of a thumb", 4006, PokemonSnapItemCategory.TRASH),
     ("A Futuristic Picture of Mareep", 4007, PokemonSnapItemCategory.TRASH),
-    
+    ("A Full Art Swinub Card", 4008, PokemonSnapItemCategory.TRASH),
+
 ]] + pokemon_pics + sign_pics + trash_pokemon_pics
 
 filler_item_names = [item.name for item in _all_items if item.category is PokemonSnapItemCategory.TRASH]
@@ -123,37 +100,25 @@ item_name_groups = {}
 item_dictionary = {item_data.name: item_data for item_data in _all_items}
 
 def build_item_pool(world: "PokemonSnapWorld") -> list[PokemonSnapItemData]:
-    item_pool = [item for item in _all_items if item.category is PokemonSnapItemCategory.TOOL]
+    item_pool = []
 
-    trash_items = [item for item in _all_items if item.category is PokemonSnapItemCategory.TRASH]
-    all_areas = [item for item in _all_items if item.category is PokemonSnapItemCategory.AREA]
+    def unfilled_count():
+        return len(world.multiworld.get_unfilled_locations(world.player)) - len(item_pool)
 
-    for area in all_areas:
-        if area.name == world.start_area.name:
-            continue
-        else:
-            item_pool.append(area)
-
+    ## Add all the required items
+    item_pool.extend(item for item in _all_items if item.category is PokemonSnapItemCategory.TOOL)
+    item_pool.extend(item for item in _all_items if item.category is PokemonSnapItemCategory.AREA and item.name != world.start_area.name)
     item_pool.extend(pokemon_pics)
     item_pool.extend(sign_pics)
 
     # Nine +5 film upgrades take the cap from 15 up to the max of 60.
-    for _ in range(9):
-        item_pool.append(item_dictionary[FILM_UPGRADE])
-
-    # Add trash items - start with as many trash_pokemon_pics as possible, then fill the rest with trash_items
-    remaining_items = len(world.multiworld.get_unfilled_locations(world.player)) - len(item_pool)
-    if remaining_items < len(trash_pokemon_pics):
-        random.shuffle(trash_pokemon_pics)
-        for i in range(len(world.multiworld.get_unfilled_locations(world.player)) - len(item_pool)):
-            random_trash_item = trash_pokemon_pics[i]
-            item_pool.append(random_trash_item)
-    else:
-        item_pool.append(trash_pokemon_pics)
-        for i in range(len(world.multiworld.get_unfilled_locations(world.player)) - len(item_pool)):
-            random_trash_item = random.choice(trash_items)
-            item_pool.append(random_trash_item)
+    item_pool.extend(item_dictionary[FILM_UPGRADE] for _ in range(9))
+    
+    ## Fill with one of each trash item, then random duplicate trash items
+    trash_items = [item for item in _all_items if item.category is PokemonSnapItemCategory.TRASH]
+    random.shuffle(trash_items)
+    item_pool.extend(trash_items[:min(len(trash_items), unfilled_count())])
+    item_pool.extend(random.choice(trash_items) for _ in range(unfilled_count()))
 
     random.shuffle(item_pool)
     return item_pool
-
