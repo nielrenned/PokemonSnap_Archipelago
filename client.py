@@ -294,7 +294,7 @@ def _check_universal_tracker_version() -> bool:
     from Utils import tuplize_version
     
     if not _tracker_loaded:
-        return False
+        return True
 
     # We are checking for a string that starts with v contains any amount of digits followed by a period
     # repeating three times (e.x. v0.2.11)
