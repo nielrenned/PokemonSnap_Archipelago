@@ -40,6 +40,7 @@ See [Setup Instructions](docs/setup_en.md).
 ## Guide
 
 A decent guide to all the photos, poses, and signs can be [found here](https://strategywiki.org/wiki/Pok%C3%A9mon_Snap/Walkthrough).
+Stuck? Check out the [FAQ](docs/faq_en.md).
 
 ## Credit
 
