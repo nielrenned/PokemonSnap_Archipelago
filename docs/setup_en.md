@@ -38,7 +38,7 @@ Run the ArchipelagoLauncher.exe from your Archipelago install and click `Options
 In the new window that opens scroll down on the left until you find `Pokemon Snap`.
 Enter your Player Name in the `Player Name` box.
 Pokemon Snap has a custom option to prevent useful items from showing up behind Photos that require RNG.
-These settings can be adjusted by clicking on `Edit` under `RNG Required Photos` and `Forbid Useful` under `RNG Photo Behavior`.
+The photographs to be avoided can be adjusted by clicking on `Edit` under `Excluded RNG Required Photos`.
 Once you have chosen your desired options click `Export Options` in the top right to export your player file.
 
 ### Where do I get a player file? (Hard)
