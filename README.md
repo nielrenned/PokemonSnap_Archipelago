@@ -23,10 +23,11 @@ See [Setup Instructions](docs/setup_en.md).
 * Submitting pictures of the Pokémon Signs (6)
   * Kingler Rock, Pinsir's Shadow, Koffing Smoke, Cubone Tree, The Mewtwo Constellation, and Dugtrio Mountain
   * Requires the Pokémon Sign Detector item
+* Taking the Secret Exits in Tunnel, River, and Valley
 
 ### Unlocks
 * The six courses: Beach, Tunnel, Volcano, River, Cave, and Valley (start with a random one)
-* Apples
+* Apple
 * Pester Balls
 * Pokéflute
 * Dash Engine
@@ -40,6 +41,7 @@ See [Setup Instructions](docs/setup_en.md).
 ## Guide
 
 A decent guide to all the photos, poses, and signs can be [found here](https://strategywiki.org/wiki/Pok%C3%A9mon_Snap/Walkthrough).
+
 Stuck? Check out the [FAQ](docs/faq_en.md).
 
 ## Credit
@@ -48,7 +50,7 @@ Thanks to [@ArsonAssassin](https://github.com/ArsonAssassin), [@GerbilJames](htt
 
 Thanks to [@AliRobotnik](https://github.com/AliRobotnik) for the Pokémon Snap Manual, which already had all the logic implemented, along with custom items.
 
-Thanks to [@cobyw](https://github.com/cobyw) for setting up better testing (and maybe more to come?).
+Thanks to [@cobyw](https://github.com/cobyw) for setting up better testing, logic tweaks, and gameplay discussion. (And maybe more to come?)
 
 ## Pokémon Snap Archipelago AI Usage Disclosure
 - Pokémon Snap Archipelago is **not** vibe-coded.
