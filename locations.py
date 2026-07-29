@@ -7,10 +7,12 @@ from .items import PokemonSnapItem
 from .constants import *
 
 class PokemonSnapLocationCategory(IntEnum):
-    PHOTO = 0
-
-
-_PHOTO = PokemonSnapLocationCategory.PHOTO
+    NORMAL_PHOTO    = 0
+    WONDERFUL_PHOTO = 1
+    MULTIPLE_PHOTO  = 2
+    SPECIAL_POSE    = 3
+    POKEMON_SIGN    = 4
+    SECRET_EXIT     = 5
 
 
 class PokemonSnapLocationData(NamedTuple):
@@ -80,8 +82,20 @@ def multiple_id(id: int):
     return id + 200
 
 
-def special_id(pose_id: int):
-    return 10000 + pose_id
+def special_pose_id(pose_id: int):
+    return 300 + pose_id
+
+
+def sign_id(level_id: int):
+    return 400 + level_id
+
+
+def secret_exit(level_name: str):
+    return f'{level_name}: Secret Exit'
+
+
+def secret_exit_id(level_id: int):
+    return 500 + level_id
 
 
 species_data_tables = {
@@ -99,8 +113,6 @@ species_data_tables = {
 
         PokemonSnapSpeciesData(id=10, name="Pikachu (Beach)", multiple=True),
         PokemonSnapSpeciesData(id=51, name="Magikarp (Beach)"),
-
-        PokemonSnapSpeciesData(id=74, name=BEACH_SIGN, multiple=False, wonderful=False),
     ],
     LVL_TUNNEL: [
         PokemonSnapSpeciesData(id=8,  name="Kakuna", multiple=True),
@@ -116,8 +128,6 @@ species_data_tables = {
         PokemonSnapSpeciesData(id=15, name="Zubat (Tunnel)"),
         PokemonSnapSpeciesData(id=65, name="Magikarp (Tunnel)"),
         PokemonSnapSpeciesData(id=70, name="Pikachu (Tunnel)"),
-
-        PokemonSnapSpeciesData(id=75, name=TUNNEL_SIGN, multiple=False, wonderful=False),
     ],
     LVL_VOLCANO: [
         PokemonSnapSpeciesData(id=2,  name="Charmander", multiple=True),
@@ -131,8 +141,6 @@ species_data_tables = {
         PokemonSnapSpeciesData(id=60, name="Moltres"),
 
         PokemonSnapSpeciesData(id=66, name="Magikarp (Volcano)"),
-
-        PokemonSnapSpeciesData(id=76, name=VOLCANO_SIGN, multiple=False, wonderful=False),
     ],
     LVL_RIVER: [
         PokemonSnapSpeciesData(id=6,  name="Metapod", multiple=True),
@@ -148,8 +156,6 @@ species_data_tables = {
         PokemonSnapSpeciesData(id=1,  name="Bulbasaur (River)", multiple=True),
         PokemonSnapSpeciesData(id=67, name="Magikarp (River)"),
         PokemonSnapSpeciesData(id=71, name="Pikachu (River)"),
-
-        PokemonSnapSpeciesData(id=77, name=RIVER_SIGN, multiple=False, wonderful=False),
     ],
     LVL_CAVE: [
         PokemonSnapSpeciesData(id=14, name="Jigglypuff", multiple=True),
@@ -166,8 +172,6 @@ species_data_tables = {
         PokemonSnapSpeciesData(id=68, name="Magikarp (Cave)"),
         PokemonSnapSpeciesData(id=72, name="Pikachu (Cave)"),
         PokemonSnapSpeciesData(id=73, name="Zubat (Cave)", multiple=True),
-
-        PokemonSnapSpeciesData(id=78, name=CAVE_SIGN, multiple=False, wonderful=False),
     ],
     LVL_VALLEY: [
         PokemonSnapSpeciesData(id=5,  name="Squirtle", multiple=True),
@@ -184,8 +188,6 @@ species_data_tables = {
         PokemonSnapSpeciesData(id=62, name="Dragonite"),
 
         PokemonSnapSpeciesData(id=69, name="Magikarp (Valley)", multiple=True),
-
-        PokemonSnapSpeciesData(id=79, name=VALLEY_SIGN, multiple=False, wonderful=False),
     ],
     LVL_CLOUD: [
         PokemonSnapSpeciesData(id=63, name="Mew", wonderful=False, multiple=False),
@@ -201,11 +203,11 @@ for region, species_data_list in species_data_tables.items():
     location_data_list = []
     region_id = COURSE_IDS[region]
     for id, name, can_wonderful, can_multiple in species_data_list:
-        location_data_list.append(PokemonSnapLocationData(id, name, _PHOTO))
+        location_data_list.append(PokemonSnapLocationData(id, name, PokemonSnapLocationCategory.NORMAL_PHOTO))
         if can_wonderful:
-            location_data_list.append(PokemonSnapLocationData(wonderful_id(id), wonderful(name), _PHOTO))
+            location_data_list.append(PokemonSnapLocationData(wonderful_id(id), wonderful(name), PokemonSnapLocationCategory.WONDERFUL_PHOTO))
         if can_multiple:
-            location_data_list.append(PokemonSnapLocationData(multiple_id(id), multiple(name), _PHOTO))
+            location_data_list.append(PokemonSnapLocationData(multiple_id(id), multiple(name), PokemonSnapLocationCategory.MULTIPLE_PHOTO))
     location_tables[region] = location_data_list
 
 
@@ -240,4 +242,16 @@ for region, pose_ids in pose_locations.items():
     location_data_list = location_tables[region]
     for pose_id in pose_ids:
         pose_name = special_poses[pose_id]
-        location_data_list.append(PokemonSnapLocationData(special_id(pose_id), pose_name, _PHOTO))
+        location_data_list.append(PokemonSnapLocationData(special_pose_id(pose_id), pose_name, PokemonSnapLocationCategory.SPECIAL_POSE))
+
+
+# Add the signs
+for level, sign in zip([LVL_BEACH, LVL_TUNNEL, LVL_VOLCANO, LVL_RIVER, LVL_CAVE, LVL_VALLEY], ALL_SIGNS):
+    location_tables[level].append(PokemonSnapLocationData(sign_id(COURSE_IDS[level]), sign, PokemonSnapLocationCategory.POKEMON_SIGN))
+
+
+# Add the secret exits
+for level in [LVL_TUNNEL, LVL_RIVER, LVL_VALLEY]:
+    id = secret_exit_id(COURSE_IDS[level])
+    name = secret_exit(level)
+    location_tables[level].append(PokemonSnapLocationData(id, name, PokemonSnapLocationCategory.SECRET_EXIT))
