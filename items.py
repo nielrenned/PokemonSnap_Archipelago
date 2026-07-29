@@ -11,14 +11,13 @@ if typing.TYPE_CHECKING:
 
 
 class PokemonSnapItemCategory(IntEnum):
-    TOOL = 0
-    AREA = 1,
-    MISC = 2,
-    SKIP = 3,
-    EVENT = 4,
-    TRASH = 5
-    VICTORY = 6
-    POKEMON_PIC = 7
+    VICTORY = 0
+    TOOL = 1
+    AREA = 2
+    MISC = 3
+    POKEMON_PIC = 4
+    TRASH_CUSTOM = 5
+    TRASH_PICTURE = 6
 
 
 class PokemonSnapItemData(NamedTuple):
@@ -57,11 +56,21 @@ sign_pics = [
 SIGN_PIC_NAMES = {item.name for item in sign_pics}
 key_item_names |= SIGN_PIC_NAMES
 
-trash_pokemon_pics = [
-    PokemonSnapItemData(f"A {random.choice(TRASH_PIC_ADJECTIVES)} Picture of {pokemon_name}", 7000 + i, PokemonSnapItemCategory.TRASH)
+# We're doing this weirdness so that each adjective/pokemon combo has its own ID.
+# This way, when a tracker connects, it knows exactly which trash item you got.
+# This also removes the mismatched checksum warning from Universal Tracker.
+trash_pokemon_pics = {
+    pokemon_name: [
+        PokemonSnapItemData(
+            f"A {adjective} Picture of {pokemon_name}", 
+            10000 + i*len(TRASH_PIC_ADJECTIVES) + j, 
+            PokemonSnapItemCategory.TRASH_PICTURE
+        )
+        for j, adjective in enumerate(TRASH_PIC_ADJECTIVES)
+    ]
     for i, pokemon_name in enumerate(ORIGINAL_151)
     if pokemon_name not in ALL_INGAME_POKEMON
-]
+}
 
 _all_items = [PokemonSnapItemData(row[0], row[1], row[2]) for row in [
     (VICTORY_ITEM_NAME, VICTORY_ITEM_ID, PokemonSnapItemCategory.VICTORY),
@@ -79,21 +88,21 @@ _all_items = [PokemonSnapItemData(row[0], row[1], row[2]) for row in [
     (LVL_CAVE,    2004, PokemonSnapItemCategory.AREA),
     (LVL_VALLEY,  2005, PokemonSnapItemCategory.AREA),
 
-    (FILM_UPGRADE,     3000, PokemonSnapItemCategory.MISC),
+    (FILM_UPGRADE, 3000, PokemonSnapItemCategory.MISC),
 
-    ("ArsonAssassin's pokemon card collection", 4000, PokemonSnapItemCategory.TRASH),
-    ("A used reel of film", 4001, PokemonSnapItemCategory.TRASH),
-    ("A reminder to remove the lens cap", 4002, PokemonSnapItemCategory.TRASH),
-    ("Nothing, literally nothing at all", 4003, PokemonSnapItemCategory.TRASH),
-    ("Several decades worth of nostalgia", 4004, PokemonSnapItemCategory.TRASH),
-    ("A burger king voucher", 4005, PokemonSnapItemCategory.TRASH),
-    ("A super close-up of a thumb", 4006, PokemonSnapItemCategory.TRASH),
-    ("A Futuristic Picture of Mareep", 4007, PokemonSnapItemCategory.TRASH),
-    ("A Full Art Swinub Card", 4008, PokemonSnapItemCategory.TRASH),
+    ("ArsonAssassin's pokemon card collection", 4000, PokemonSnapItemCategory.TRASH_CUSTOM),
+    ("A used reel of film", 4001, PokemonSnapItemCategory.TRASH_CUSTOM),
+    ("A reminder to remove the lens cap", 4002, PokemonSnapItemCategory.TRASH_CUSTOM),
+    ("Nothing, literally nothing at all", 4003, PokemonSnapItemCategory.TRASH_CUSTOM),
+    ("Several decades worth of nostalgia", 4004, PokemonSnapItemCategory.TRASH_CUSTOM),
+    ("A burger king voucher", 4005, PokemonSnapItemCategory.TRASH_CUSTOM),
+    ("A super close-up of a thumb", 4006, PokemonSnapItemCategory.TRASH_CUSTOM),
+    ("A Futuristic Picture of Mareep", 4007, PokemonSnapItemCategory.TRASH_CUSTOM),
+    ("A Full Art Swinub Card", 4008, PokemonSnapItemCategory.TRASH_CUSTOM),
 
-]] + pokemon_pics + sign_pics + trash_pokemon_pics
+]] + pokemon_pics + sign_pics + [pic for pics in trash_pokemon_pics.values() for pic in pics]
 
-filler_item_names = [item.name for item in _all_items if item.category is PokemonSnapItemCategory.TRASH]
+filler_item_names = [item.name for item in _all_items if item.category is PokemonSnapItemCategory.TRASH_CUSTOM]
 
 item_name_groups = {}
 
@@ -110,15 +119,20 @@ def build_item_pool(world: "PokemonSnapWorld") -> list[PokemonSnapItemData]:
     item_pool.extend(item for item in _all_items if item.category is PokemonSnapItemCategory.AREA and item.name != world.start_area.name)
     item_pool.extend(pokemon_pics)
     item_pool.extend(sign_pics)
-
-    # Nine +5 film upgrades take the cap from 15 up to the max of 60.
-    item_pool.extend(item_dictionary[FILM_UPGRADE] for _ in range(9))
+    item_pool.extend(item_dictionary[FILM_UPGRADE] for _ in range(9)) # Nine +5 film upgrades take the cap from 15 up to the max of 60.
     
-    ## Fill with one of each trash item, then random duplicate trash items
-    trash_items = [item for item in _all_items if item.category is PokemonSnapItemCategory.TRASH]
-    random.shuffle(trash_items)
-    item_pool.extend(trash_items[:min(len(trash_items), unfilled_count())])
-    item_pool.extend(random.choice(trash_items) for _ in range(unfilled_count()))
+    ## Fill with one of each custom trash item, then one of each trash pokemon pic, then random pokemon pics
+    trash_items = [item for item in _all_items if item.category is PokemonSnapItemCategory.TRASH_CUSTOM]
+
+    trash_pics = list(trash_pokemon_pics.values())
+    while len(trash_items) < unfilled_count():
+        for pictures in trash_pics:
+            trash_items.append(random.choice(pictures))
+        random.shuffle(trash_pics)
+    item_pool.extend(trash_items[:unfilled_count()])
+
+    for item in item_pool:
+        print(item.name)
 
     random.shuffle(item_pool)
     return item_pool
