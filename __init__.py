@@ -67,7 +67,14 @@ class PokemonSnapWorld(World):
         self.enabled_location_categories = set()
 
     def generate_early(self):
-        self.enabled_location_categories.add(PokemonSnapLocationCategory.PHOTO)
+        self.enabled_location_categories |= {
+            PokemonSnapLocationCategory.NORMAL_PHOTO,
+            PokemonSnapLocationCategory.WONDERFUL_PHOTO,
+            PokemonSnapLocationCategory.MULTIPLE_PHOTO,
+            PokemonSnapLocationCategory.SPECIAL_POSE,
+            PokemonSnapLocationCategory.POKEMON_SIGN,
+            PokemonSnapLocationCategory.SECRET_EXIT,
+        }
 
         # Per-seed connect token, baked into the ROM and registered server-side.
         self.auth = self.random.randbytes(16)

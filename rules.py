@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING
 
 from rule_builder.rules import Has, HasAll, HasAny, And
 from .items import SIGN_PIC_NAMES
-from .locations import wonderful as wdfl, multiple as mult
+from .locations import wonderful as wdfl, multiple as mult, secret_exit
 from .constants import *
 
 if TYPE_CHECKING:
@@ -22,6 +22,10 @@ def set_rules(world: "PokemonSnapWorld"):
         world.set_rule(world.get_entrance(f'{START_GAME} -> {level}'), Has(level))
 
     world.set_rule(world.get_entrance(f'{START_GAME} -> {LVL_CLOUD}'), HasAll(*SIGN_PIC_NAMES))
+
+    world.set_rule(world.get_location(secret_exit(LVL_TUNNEL)), _HAS_APPLE_OR_PESTER)
+    world.set_rule(world.get_location(secret_exit(LVL_RIVER)), _HAS_PESTER)
+    world.set_rule(world.get_location(secret_exit(LVL_VALLEY)), _HAS_PESTER)
 
 
     # beach

@@ -70,6 +70,12 @@
       "type": "u8[6]",
       "access": "r",
       "desc": "[beach, tunnel, volcano, river, cave, valley]"
+    },
+    "secretExits": {
+      "addr": "0x80400396",
+      "type": "u8",
+      "access": "r",
+      "desc": "Bit flags for secret exits taken. bit1=Tunnel,3=River,5=Valley"
     }
   },
   "idents": {

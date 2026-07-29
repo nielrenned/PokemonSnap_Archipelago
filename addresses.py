@@ -36,6 +36,7 @@ RANK = _addr("save", "rank")
 REPORT_SCORES = _addr("save", "reportScores")
 SPECIES_SCORES = _addr("symbols", "speciesScores")
 SIGN_FLAGS = _addr("symbols", "signsFound")
+SECRET_EXIT_FLAGS = _addr("symbols", "secretExits")
 
 # Per-seed auth token: RAM addr (read), ROM offset (write), length.
 AUTH_ADDR, AUTH_ROM, AUTH_LEN = _ident("auth")

@@ -7,7 +7,7 @@ from NetUtils import ClientStatus
 
 from .pj64_connector import PJ64Context, pj64connect, pj64disconnect, pj64_read_memory, pj64_write_memory
 from .constants import *
-from .locations import wonderful_id as wdfl_id, multiple_id as mult_id, special_id
+from .locations import wonderful_id as wdfl_id, multiple_id as mult_id, special_pose_id, secret_exit_id, sign_id
 from .update_pj64_config import safe_load_pj64_config
 from .items import item_dictionary, SIGN_PIC_NAMES
 from . import addresses as addr
@@ -171,6 +171,7 @@ class PokemonSnapContext(CommonContext, PJ64Context):
         await self.send_connect()
 
     async def check_snap_locations(self):
+        # TODO: condense into one read and split based on addresses
         if not self.slot or not await self._expansion_loaded():
             return
 
@@ -186,8 +187,8 @@ class PokemonSnapContext(CommonContext, PJ64Context):
 
             poses_seen_ids = [i+1 for i in range(12) if ((1 << i) & report.special_pose_bits) != 0]
             for pose_id in poses_seen_ids:
-                if special_id(pose_id) not in self.checked_snap_locations:
-                    new_checks.add(special_id(pose_id))
+                if special_pose_id(pose_id) not in self.checked_snap_locations:
+                    new_checks.add(special_pose_id(pose_id))
 
             location_id = slot + 1
             if location_id not in self.checked_snap_locations:
@@ -198,7 +199,13 @@ class PokemonSnapContext(CommonContext, PJ64Context):
                 new_checks.add(mult_id(location_id))
 
         sign_flags = await pj64_read_memory(self, "u8", addr.SIGN_FLAGS, addr.NUM_SIGNS)
-        new_checks |= {addr.NUM_SPECIES_SCORES + i + 1 for i, f in enumerate(sign_flags) if f != 0}
+        new_checks |= {sign_id(i) for i, f in enumerate(sign_flags) 
+                       if f != 0 and sign_id(i) not in self.checked_snap_locations}
+
+        secret_exit_flags = (await pj64_read_memory(self, "u8", addr.SECRET_EXIT_FLAGS, 1))[0]
+        new_checks |= {secret_exit_id(i) for i in range(6) 
+                       if (secret_exit_flags & (1 << i)) != 0 
+                       and secret_exit_id(i) not in self.checked_snap_locations}
 
         if new_checks:
             self.checked_snap_locations |= new_checks
