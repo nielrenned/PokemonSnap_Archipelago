@@ -48,6 +48,10 @@ def set_rules(world: "PokemonSnapWorld"):
 
 
     # tunnel
+    # TODO: [SOFT] mult: Technically possible without anything (difficult)
+    world.set_rule(world.get_location(mult("Kakuna")), HasAny(PESTER_BALL, POKEMON_FOOD, DASH_ENGINE))
+
+    # Without Zapdos you have to ignore the first and throw at the second - spoiler in doc
     world.set_rule(world.get_location(mult("Electabuzz")), _HAS_APPLE_OR_PESTER)
 
     world.set_rule(world.get_location("Magnemite"), _HAS_APPLE)
@@ -64,7 +68,6 @@ def set_rules(world: "PokemonSnapWorld"):
 
 
     # volcano
-    world.set_rule(world.get_location(wdfl("Charmander")), _HAS_APPLE)
     world.set_rule(world.get_location(mult("Charmander")), _HAS_APPLE)
 
     world.set_rule(world.get_location("Charmeleon"), _HAS_APPLE_OR_PESTER)
@@ -73,6 +76,7 @@ def set_rules(world: "PokemonSnapWorld"):
     world.set_rule(world.get_location("Charizard"), _HAS_APPLE_OR_PESTER)
     world.set_rule(world.get_location(wdfl("Charizard")), _HAS_APPLE_OR_PESTER)
 
+    # TODO: [SOFT] mult: Technically possible with dash (rng)
     world.set_rule(world.get_location(mult("Vulpix")), _HAS_APPLE)
 
     world.set_rule(world.get_location("Growlithe"), _HAS_PESTER)
@@ -97,10 +101,14 @@ def set_rules(world: "PokemonSnapWorld"):
 
 
     # river
+    # TODO: [SOFT] wdfl&mult: Technically possible without anything (rng)
+    world.set_rule(world.get_location(wdfl("Shellder")), Has(DASH_ENGINE))
+    world.set_rule(world.get_location(mult("Shellder")), Has(DASH_ENGINE))
+
     world.set_rule(world.get_location("Vileplume"), _HAS_FLUTE)
     world.set_rule(world.get_location(wdfl("Vileplume")), _HAS_FLUTE)
 
-    # TODO: This is technically possible without pester, but is hard
+    # TODO: [SOFT] wdfl&mult: Technically possible without anything (difficult)
     world.set_rule(world.get_location(wdfl("Metapod")), _HAS_PESTER)
     world.set_rule(world.get_location(mult("Metapod")), _HAS_PESTER)
 
@@ -148,6 +156,8 @@ def set_rules(world: "PokemonSnapWorld"):
     world.set_rule(world.get_location("Magikarp (Cave)"), _HAS_APPLE_OR_PESTER)
     world.set_rule(world.get_location(wdfl("Magikarp (Cave)")), _HAS_APPLE_OR_PESTER)
 
+    # TODO: [SOFT] base: Technically possible without anything (difficult)
+    world.set_rule(world.get_location("Pikachu (Cave)"), _HAS_APPLE_OR_PESTER)
     world.set_rule(world.get_location(wdfl("Pikachu (Cave)")), _HAS_APPLE_OR_PESTER)
 
     world.set_rule(world.get_location("Balloon Pikachu"), _HAS_APPLE_OR_PESTER)
@@ -159,15 +169,20 @@ def set_rules(world: "PokemonSnapWorld"):
 
 
     # valley
-    world.set_rule(world.get_location(mult("Squirtle")), HasAny(PESTER_BALL, DASH_ENGINE))
+    # TODO: [SOFT] wdfl: Technically possible without anything. mult: Technically possible with just dash (difficult)
+    world.set_rule(world.get_location(wdfl("Squirtle")), _HAS_PESTER)
+    world.set_rule(world.get_location(mult("Squirtle")), _HAS_PESTER)
 
     world.set_rule(world.get_location("Goldeen"), _HAS_APPLE_OR_PESTER)
     world.set_rule(world.get_location(wdfl("Goldeen")), _HAS_APPLE_OR_PESTER)
 
-    # TODO: Ali's logic claims we can get Valley karp without Apple/Pester, but I couldn't do it
-    world.set_rule(world.get_location("Magikarp (Valley)"), _HAS_APPLE_OR_PESTER)
+    world.set_rule(world.get_location("Magikarp (Valley)"), HasAny(PESTER_BALL, POKEMON_FOOD, DASH_ENGINE))
     world.set_rule(world.get_location(wdfl("Magikarp (Valley)")), _HAS_APPLE_OR_PESTER)
     world.set_rule(world.get_location(mult("Magikarp (Valley)")), _HAS_APPLE_OR_PESTER)
+
+    # TODO: [SOFT] wdfl&mult: Technically possible without anything (difficult)
+    world.set_rule(world.get_location(wdfl("Graveler")), HasAny(PESTER_BALL, POKEFLUTE))
+    world.set_rule(world.get_location(mult("Graveler")), _HAS_FLUTE)
 
     world.set_rule(world.get_location("Gyarados"), _HAS_PESTER)
     world.set_rule(world.get_location(wdfl("Gyarados")), _HAS_PESTER)
