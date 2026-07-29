@@ -50,7 +50,7 @@ Thanks to [@ArsonAssassin](https://github.com/ArsonAssassin), [@GerbilJames](htt
 
 Thanks to [@AliRobotnik](https://github.com/AliRobotnik) for the Pokémon Snap Manual, which already had all the logic implemented, along with custom items.
 
-Thanks to [@cobyw](https://github.com/cobyw) for setting up better testing, logic tweaks, and gameplay discussion. (and maybe more to come?).
+Thanks to [@cobyw](https://github.com/cobyw) for setting up better testing, logic tweaks, and gameplay discussion. (And maybe more to come?)
 
 ## Pokémon Snap Archipelago AI Usage Disclosure
 - Pokémon Snap Archipelago is **not** vibe-coded.
