@@ -32,7 +32,16 @@ should generate your game. Each player of a multiworld will provide their own fi
 to enjoy an experience customized for their taste, and different players in the same multiworld can all have different
 options.
 
-### Where do I get a player file?
+### Where do I get a player file? (Easy)
+
+Run the ArchipelagoLauncher.exe from your Archipelago install and click `Options Creator`.
+In the new window that opens scroll down on the left until you find `Pokemon Snap`.
+Enter your Player Name in the `Player Name` box.
+Pokemon Snap has a custom option to prevent useful items from showing up behind Photos that require RNG.
+The photographs to be avoided can be adjusted by clicking on `Edit` under `Excluded RNG Required Photos`.
+Once you have chosen your desired options click `Export Options` in the top right to export your player file.
+
+### Where do I get a player file? (Hard)
 
 Run the ArchipelagoLauncher.exe from your Archipelago install and click `Generate Template Options`.
 This will produce a `/Players/Templates` folder in your Archipelago install, which contains default config files for 
