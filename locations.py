@@ -67,7 +67,7 @@ class PokemonSnapLocation(Location):
 
 
 def wonderful(pokemon_name: str):
-    return f'{pokemon_name}: Wonderful!'
+    return f'{pokemon_name}: Good Technique'
 
 
 def wonderful_id(id: int):
