@@ -96,6 +96,9 @@ class PokemonSnapWorld(World):
         self.start_area = self.random.choice(areas)
         self.multiworld.push_precollected(self.create_item(self.start_area.name))
 
+        if self.options.start_with_dash_engine:
+            self.multiworld.push_precollected(self.create_item(DASH_ENGINE))
+
     def create_regions(self):
         # Create Regions
         regions = {"Menu": self.create_region("Menu", [])}

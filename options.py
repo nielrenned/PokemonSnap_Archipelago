@@ -73,6 +73,15 @@ class IncludeHardChecks(Toggle):
     display_name = "Include hard checks"
 
 
+class StartWithDashEngine(Toggle):
+    """
+    Start with the Dash Engine (for Quality-of-Life).
+
+    This slightly impacts logic: it makes up to six more checks available from the beginning.
+    """
+    display_name = "Start with Dash Engine"
+
+
 @dataclass
 class PokemonSnapOption(PerGameCommonOptions):
     photo_bonuses: PhotoBonusChecks
@@ -82,3 +91,5 @@ class PokemonSnapOption(PerGameCommonOptions):
 
     rng_checks:  IncludeRNGChecks
     hard_checks: IncludeHardChecks
+
+    start_with_dash_engine: StartWithDashEngine
