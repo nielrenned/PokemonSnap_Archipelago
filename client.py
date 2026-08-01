@@ -193,7 +193,6 @@ class PokemonSnapContext(CommonContext, PJ64Context):
             location_id = slot + 1
             if location_id not in self.checked_snap_locations:
                 new_checks.add(location_id)
-                new_checks.add(bonus_id(location_id))
             if report.technique_score != 0 and wdfl_id(location_id) not in self.checked_snap_locations:
                 new_checks.add(wdfl_id(location_id))
             if report.same_pokemon_score != 0 and mult_id(location_id) not in self.checked_snap_locations:
@@ -202,11 +201,16 @@ class PokemonSnapContext(CommonContext, PJ64Context):
         sign_flags = await pj64_read_memory(self, "u8", addr.SIGN_FLAGS, addr.NUM_SIGNS)
         new_checks |= {sign_id(i) for i, f in enumerate(sign_flags) 
                        if f != 0 and sign_id(i) not in self.checked_snap_locations}
+        new_checks |= {sign_id(i) for i, f in enumerate(sign_flags) 
+                       if f != 0 and sign_id(i) not in self.checked_snap_locations}
 
         secret_exit_flags = (await pj64_read_memory(self, "u8", addr.SECRET_EXIT_FLAGS, 1))[0]
         new_checks |= {secret_exit_id(i) for i in range(6) 
                        if (secret_exit_flags & (1 << i)) != 0 
                        and secret_exit_id(i) not in self.checked_snap_locations}
+
+        new_checks |= {bonus_id(id) for id in new_checks 
+                       if bonus_id(id) not in self.checked_snap_locations}
 
         if new_checks:
             self.checked_snap_locations |= new_checks
