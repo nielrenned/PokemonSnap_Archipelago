@@ -12,9 +12,8 @@ class RNGLocations(ExcludeLocations):
 class PhotoBonusChecks(Choice):
     """
     Determines which photo bonuses to include as checks.
-    
-    - technique_and_multiple: adds "good technique" and "multiple pokemon" photos as checks 
-    - technique_only: adds "good technique" photos as checks
+    - technique_and_multiple: adds "Good Technique" and "Multiple Pokemon" photos as checks 
+    - technique_only: adds "Good Technique" photos as checks
     - none: only normal photos are checks
     """
     display_name = "Include photo bonuses"
@@ -27,7 +26,6 @@ class PhotoBonusChecks(Choice):
 class SpecialPoses(DefaultOnToggle):
     """
     Includes the 11 "Special Pose" photos as checks. The special poses are:
-
     - Beach:   Surfing Pikachu, Pikachu on a Stump, Gust-Using Pidgey
     - Tunnel:  Pikachu on a Ball
     - Volcano: Fighting Magmar
@@ -54,9 +52,7 @@ class SecretExits(DefaultOnToggle):
 
 class IncludeRNGChecks(Toggle):
     """
-    Include the luck-heavy photos as checks.
-
-    These photos require a lot of luck:. They are:
+    Include the luck-heavy photos as checks. They are:
       Arcanine: Multiple, Cloyster: Multiple, Dratini: Multiple, 
       Magikarp (Valley): Multiple, and Psyduck: Multiple
     """
@@ -65,19 +61,17 @@ class IncludeRNGChecks(Toggle):
 
 class IncludeHardChecks(Toggle):
     """
-    Include the hard photos as checks.
-
-    These photos are somewhat difficult. They are:
-    Staryu: Multiple, Starmie: Multiple, and Zubat (Cave): Multiple.
+    Include the hard photos as checks. They are:
+      Staryu: Multiple, Starmie: Multiple, and Zubat (Cave): Multiple.
     """
     display_name = "Include hard checks"
 
 
 class StartWithDashEngine(Toggle):
     """
-    Start with the Dash Engine (for Quality-of-Life).
+    Start with the Dash Engine.
 
-    This slightly impacts logic: it makes up to six more checks available from the beginning.
+    This makes up to six more checks available from the beginning.
     """
     display_name = "Start with Dash Engine"
 
