@@ -123,8 +123,9 @@ class PokemonSnapWorld(World):
 
         # Create more locations, if necessary
         location_count = sum(1 for loc in self.multiworld.get_locations(self.player) if not loc.locked)
-        if location_count < MINIMAL_OPEN_LOCATION_COUNT:
-            self.create_extra_locations(MINIMAL_OPEN_LOCATION_COUNT - location_count)
+        required_count = len(build_item_pool(self))
+        if location_count < required_count:
+            self.create_extra_locations(required_count - location_count)
 
     def create_region(self, region_name, location_table) -> Region:
         new_region = Region(region_name, self.player, self.multiworld)
