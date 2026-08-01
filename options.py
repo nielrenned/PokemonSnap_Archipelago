@@ -1,12 +1,6 @@
 from dataclasses import dataclass
 
-from Options import Choice, DefaultOnToggle, ExcludeLocations, PerGameCommonOptions, Toggle
-
-class RNGLocations(ExcludeLocations):
-    """These photos rely on heavy RNG to capture.
-    This prevents progress from being trapped behind them."""
-    display_name = "Excluded RNG Required Photos"
-    default = frozenset({"Zubat (Cave): Multiple", "Cloyster: Multiple", "Staryu: Multiple", "Starmie: Multiple","Dratini: Multiple","Magikarp (Valley): Multiple", "Arcanine: Multiple"})
+from Options import Choice, DefaultOnToggle, PerGameCommonOptions, Toggle
 
 
 class PhotoBonusChecks(Choice):
