@@ -201,8 +201,6 @@ class PokemonSnapContext(CommonContext, PJ64Context):
         sign_flags = await pj64_read_memory(self, "u8", addr.SIGN_FLAGS, addr.NUM_SIGNS)
         new_checks |= {sign_id(i) for i, f in enumerate(sign_flags) 
                        if f != 0 and sign_id(i) not in self.checked_snap_locations}
-        new_checks |= {sign_id(i) for i, f in enumerate(sign_flags) 
-                       if f != 0 and sign_id(i) not in self.checked_snap_locations}
 
         secret_exit_flags = (await pj64_read_memory(self, "u8", addr.SECRET_EXIT_FLAGS, 1))[0]
         new_checks |= {secret_exit_id(i) for i in range(6) 
