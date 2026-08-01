@@ -24,10 +24,13 @@ location_name_functions = {
 }
 
 def set_location_rule(world: "PokemonSnapWorld", name: str, category: Category, rule: Rule):
-    if category in world.enabled_location_categories:
+    try:
         name_func = location_name_functions[category]
         world.set_rule(world.get_location(name_func(name)), rule)
-
+    except KeyError:
+        # The location wasn't added, so skip the logic for it
+        # TODO: this is hacky, let's do it better eventually
+        pass
 
 def set_rules(world: "PokemonSnapWorld"):
     world.set_completion_rule(Has(VICTORY_ITEM_NAME))

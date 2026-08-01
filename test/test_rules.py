@@ -11,6 +11,12 @@ def powerset(iterable):
 
 class TestRuleInheritance(PokemonSnapTestBase):
 
+    options = {
+        "photo_bonuses": "technique_and_multiple",
+        "rng_checks": True,
+        "hard_checks": True
+    }
+
     def test_multiple_implies_wonderful(self):
         '''Professor Oak will not give you the multiple species bonus if the picture is not Wonderful'''
         for _, species_data_list in species_data_tables.items():
@@ -26,8 +32,8 @@ class TestRuleInheritance(PokemonSnapTestBase):
         wdfl_rule = self.multiworld.get_location(wonderful(species_name), self.player).access_rule
 
         tools = [self.get_item_by_name(name)
-                    for name, item in item_dictionary.items() 
-                    if item.category is PokemonSnapItemCategory.TOOL]
+                 for name, item in item_dictionary.items() 
+                 if item.category is PokemonSnapItemCategory.TOOL]
 
         for combo in powerset(tools):
             state = CollectionState(self.multiworld)

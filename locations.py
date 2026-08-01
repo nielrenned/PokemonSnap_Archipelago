@@ -98,6 +98,25 @@ def secret_exit_id(level_id: int):
     return 500 + level_id
 
 
+def course(name: str, course: str):
+    return f'{name} ({course})'
+
+
+RNG_LOCATIONS = [
+    multiple(ARCANINE),
+    multiple(CLOYSTER),
+    multiple(DRATINI),
+    multiple(course(MAGIKARP, LVL_VALLEY)),
+    multiple(PSYDUCK),
+]
+
+HARD_LOCATIONS = [
+    multiple(STARYU),
+    multiple(STARMIE),
+    multiple(course(ZUBAT, LVL_CAVE)),
+]
+
+
 species_data_tables = {
     LVL_BEACH: [
         PokemonSnapSpeciesData(id=7,  name="Butterfree", multiple=True),
@@ -238,6 +257,7 @@ pose_locations = {
     # LVL_CLOUD:   [10]
 }
 
+# Add the poses
 for region, pose_ids in pose_locations.items():
     location_data_list = location_tables[region]
     for pose_id in pose_ids:
