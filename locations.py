@@ -15,7 +15,7 @@ class PokemonSnapLocationCategory(IntEnum):
     SECRET_EXIT     = 5
 
     # for when there aren't enough locations in the pool
-    NORMAL_PHOTO_BONUS = 10
+    BONUS_LOCATION = 10
 
 
 class PokemonSnapLocationData(NamedTuple):
@@ -234,7 +234,6 @@ for region, species_data_list in species_data_tables.items():
     region_id = COURSE_IDS[region]
     for id, name, can_wonderful, can_multiple in species_data_list:
         location_data_list.append(PokemonSnapLocationData(id, name, PokemonSnapLocationCategory.NORMAL_PHOTO))
-        location_data_list.append(PokemonSnapLocationData(bonus_id(id), bonus(name), PokemonSnapLocationCategory.NORMAL_PHOTO_BONUS))
         if can_wonderful:
             location_data_list.append(PokemonSnapLocationData(wonderful_id(id), wonderful(name), PokemonSnapLocationCategory.WONDERFUL_PHOTO))
         if can_multiple:
@@ -287,3 +286,12 @@ for level in [LVL_TUNNEL, LVL_RIVER, LVL_VALLEY]:
     id = secret_exit_id(COURSE_IDS[level])
     name = secret_exit(level)
     location_tables[level].append(PokemonSnapLocationData(id, name, PokemonSnapLocationCategory.SECRET_EXIT))
+
+
+# Add the bonus locations
+for region, location_data_list in location_tables.items():
+    location_data_list.extend([
+        PokemonSnapLocationData(bonus_id(id), bonus(name), PokemonSnapLocationCategory.BONUS_LOCATION)
+        for id, name, _ in location_data_list
+    ])
+    

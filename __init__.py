@@ -105,6 +105,12 @@ class PokemonSnapWorld(World):
         regions.update({region_name: self.create_region(region_name, region_entry)
                         for region_name, region_entry in location_tables.items()})
 
+        # Create more locations, if necessary
+        location_count = sum(1 for loc in self.multiworld.get_locations(self.player) if not loc.locked)
+        required_count = len(build_item_pool(self))
+        if location_count < required_count:
+            self.create_extra_locations(required_count - location_count)
+
         # Connect Regions
         def create_connection(from_region: str, to_region: str):
             connection = Entrance(self.player, f"{from_region} -> {to_region}", regions[from_region])
@@ -120,12 +126,6 @@ class PokemonSnapWorld(World):
         create_connection(START_GAME, LVL_CAVE)
         create_connection(START_GAME, LVL_VALLEY)
         create_connection(START_GAME, LVL_CLOUD)
-
-        # Create more locations, if necessary
-        location_count = sum(1 for loc in self.multiworld.get_locations(self.player) if not loc.locked)
-        required_count = len(build_item_pool(self))
-        if location_count < required_count:
-            self.create_extra_locations(required_count - location_count)
 
     def create_region(self, region_name, location_table) -> Region:
         new_region = Region(region_name, self.player, self.multiworld)
