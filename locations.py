@@ -14,6 +14,9 @@ class PokemonSnapLocationCategory(IntEnum):
     POKEMON_SIGN    = 4
     SECRET_EXIT     = 5
 
+    # for when there aren't enough locations in the pool
+    BONUS_LOCATION = 10
+
 
 class PokemonSnapLocationData(NamedTuple):
     id: int
@@ -71,7 +74,7 @@ def wonderful(pokemon_name: str):
 
 
 def wonderful_id(id: int):
-    return id + 100
+    return 100 + id
 
 
 def multiple(pokemon_name: str):
@@ -79,7 +82,7 @@ def multiple(pokemon_name: str):
 
 
 def multiple_id(id: int):
-    return id + 200
+    return 200 + id
 
 
 def special_pose_id(pose_id: int):
@@ -96,6 +99,33 @@ def secret_exit(level_name: str):
 
 def secret_exit_id(level_id: int):
     return 500 + level_id
+
+
+def bonus(name: str):
+    return f'{name} 2'
+
+
+def bonus_id(id: int):
+    return 1000 + id
+
+
+def course(name: str, course: str):
+    return f'{name} ({course})'
+
+
+RNG_LOCATIONS = [
+    multiple(ARCANINE),
+    multiple(CLOYSTER),
+    multiple(DRATINI),
+    multiple(course(MAGIKARP, LVL_VALLEY)),
+    multiple(PSYDUCK),
+]
+
+HARD_LOCATIONS = [
+    multiple(STARYU),
+    multiple(STARMIE),
+    multiple(course(ZUBAT, LVL_CAVE)),
+]
 
 
 species_data_tables = {
@@ -238,6 +268,7 @@ pose_locations = {
     # LVL_CLOUD:   [10]
 }
 
+# Add the poses
 for region, pose_ids in pose_locations.items():
     location_data_list = location_tables[region]
     for pose_id in pose_ids:
@@ -255,3 +286,12 @@ for level in [LVL_TUNNEL, LVL_RIVER, LVL_VALLEY]:
     id = secret_exit_id(COURSE_IDS[level])
     name = secret_exit(level)
     location_tables[level].append(PokemonSnapLocationData(id, name, PokemonSnapLocationCategory.SECRET_EXIT))
+
+
+# Add the bonus locations
+for region, location_data_list in location_tables.items():
+    location_data_list.extend([
+        PokemonSnapLocationData(bonus_id(id), bonus(name), PokemonSnapLocationCategory.BONUS_LOCATION)
+        for id, name, _ in location_data_list
+    ])
+    

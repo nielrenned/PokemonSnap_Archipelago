@@ -9,8 +9,9 @@ from worlds.LauncherComponents import Component, SuffixIdentifier, Type, compone
 from .constants import *
 from .items import PokemonSnapItem, PokemonSnapItemCategory, key_item_names, useful_item_names, \
     _all_items, build_item_pool, PokemonSnapItemData
-from .locations import PokemonSnapLocation, PokemonSnapLocationCategory, location_tables
-from .options import PokemonSnapOption
+from .locations import PokemonSnapLocation, PokemonSnapLocationCategory, location_tables, bonus, \
+    RNG_LOCATIONS, HARD_LOCATIONS
+from .options import PokemonSnapOption, PhotoBonusChecks
 from .psnap_settings import PokemonSnapSettings
 from .rom import PokemonSnapProcedurePatch
 from .rules import set_rules
@@ -68,13 +69,21 @@ class PokemonSnapWorld(World):
 
     def generate_early(self):
         self.enabled_location_categories |= {
-            PokemonSnapLocationCategory.NORMAL_PHOTO,
-            PokemonSnapLocationCategory.WONDERFUL_PHOTO,
-            PokemonSnapLocationCategory.MULTIPLE_PHOTO,
-            PokemonSnapLocationCategory.SPECIAL_POSE,
-            PokemonSnapLocationCategory.POKEMON_SIGN,
-            PokemonSnapLocationCategory.SECRET_EXIT,
+            PokemonSnapLocationCategory.NORMAL_PHOTO
         }
+
+        if self.options.photo_bonuses == PhotoBonusChecks.option_technique_and_multiple:
+            self.enabled_location_categories.add(PokemonSnapLocationCategory.WONDERFUL_PHOTO)
+            self.enabled_location_categories.add(PokemonSnapLocationCategory.MULTIPLE_PHOTO)
+        elif self.options.photo_bonuses == PhotoBonusChecks.option_technique_only:
+            self.enabled_location_categories.add(PokemonSnapLocationCategory.WONDERFUL_PHOTO)
+
+        if self.options.special_poses:
+            self.enabled_location_categories.add(PokemonSnapLocationCategory.SPECIAL_POSE)
+        if self.options.pokemon_signs:
+            self.enabled_location_categories.add(PokemonSnapLocationCategory.POKEMON_SIGN)
+        if self.options.secret_exits:
+            self.enabled_location_categories.add(PokemonSnapLocationCategory.SECRET_EXIT)
 
         # Per-seed connect token, baked into the ROM and registered server-side.
         self.auth = self.random.randbytes(16)
@@ -87,11 +96,20 @@ class PokemonSnapWorld(World):
         self.start_area = self.random.choice(areas)
         self.multiworld.push_precollected(self.create_item(self.start_area.name))
 
+        if self.options.start_with_dash_engine:
+            self.multiworld.push_precollected(self.create_item(DASH_ENGINE))
+
     def create_regions(self):
         # Create Regions
         regions = {"Menu": self.create_region("Menu", [])}
         regions.update({region_name: self.create_region(region_name, region_entry)
                         for region_name, region_entry in location_tables.items()})
+
+        # Create more locations, if necessary
+        location_count = sum(1 for loc in self.multiworld.get_locations(self.player) if not loc.locked)
+        required_count = len(build_item_pool(self))
+        if location_count < required_count:
+            self.create_extra_locations(required_count - location_count)
 
         # Connect Regions
         def create_connection(from_region: str, to_region: str):
@@ -112,6 +130,13 @@ class PokemonSnapWorld(World):
     def create_region(self, region_name, location_table) -> Region:
         new_region = Region(region_name, self.player, self.multiworld)
         for location in location_table:
+            if location.category not in self.enabled_location_categories:
+                continue
+            if location.name in RNG_LOCATIONS and not self.options.rng_checks:
+                continue
+            if location.name in HARD_LOCATIONS and not self.options.hard_checks:
+                continue
+
             new_location = PokemonSnapLocation(
                 self.player,
                 location.name,
@@ -119,13 +144,30 @@ class PokemonSnapWorld(World):
                 self.location_name_to_id[location.name],
                 new_region
             )
+            
             # Eventually this will need to change depending on chosen victory condition.
             # But we have no options right now, so :chrisShrug:.
             if location.name == "Mew":
                 new_location.place_locked_item(self.create_item(VICTORY_ITEM_NAME))
+            
             new_region.locations.append(new_location)
+        
         self.multiworld.regions.append(new_region)
         return new_region
+
+    def create_extra_locations(self, extra_count: int):
+        all_locations = [(region, loc) for region in self.multiworld.get_regions(self.player) for loc in region.locations]
+        self.random.shuffle(all_locations)
+        for region, location in all_locations[:extra_count]:
+            name = bonus(location.name)
+            new_location = PokemonSnapLocation(
+                self.player,
+                name,
+                location.category,
+                self.location_name_to_id[name],
+                region
+            )
+            region.locations.append(new_location)
 
     def create_items(self):
         item_pool = build_item_pool(self)

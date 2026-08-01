@@ -7,7 +7,7 @@ from NetUtils import ClientStatus
 
 from .pj64_connector import PJ64Context, pj64connect, pj64disconnect, pj64_read_memory, pj64_write_memory
 from .constants import *
-from .locations import wonderful_id as wdfl_id, multiple_id as mult_id, special_pose_id, secret_exit_id, sign_id
+from .locations import wonderful_id as wdfl_id, multiple_id as mult_id, special_pose_id, secret_exit_id, sign_id, bonus_id
 from .update_pj64_config import safe_load_pj64_config
 from .items import item_dictionary, SIGN_PIC_NAMES
 from . import addresses as addr
@@ -206,6 +206,9 @@ class PokemonSnapContext(CommonContext, PJ64Context):
         new_checks |= {secret_exit_id(i) for i in range(6) 
                        if (secret_exit_flags & (1 << i)) != 0 
                        and secret_exit_id(i) not in self.checked_snap_locations}
+
+        new_checks |= {bonus_id(id) for id in new_checks 
+                       if bonus_id(id) not in self.checked_snap_locations}
 
         if new_checks:
             self.checked_snap_locations |= new_checks

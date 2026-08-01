@@ -44,6 +44,12 @@ A decent guide to all the photos, poses, and signs can be [found here](https://s
 
 Stuck? Check out the [FAQ](docs/faq_en.md).
 
+Still stuck? Ask in the [Discord channel](https://discord.com/channels/731205301247803413/1528972845479100617)!
+
+## Tracker
+
+A poptracker pack made by [@lighting8282](https://github.com/lighting8282) for this world can be [found here](https://github.com/lighting8282/Pokemon-Snap-AP-Pop-Tracker/releases).
+
 ## Credit
 
 Thanks to [@ArsonAssassin](https://github.com/ArsonAssassin), [@GerbilJames](https://github.com/gerbiljames), and [@SomeJakeGuy](https://github.com/SomeJakeGuy) for initial repository setup and doing 90% of the work to get this functional.
