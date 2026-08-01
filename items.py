@@ -16,8 +16,9 @@ class PokemonSnapItemCategory(IntEnum):
     AREA = 2
     MISC = 3
     POKEMON_PIC = 4
-    TRASH_CUSTOM = 5
-    TRASH_PICTURE = 6
+    SIGN_PIC = 5
+    TRASH_CUSTOM = 10
+    TRASH_PICTURE = 11
 
 
 class PokemonSnapItemData(NamedTuple):
@@ -50,7 +51,7 @@ pokemon_pics = [
 ]
 
 sign_pics = [
-    PokemonSnapItemData(f"A Picture of {name}", 6000 + i, PokemonSnapItemCategory.MISC)
+    PokemonSnapItemData(f"A Picture of {name}", 6000 + i, PokemonSnapItemCategory.SIGN_PIC)
     for i, name in enumerate(ALL_SIGNS)
 ]
 SIGN_PIC_NAMES = {item.name for item in sign_pics}
@@ -117,7 +118,7 @@ def build_item_pool(world: "PokemonSnapWorld") -> list[PokemonSnapItemData]:
     ## Add all the required items
     item_pool.extend(item for item in _all_items if item.category is PokemonSnapItemCategory.TOOL)
     item_pool.extend(item for item in _all_items if item.category is PokemonSnapItemCategory.AREA and item.name != world.start_area.name)
-    item_pool.extend(sign_pics)
+    item_pool.extend(item for item in _all_items if item.category is PokemonSnapItemCategory.SIGN_PIC)
     item_pool.extend(item_dictionary[FILM_UPGRADE] for _ in range(9)) # Nine +5 film upgrades take the cap from 15 up to the max of 60.
     item_pool.extend(pokemon_pics)
     
