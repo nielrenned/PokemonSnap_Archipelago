@@ -7,7 +7,7 @@ from NetUtils import ClientStatus
 
 from .pj64_connector import PJ64Context, pj64connect, pj64disconnect, pj64_read_memory, pj64_write_memory
 from .constants import *
-from .locations import wonderful_id as wdfl_id, multiple_id as mult_id, special_pose_id, secret_exit_id, sign_id
+from .locations import wonderful_id as wdfl_id, multiple_id as mult_id, special_pose_id, secret_exit_id, sign_id, bonus_id
 from .update_pj64_config import safe_load_pj64_config
 from .items import item_dictionary, SIGN_PIC_NAMES
 from . import addresses as addr
@@ -193,6 +193,7 @@ class PokemonSnapContext(CommonContext, PJ64Context):
             location_id = slot + 1
             if location_id not in self.checked_snap_locations:
                 new_checks.add(location_id)
+                new_checks.add(bonus_id(location_id))
             if report.technique_score != 0 and wdfl_id(location_id) not in self.checked_snap_locations:
                 new_checks.add(wdfl_id(location_id))
             if report.same_pokemon_score != 0 and mult_id(location_id) not in self.checked_snap_locations:

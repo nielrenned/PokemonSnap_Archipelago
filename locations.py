@@ -14,6 +14,9 @@ class PokemonSnapLocationCategory(IntEnum):
     POKEMON_SIGN    = 4
     SECRET_EXIT     = 5
 
+    # for when there aren't enough locations in the pool
+    NORMAL_PHOTO_BONUS = 10
+
 
 class PokemonSnapLocationData(NamedTuple):
     id: int
@@ -71,7 +74,7 @@ def wonderful(pokemon_name: str):
 
 
 def wonderful_id(id: int):
-    return id + 100
+    return 100 + id
 
 
 def multiple(pokemon_name: str):
@@ -79,7 +82,7 @@ def multiple(pokemon_name: str):
 
 
 def multiple_id(id: int):
-    return id + 200
+    return 200 + id
 
 
 def special_pose_id(pose_id: int):
@@ -96,6 +99,14 @@ def secret_exit(level_name: str):
 
 def secret_exit_id(level_id: int):
     return 500 + level_id
+
+
+def bonus(name: str):
+    return f'{name} 2'
+
+
+def bonus_id(id: int):
+    return 1000 + id
 
 
 def course(name: str, course: str):
@@ -223,6 +234,7 @@ for region, species_data_list in species_data_tables.items():
     region_id = COURSE_IDS[region]
     for id, name, can_wonderful, can_multiple in species_data_list:
         location_data_list.append(PokemonSnapLocationData(id, name, PokemonSnapLocationCategory.NORMAL_PHOTO))
+        location_data_list.append(PokemonSnapLocationData(bonus_id(id), bonus(name), PokemonSnapLocationCategory.NORMAL_PHOTO_BONUS))
         if can_wonderful:
             location_data_list.append(PokemonSnapLocationData(wonderful_id(id), wonderful(name), PokemonSnapLocationCategory.WONDERFUL_PHOTO))
         if can_multiple:

@@ -11,6 +11,12 @@ WRONG_GAME: str = "Wrong game was detected, please load a North American version
 CONNECTING_STATUS: str = "Connected to Project64."
 CONNECTED_STATUS: str = "Connected to Project64 and Archipelago, ready to play!"
 
+# Run TestSparseLocationGeneration to see what this number should be
+# TODO: can we figure out a better way to do this?
+#   - Potentially we can write a precompute_item_count function that
+#     that takes in the world options during generation.
+MINIMAL_OPEN_LOCATION_COUNT = 88
+
 # Courses
 START_GAME  = "Start Game"
 LVL_BEACH   = "Beach"

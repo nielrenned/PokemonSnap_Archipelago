@@ -9,7 +9,8 @@ from worlds.LauncherComponents import Component, SuffixIdentifier, Type, compone
 from .constants import *
 from .items import PokemonSnapItem, PokemonSnapItemCategory, key_item_names, useful_item_names, \
     _all_items, build_item_pool, PokemonSnapItemData
-from .locations import PokemonSnapLocation, PokemonSnapLocationCategory, location_tables, RNG_LOCATIONS, HARD_LOCATIONS
+from .locations import PokemonSnapLocation, PokemonSnapLocationCategory, location_tables, bonus, \
+    RNG_LOCATIONS, HARD_LOCATIONS
 from .options import PokemonSnapOption, PhotoBonusChecks
 from .psnap_settings import PokemonSnapSettings
 from .rom import PokemonSnapProcedurePatch
@@ -117,6 +118,11 @@ class PokemonSnapWorld(World):
         create_connection(START_GAME, LVL_VALLEY)
         create_connection(START_GAME, LVL_CLOUD)
 
+        # Create more locations, if necessary
+        location_count = sum(1 for loc in self.multiworld.get_locations(self.player) if not loc.locked)
+        if location_count < MINIMAL_OPEN_LOCATION_COUNT:
+            self.create_extra_locations(MINIMAL_OPEN_LOCATION_COUNT - location_count)
+
     def create_region(self, region_name, location_table) -> Region:
         new_region = Region(region_name, self.player, self.multiworld)
         for location in location_table:
@@ -144,6 +150,20 @@ class PokemonSnapWorld(World):
         
         self.multiworld.regions.append(new_region)
         return new_region
+
+    def create_extra_locations(self, extra_count: int):
+        all_locations = [(region, loc) for region in self.multiworld.get_regions(self.player) for loc in region.locations]
+        self.random.shuffle(all_locations)
+        for region, location in all_locations[:extra_count]:
+            name = bonus(location.name)
+            new_location = PokemonSnapLocation(
+                self.player,
+                name,
+                location.category,
+                self.location_name_to_id[name],
+                region
+            )
+            region.locations.append(new_location)
 
     def create_items(self):
         item_pool = build_item_pool(self)
