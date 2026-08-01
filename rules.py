@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING
 
 from rule_builder.rules import Has, HasAll, HasAny, And, Rule
 from .items import SIGN_PIC_NAMES
-from .locations import wonderful as wdfl, multiple as mult, secret_exit, PokemonSnapLocationCategory as Category
+from .locations import wonderful as wdfl, multiple as mult, secret_exit, bonus, PokemonSnapLocationCategory as Category
 from .constants import *
 
 if TYPE_CHECKING:
@@ -27,6 +27,9 @@ def set_location_rule(world: "PokemonSnapWorld", name: str, category: Category, 
     try:
         name_func = location_name_functions[category]
         world.set_rule(world.get_location(name_func(name)), rule)
+        # Make sure the bonus locations also have the same rules
+        if category == Category.NORMAL_PHOTO:
+            world.set_rule(world.get_location(bonus(name)), rule)
     except KeyError:
         # The location wasn't added, so skip the logic for it
         # TODO: this is hacky, let's do it better eventually
