@@ -19,7 +19,7 @@ class PhotoBonusChecks(Choice):
 
 class SpecialPoses(DefaultOnToggle):
     """
-    Includes the 11 "Special Pose" photos as checks. The special poses are:
+    Include the 11 "Special Pose" photos as checks. The special poses are:
     - Beach:   Surfing Pikachu, Pikachu on a Stump, Gust-Using Pidgey
     - Tunnel:  Pikachu on a Ball
     - Volcano: Fighting Magmar
@@ -32,7 +32,7 @@ class SpecialPoses(DefaultOnToggle):
 
 class PokemonSigns(DefaultOnToggle):
     """
-    Includes the 6 Pokemon Sign photos as checks (requires Pokemon Sign Detector).
+    Include the 6 Pokemon Sign photos as checks (requires Pokemon Sign Detector).
     """
     display_name = "Include pokemon signs"
 
