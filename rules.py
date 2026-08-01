@@ -26,10 +26,10 @@ location_name_functions = {
 def set_location_rule(world: "PokemonSnapWorld", name: str, category: Category, rule: Rule):
     try:
         name_func = location_name_functions[category]
-        world.set_rule(world.get_location(name_func(name)), rule)
+        base_name = name_func(name)
+        world.set_rule(world.get_location(base_name), rule)
         # Make sure the bonus locations also have the same rules
-        if category == Category.NORMAL_PHOTO:
-            world.set_rule(world.get_location(bonus(name)), rule)
+        world.set_rule(world.get_location(bonus(base_name)), rule)
     except KeyError:
         # The location wasn't added, so skip the logic for it
         # TODO: this is hacky, let's do it better eventually
