@@ -45,8 +45,8 @@ def set_rules(world: "PokemonSnapWorld"):
 
     # Secret Exits
     set_location_rule(world, LVL_TUNNEL, Category.SECRET_EXIT, _HAS_APPLE_OR_PESTER)
-    set_location_rule(world, LVL_RIVER, Category.SECRET_EXIT, _HAS_PESTER)
-    set_location_rule(world, LVL_TUNNEL, Category.SECRET_EXIT, _HAS_PESTER)
+    set_location_rule(world, LVL_RIVER,  Category.SECRET_EXIT, _HAS_PESTER)
+    set_location_rule(world, LVL_VALLEY, Category.SECRET_EXIT, _HAS_PESTER)
 
 
     # beach
