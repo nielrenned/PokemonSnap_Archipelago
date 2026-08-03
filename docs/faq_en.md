@@ -2,8 +2,6 @@
 
 ## Troubleshooting
 
----
-
 ### My AP won't connect
 
 **Error:**
@@ -55,8 +53,6 @@ This can happen if you accidentally selected the wrong file when initially selec
 2. Type in the full file name manually, including the suffix
 
 ## General Questions
-
----
 
 ### How Do I Snap (whatever) with just the Dash Engine?
 Dash and Snap at the same time! This wasn't required in the base game but is needed for some of the Randomizer logic.
