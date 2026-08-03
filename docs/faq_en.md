@@ -21,7 +21,7 @@
 **Solution: Troubleshoot your base ROM**
 
 This likely isn't related to the AP and is an issue with your emulator vs base Pokemon Snap ROM in general. 
-Confirm by attempting to submit photos in your base rom. The following steps have all been known to help:
+Confirm by attempting to submit photos in your base ROM. The following steps have all been known to help:
 
  - Ensure you are using Project64 `3.0` NOT `4.0`
  - Swap to a different RDP plugin. Both the [angrylion-plus](https://github.com/ata4/angrylion-rdp-plus/releases) and [Parallel RDP Plugin](https://github.com/ariahiro64/pj64-parallelrdp/releases/tag/1.4) have been reported to work with Parallel having better performance.
