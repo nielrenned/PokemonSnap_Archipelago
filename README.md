@@ -6,7 +6,7 @@ Note: To use this repository, you must already have a legally acquired English R
 
 ## Setup
 
-See [Setup Instructions](docs/setup_en.md).
+See [Setup Instructions](docs/setup_en.md) for set up and [FAQ](docs/faq_en.md) for troubleshooting.
 
 ## AP World Details
 ### Checks

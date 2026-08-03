@@ -9,7 +9,7 @@
 - [Pokemon Snap APWorld](https://github.com/nielrenned/PokemonSnap_Archipelago/releases/latest)
 - An American/US version of Pokemon Snap
 
-## General Concept
+# General Concept
 
 ## Installation Procedures
 
@@ -96,3 +96,8 @@ at the top of the Pokemon Snap Client. If the port number is correct, you are no
    - If you see "Unable to connect to Project 64. Attempting again in 5 seconds...", do this step.
 
 ### Play the game
+
+## Hitting issues?
+
+See [FAQ](faq_en.md) for troubleshooting tips
+
