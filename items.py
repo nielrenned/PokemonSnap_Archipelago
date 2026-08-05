@@ -1,4 +1,3 @@
-import random
 import typing
 from enum import IntEnum
 from typing import NamedTuple
@@ -132,9 +131,9 @@ def build_item_pool(world: "PokemonSnapWorld") -> list[PokemonSnapItemData]:
     trash_pics = list(trash_pokemon_pics.values())
     while len(trash_items) < unfilled_count():
         for pictures in trash_pics:
-            trash_items.append(random.choice(pictures))
-        random.shuffle(trash_pics)
+            trash_items.append(world.random.choice(pictures))
+        world.random.shuffle(trash_pics)
     item_pool.extend(trash_items[:unfilled_count()])
 
-    random.shuffle(item_pool)
+    world.random.shuffle(item_pool)
     return item_pool
