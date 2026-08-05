@@ -7,7 +7,7 @@ class TestSparseLocationGeneration(PokemonSnapTestBase):
     def test_minimum_unit_version(self):
 
         invalid_versions = [ "v2.11.11.11","wre.121","30.0.0.0", "3", "0.0.0", "v0.2.10"]
-        valid_versions = [ "v2.11.11", "v3.0.0", "0.25.120202", PokemonSnapContext.min_universal_tracker_version]
+        valid_versions = [ "v2.24.1" ,"v2.11.11", "v3.0.0", "0.25.120202", PokemonSnapContext.min_universal_tracker_version]
 
         for invalid_version in invalid_versions:
             if not _has_invalid_universal_tracker(invalid_version):
