@@ -66,6 +66,7 @@ class PokemonSnapContext(CommonContext, PJ64Context):
     pj64_status: str
     finished_game: bool = False
     should_play_cloud_dialog: bool = True
+    min_universal_tracker_version = "0.2.11"
 
     def __init__(self, server_address, password, ap_port):
         """
@@ -114,10 +115,10 @@ class PokemonSnapContext(CommonContext, PJ64Context):
             logger.warning("Could not find Universal Tracker.")
 
     def make_gui(self):
-        if not _check_universal_tracker_version():
+        if _tracker_loaded and _has_invalid_universal_tracker(UT_VERSION):
             Utils.messagebox("Universal Tracker needs updated",
             f"Please update your Universal Tracker. The version currently installed is {UT_VERSION}.", error=True)
-            raise ImportError("Need to update universal tracker version to at least v0.2.11.")
+            raise ImportError(f"Need to update universal tracker version to at least v{PokemonSnapContext.min_universal_tracker_version}.")
 
         # Performing local import to prevent additional UIs to appear during the patching process.
         # This appears to be occurring if a spawned process does not have a UI element when importing kvui/kivymd.
@@ -299,22 +300,23 @@ class PokemonSnapContext(CommonContext, PJ64Context):
             logger.error("Something went horribly wrong with the Pokemon Snap client. Details: " + str(threadEx))
 
 
-def _check_universal_tracker_version() -> bool:
-    import re
-    from Utils import tuplize_version
-    
-    if not _tracker_loaded:
-        return True
+def _has_invalid_universal_tracker(universal_tracker_version) -> bool:
+    retval = False
+    delimiter = "."
 
-    # We are checking for a string that starts with v contains any amount of digits followed by a period
-    # repeating three times (e.x. v0.2.11)
-    match = re.search(r"v\d+.(\d+).(\d+)", UT_VERSION)
-    if len(match.groups()) < 2:
-        return False
-    if not tuplize_version(match.string.replace("v", "")) > tuplize_version("0.2.11"):
-        return False
+    version_split = universal_tracker_version.split(delimiter)
+    if len(version_split) != 3:
+        retval = True
+    else:
+        clean_version_split = version_split.copy()
+        for i, version in enumerate(version_split):
+            clean_version_split[i]  = "".join([ele for ele in version if ele.isdigit()]) #Clean anything but digits from each part of the split
 
-    return True
+        clean_version_joined = delimiter.join(clean_version_split)
+        if Utils.tuplize_version(clean_version_joined) < Utils.tuplize_version(PokemonSnapContext.min_universal_tracker_version):
+            retval = True
+
+    return retval
 
 def _patch_and_launch(patch_file: str) -> str:
     """Turn a dragged-in .apsnap patch into a ROM and start the emulator on it.
