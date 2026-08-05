@@ -81,7 +81,7 @@
   "idents": {
     "auth": {
       "addr": "0x8040041C",
-      "rom_offset": "0x0100042C",
+      "rom_offset": "0x0100041C",
       "len": 16,
       "type": "u8[16]",
       "access": "rw",
@@ -90,31 +90,31 @@
   },
   "save": {
     "savePtr": {
-      "addr": "0x800C21C0",
+      "addr": "0x800C21B0",
       "type": "ptr",
       "access": "r",
       "desc": "pointer to the save struct (deref for base; == saveBase)"
     },
     "saveBase": {
-      "addr": "0x800C21D0",
+      "addr": "0x800C21C0",
       "type": "UnkBigBoy",
       "access": "r",
       "desc": "main save struct base; full layout in src/more_funcs/more_funcs.h"
     },
     "rank": {
-      "addr": "0x800C2234",
+      "addr": "0x800C2224",
       "type": "u32",
       "access": "r",
       "desc": "current rank = (value >> 29) & 7"
     },
     "reportScores": {
-      "addr": "0x800C223C",
+      "addr": "0x800C222C",
       "type": "s32[69]",
       "access": "r",
       "desc": "best PKMN Report score per species slot"
     },
     "registeredPhotos": {
-      "addr": "0x800C2350",
+      "addr": "0x800C2340",
       "type": "PhotoData[69]",
       "access": "r",
       "desc": "registered photo per species slot (stride 0x3A0); registered if s32 at +0x04 != -1"
