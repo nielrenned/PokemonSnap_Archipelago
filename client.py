@@ -114,10 +114,10 @@ class PokemonSnapContext(CommonContext, PJ64Context):
             logger.warning("Could not find Universal Tracker.")
 
     def make_gui(self):
-        if not _check_universal_tracker_version():
+        if _tracker_loaded and _has_invalid_universal_tracker(UT_VERSION):
             Utils.messagebox("Universal Tracker needs updated",
             f"Please update your Universal Tracker. The version currently installed is {UT_VERSION}.", error=True)
-            raise ImportError("Need to update universal tracker version to at least v0.2.11.")
+            raise ImportError(f"Need to update universal tracker version to at least v{'.'.join(map(str,MIN_UNIVERSAL_TRACKER_VERSION))}.")
 
         # Performing local import to prevent additional UIs to appear during the patching process.
         # This appears to be occurring if a spawned process does not have a UI element when importing kvui/kivymd.
@@ -299,22 +299,22 @@ class PokemonSnapContext(CommonContext, PJ64Context):
             logger.error("Something went horribly wrong with the Pokemon Snap client. Details: " + str(threadEx))
 
 
-def _check_universal_tracker_version() -> bool:
-    import re
-    from Utils import tuplize_version
-    
-    if not _tracker_loaded:
+def _has_invalid_universal_tracker(universal_tracker_version) -> bool:
+    delimiter = "."
+
+    version_split = universal_tracker_version.split(delimiter)
+    if len(version_split) < 3:
         return True
 
-    # We are checking for a string that starts with v contains any amount of digits followed by a period
-    # repeating three times (e.x. v0.2.11)
-    match = re.search(r"v\d+.(\d+).(\d+)", UT_VERSION)
-    if len(match.groups()) < 2:
-        return False
-    if not tuplize_version(match.string.replace("v", "")) > tuplize_version("0.2.11"):
-        return False
+    clean_version_split = version_split.copy()
+    for i, version in enumerate(version_split):
+        clean_version_split[i]  = "".join([ele for ele in version if ele.isdigit()]) # Clean everything but digits from each part of the split
 
-    return True
+    tracker_version = tuple(int(ele) for ele in clean_version_split)
+    if tracker_version < MIN_UNIVERSAL_TRACKER_VERSION:
+        return True
+
+    return False
 
 def _patch_and_launch(patch_file: str) -> str:
     """Turn a dragged-in .apsnap patch into a ROM and start the emulator on it.

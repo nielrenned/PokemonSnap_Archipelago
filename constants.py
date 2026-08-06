@@ -1,5 +1,6 @@
 GAME_NAME: str = "Pokemon Snap"
 CLIENT_NAME: str = "Pokemon Snap Client"
+MIN_UNIVERSAL_TRACKER_VERSION: tuple  = (0, 2, 11)
 
 ADAPTER_SCRIPT_NAME: str = "ap_psnap_pj64_adapter_30.js"
 PJ64_ENCODING: str = "cp1252"
