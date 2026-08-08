@@ -5,6 +5,12 @@
     "requires": "8MB Expansion Pak"
   },
   "symbols": {
+    "gLevelID": {
+      "addr": "0x800AC0C0",
+      "type": "s32",
+      "access": "r",
+      "desc": "Most recently entered level (defaults to -1)"
+    },
     "gExpansionMagic": {
       "addr": "0x80400000",
       "type": "u32",

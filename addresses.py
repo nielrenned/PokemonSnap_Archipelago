@@ -29,6 +29,7 @@ CAN_USE_MASK = _addr("symbols", "gCanUseMask")
 COURSE_OVERRIDE = _addr("symbols", "gCourseOverride")
 COURSE_UNLOCK_MASK = _addr("symbols", "gCourseUnlockMask")
 DIALOG_FLAGS = _addr("symbols", "gDialogFlags")
+LEVEL_ID = _addr("symbols", "gLevelID")
 
 # Vanilla save block (read-only)
 SAVE_BASE = _addr("save", "saveBase")

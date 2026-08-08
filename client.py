@@ -66,6 +66,7 @@ class PokemonSnapContext(CommonContext, PJ64Context):
     pj64_status: str
     finished_game: bool = False
     should_play_cloud_dialog: bool = True
+    current_level_id: int = -1
 
     def __init__(self, server_address, password, ap_port):
         """
@@ -174,6 +175,19 @@ class PokemonSnapContext(CommonContext, PJ64Context):
         # TODO: condense into one read and split based on addresses
         if not self.slot or not await self._expansion_loaded():
             return
+
+        level_id = (await pj64_read_memory(self, "s32", addr.LEVEL_ID, 4))[0]
+        if level_id != self.current_level_id:
+            self.current_level_id = level_id
+            logger.debug(f"Pokemon Snap Level changed to {level_id}")
+            await self.send_msgs([{
+                "cmd": "Bounce",
+                "slots": [self.slot],
+                "data": {
+                    "type": "MapUpdate",
+                    "mapId": level_id
+                }
+            }])
 
         scores = []
         raw_scores = await pj64_read_memory(self, "u16", addr.SPECIES_SCORES, addr.NUM_SPECIES_SCORES * 6 * 2)

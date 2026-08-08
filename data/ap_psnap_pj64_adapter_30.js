@@ -47,7 +47,7 @@ var MemoryBridge = {
             return result.join("");
         }
 
-        var step = (type === "u32") ? 4 : (type === "u16") ? 2 : 1;
+        var step = (type === "u32" || type === "s32") ? 4 : (type === "u16" || type === "s16") ? 2 : 1;
         var view = mem[type];
 
         for (var i = 0; i < size; i += step) {
@@ -64,7 +64,7 @@ var MemoryBridge = {
             return true;
         }
 
-        var step = (type === "u32") ? 4 : (type === "u16") ? 2 : 1;
+        var step = (type === "u32" || type === "s32") ? 4 : (type === "u16" || type === "s16") ? 2 : 1;
         var view = mem[type];
 
         for (var i = 0; i < value.length; i++) {
