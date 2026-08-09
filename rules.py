@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING
 
 from rule_builder.rules import Has, HasAll, HasAny, And, Rule
 from .items import SIGN_PIC_NAMES
-from .locations import wonderful, multiple, secret_exit, bonus, PokemonSnapLocationCategory as Category
+from .locations import wonderful, multiple, secret_exit, course, bonus, PokemonSnapLocationCategory as Category
 from .constants import *
 
 if TYPE_CHECKING:
@@ -56,21 +56,21 @@ def set_rules(world: "PokemonSnapWorld"):
 
 
 def set_beach_rules(world: "PokemonSnapWorld"):
-    set_location_rule(world, "Scyther", Category.NORMAL_PHOTO, _HAS_PESTER)
-    set_location_rule(world, "Scyther", Category.WONDERFUL_PHOTO, _HAS_PESTER)
+    set_location_rule(world, SCYTHER, Category.NORMAL_PHOTO, _HAS_PESTER)
+    set_location_rule(world, SCYTHER, Category.WONDERFUL_PHOTO, _HAS_PESTER)
 
-    set_location_rule(world, "Chansey", Category.NORMAL_PHOTO, _HAS_APPLE_OR_PESTER)
-    set_location_rule(world, "Chansey", Category.WONDERFUL_PHOTO, _HAS_APPLE_OR_PESTER)
+    set_location_rule(world, CHANSEY, Category.NORMAL_PHOTO, _HAS_APPLE_OR_PESTER)
+    set_location_rule(world, CHANSEY, Category.WONDERFUL_PHOTO, _HAS_APPLE_OR_PESTER)
     
-    set_location_rule(world, "Snorlax", Category.NORMAL_PHOTO, HasAny(PESTER_BALL, POKEFLUTE))
-    set_location_rule(world, "Snorlax", Category.WONDERFUL_PHOTO, HasAny(PESTER_BALL, POKEFLUTE))
+    set_location_rule(world, SNORLAX, Category.NORMAL_PHOTO, HasAny(PESTER_BALL, POKEFLUTE))
+    set_location_rule(world, SNORLAX, Category.WONDERFUL_PHOTO, HasAny(PESTER_BALL, POKEFLUTE))
 
-    set_location_rule(world, "Kangaskhan", Category.WONDERFUL_PHOTO, _HAS_APPLE_OR_PESTER)
+    set_location_rule(world, KANGASKHAN, Category.WONDERFUL_PHOTO, _HAS_APPLE_OR_PESTER)
 
-    set_location_rule(world, "Magikarp (Beach)", Category.NORMAL_PHOTO, _HAS_APPLE_OR_PESTER)
-    set_location_rule(world, "Magikarp (Beach)", Category.WONDERFUL_PHOTO, _HAS_APPLE_OR_PESTER)
+    set_location_rule(world, course(MAGIKARP, LVL_BEACH), Category.NORMAL_PHOTO, _HAS_APPLE_OR_PESTER)
+    set_location_rule(world, course(MAGIKARP, LVL_BEACH), Category.WONDERFUL_PHOTO, _HAS_APPLE_OR_PESTER)
 
-    set_location_rule(world, "Pikachu (Beach)", Category.MULTIPLE_PHOTO, _HAS_PESTER)
+    set_location_rule(world, course(PIKACHU, LVL_BEACH), Category.MULTIPLE_PHOTO, _HAS_PESTER)
 
     set_location_rule(world, SURFING_PIKACHU, Category.SPECIAL_POSE, _HAS_APPLE)
     set_location_rule(world, PIKACHU_ON_A_STUMP, Category.SPECIAL_POSE, _HAS_PESTER)
@@ -80,52 +80,52 @@ def set_beach_rules(world: "PokemonSnapWorld"):
 
 def set_tunnel_rules(world: "PokemonSnapWorld"):
     # TODO: [SOFT] mult: Technically possible without anything (difficult)
-    set_location_rule(world, "Kakuna", Category.MULTIPLE_PHOTO, HasAny(PESTER_BALL, POKEMON_FOOD, DASH_ENGINE))
+    set_location_rule(world, KAKUNA, Category.MULTIPLE_PHOTO, HasAny(PESTER_BALL, POKEMON_FOOD, DASH_ENGINE))
 
     # Without Zapdos you have to ignore the first and throw at the second - spoiler in doc
-    set_location_rule(world, "Electabuzz", Category.MULTIPLE_PHOTO, _HAS_APPLE_OR_PESTER)
+    set_location_rule(world, ELECTABUZZ, Category.MULTIPLE_PHOTO, _HAS_APPLE_OR_PESTER)
 
-    set_location_rule(world, "Magnemite", Category.NORMAL_PHOTO, _HAS_APPLE)
-    set_location_rule(world, "Magnemite", Category.WONDERFUL_PHOTO, _HAS_APPLE)
-    set_location_rule(world, "Magnemite", Category.MULTIPLE_PHOTO, _HAS_APPLE)
+    set_location_rule(world, MAGNEMITE, Category.NORMAL_PHOTO, _HAS_APPLE)
+    set_location_rule(world, MAGNEMITE, Category.WONDERFUL_PHOTO, _HAS_APPLE)
+    set_location_rule(world, MAGNEMITE, Category.MULTIPLE_PHOTO, _HAS_APPLE)
 
-    set_location_rule(world, "Magneton", Category.NORMAL_PHOTO, _HAS_APPLE)
-    set_location_rule(world, "Magneton", Category.WONDERFUL_PHOTO, _HAS_APPLE)
+    set_location_rule(world, MAGNETON, Category.NORMAL_PHOTO, _HAS_APPLE)
+    set_location_rule(world, MAGNETON, Category.WONDERFUL_PHOTO, _HAS_APPLE)
 
-    set_location_rule(world, "Zapdos", Category.NORMAL_PHOTO, HasAll(POKEMON_FOOD, POKEFLUTE))
-    set_location_rule(world, "Zapdos", Category.WONDERFUL_PHOTO, HasAll(POKEMON_FOOD, POKEFLUTE))
+    set_location_rule(world, ZAPDOS, Category.NORMAL_PHOTO, HasAll(POKEMON_FOOD, POKEFLUTE))
+    set_location_rule(world, ZAPDOS, Category.WONDERFUL_PHOTO, HasAll(POKEMON_FOOD, POKEFLUTE))
 
     set_location_rule(world, TUNNEL_SIGN, Category.POKEMON_SIGN, HasAll(SIGN_DETECTOR, POKEMON_FOOD, POKEFLUTE))
     set_location_rule(world, LVL_TUNNEL, Category.SECRET_EXIT, _HAS_APPLE_OR_PESTER)
 
 
 def set_volcano_rules(world: "PokemonSnapWorld"):
-    set_location_rule(world, "Charmander", Category.MULTIPLE_PHOTO, _HAS_APPLE)
+    set_location_rule(world, CHARMANDER, Category.MULTIPLE_PHOTO, _HAS_APPLE)
 
-    set_location_rule(world, "Charmeleon", Category.NORMAL_PHOTO, _HAS_APPLE_OR_PESTER)
-    set_location_rule(world, "Charmeleon", Category.WONDERFUL_PHOTO, _HAS_APPLE_OR_PESTER)
+    set_location_rule(world, CHARMELEON, Category.NORMAL_PHOTO, _HAS_APPLE_OR_PESTER)
+    set_location_rule(world, CHARMELEON, Category.WONDERFUL_PHOTO, _HAS_APPLE_OR_PESTER)
 
-    set_location_rule(world, "Charizard", Category.NORMAL_PHOTO, _HAS_APPLE_OR_PESTER)
-    set_location_rule(world, "Charizard", Category.WONDERFUL_PHOTO, _HAS_APPLE_OR_PESTER)
+    set_location_rule(world, CHARIZARD, Category.NORMAL_PHOTO, _HAS_APPLE_OR_PESTER)
+    set_location_rule(world, CHARIZARD, Category.WONDERFUL_PHOTO, _HAS_APPLE_OR_PESTER)
 
     # TODO: [SOFT] mult: Technically possible with dash (rng)
-    set_location_rule(world, "Vulpix", Category.MULTIPLE_PHOTO, _HAS_APPLE)
+    set_location_rule(world, VULPIX, Category.MULTIPLE_PHOTO, _HAS_APPLE)
 
-    set_location_rule(world, "Growlithe", Category.NORMAL_PHOTO, _HAS_PESTER)
-    set_location_rule(world, "Growlithe", Category.WONDERFUL_PHOTO, _HAS_PESTER)
-    set_location_rule(world, "Growlithe", Category.MULTIPLE_PHOTO, HasAll(PESTER_BALL, POKEMON_FOOD))
+    set_location_rule(world, GROWLITHE, Category.NORMAL_PHOTO, _HAS_PESTER)
+    set_location_rule(world, GROWLITHE, Category.WONDERFUL_PHOTO, _HAS_PESTER)
+    set_location_rule(world, GROWLITHE, Category.MULTIPLE_PHOTO, HasAll(PESTER_BALL, POKEMON_FOOD))
 
-    set_location_rule(world, "Arcanine", Category.NORMAL_PHOTO, _HAS_PESTER)
-    set_location_rule(world, "Arcanine", Category.WONDERFUL_PHOTO, _HAS_PESTER)
-    set_location_rule(world, "Arcanine", Category.MULTIPLE_PHOTO, HasAll(PESTER_BALL, POKEMON_FOOD))
+    set_location_rule(world, ARCANINE, Category.NORMAL_PHOTO, _HAS_PESTER)
+    set_location_rule(world, ARCANINE, Category.WONDERFUL_PHOTO, _HAS_PESTER)
+    set_location_rule(world, ARCANINE, Category.MULTIPLE_PHOTO, HasAll(PESTER_BALL, POKEMON_FOOD))
 
-    set_location_rule(world, "Moltres", Category.NORMAL_PHOTO, _HAS_APPLE_OR_PESTER)
-    set_location_rule(world, "Moltres", Category.WONDERFUL_PHOTO, _HAS_APPLE_OR_PESTER)
+    set_location_rule(world, MOLTRES, Category.NORMAL_PHOTO, _HAS_APPLE_OR_PESTER)
+    set_location_rule(world, MOLTRES, Category.WONDERFUL_PHOTO, _HAS_APPLE_OR_PESTER)
 
-    set_location_rule(world, "Magmar", Category.MULTIPLE_PHOTO, _HAS_APPLE_OR_PESTER)
+    set_location_rule(world, MAGMAR, Category.MULTIPLE_PHOTO, _HAS_APPLE_OR_PESTER)
 
-    set_location_rule(world, "Magikarp (Volcano)", Category.NORMAL_PHOTO, _HAS_APPLE_OR_PESTER)
-    set_location_rule(world, "Magikarp (Volcano)", Category.WONDERFUL_PHOTO, _HAS_APPLE_OR_PESTER)
+    set_location_rule(world, course(MAGIKARP, LVL_VOLCANO), Category.NORMAL_PHOTO, _HAS_APPLE_OR_PESTER)
+    set_location_rule(world, course(MAGIKARP, LVL_VOLCANO), Category.WONDERFUL_PHOTO, _HAS_APPLE_OR_PESTER)
 
     set_location_rule(world, FIGHTING_MAGMAR, Category.SPECIAL_POSE, _HAS_APPLE)
 
@@ -134,33 +134,33 @@ def set_volcano_rules(world: "PokemonSnapWorld"):
 
 def set_river_rules(world: "PokemonSnapWorld"):
     # TODO: [SOFT] wdfl&mult: Technically possible without anything (rng)
-    set_location_rule(world, "Shellder", Category.WONDERFUL_PHOTO, Has(DASH_ENGINE))
-    set_location_rule(world, "Shellder", Category.MULTIPLE_PHOTO, Has(DASH_ENGINE))
+    set_location_rule(world, SHELLDER, Category.WONDERFUL_PHOTO, Has(DASH_ENGINE))
+    set_location_rule(world, SHELLDER, Category.MULTIPLE_PHOTO, Has(DASH_ENGINE))
 
-    set_location_rule(world, "Vileplume", Category.NORMAL_PHOTO, _HAS_FLUTE)
-    set_location_rule(world, "Vileplume", Category.WONDERFUL_PHOTO, _HAS_FLUTE)
+    set_location_rule(world, VILEPLUME, Category.NORMAL_PHOTO, _HAS_FLUTE)
+    set_location_rule(world, VILEPLUME, Category.WONDERFUL_PHOTO, _HAS_FLUTE)
 
     # TODO: [SOFT] wdfl&mult: Technically possible without anything (difficult)
-    set_location_rule(world, "Metapod", Category.WONDERFUL_PHOTO, _HAS_PESTER)
-    set_location_rule(world, "Metapod", Category.MULTIPLE_PHOTO, _HAS_PESTER)
+    set_location_rule(world, METAPOD, Category.WONDERFUL_PHOTO, _HAS_PESTER)
+    set_location_rule(world, METAPOD, Category.MULTIPLE_PHOTO, _HAS_PESTER)
 
-    set_location_rule(world, "Psyduck", Category.MULTIPLE_PHOTO, _HAS_APPLE_OR_PESTER)
+    set_location_rule(world, PSYDUCK, Category.MULTIPLE_PHOTO, _HAS_APPLE_OR_PESTER)
 
-    set_location_rule(world, "Poliwag", Category.WONDERFUL_PHOTO, _HAS_APPLE_OR_PESTER)
-    set_location_rule(world, "Poliwag", Category.MULTIPLE_PHOTO, _HAS_APPLE_OR_PESTER)
+    set_location_rule(world, POLIWAG, Category.WONDERFUL_PHOTO, _HAS_APPLE_OR_PESTER)
+    set_location_rule(world, POLIWAG, Category.MULTIPLE_PHOTO, _HAS_APPLE_OR_PESTER)
 
-    set_location_rule(world, "Slowbro", Category.NORMAL_PHOTO, _HAS_APPLE)
-    set_location_rule(world, "Slowbro", Category.WONDERFUL_PHOTO, _HAS_APPLE)
+    set_location_rule(world, SLOWBRO, Category.NORMAL_PHOTO, _HAS_APPLE)
+    set_location_rule(world, SLOWBRO, Category.WONDERFUL_PHOTO, _HAS_APPLE)
 
-    set_location_rule(world, "Porygon", Category.NORMAL_PHOTO, _HAS_PESTER)
-    set_location_rule(world, "Porygon", Category.WONDERFUL_PHOTO, _HAS_PESTER)
-    set_location_rule(world, "Porygon", Category.MULTIPLE_PHOTO, HasAll(PESTER_BALL, POKEMON_FOOD))
+    set_location_rule(world, PORYGON, Category.NORMAL_PHOTO, _HAS_PESTER)
+    set_location_rule(world, PORYGON, Category.WONDERFUL_PHOTO, _HAS_PESTER)
+    set_location_rule(world, PORYGON, Category.MULTIPLE_PHOTO, HasAll(PESTER_BALL, POKEMON_FOOD))
 
-    set_location_rule(world, "Bulbasaur (River)", Category.WONDERFUL_PHOTO, _HAS_APPLE_OR_PESTER)
-    set_location_rule(world, "Bulbasaur (River)", Category.MULTIPLE_PHOTO, _HAS_APPLE_OR_PESTER)
+    set_location_rule(world, course(BULBASAUR, LVL_RIVER), Category.WONDERFUL_PHOTO, _HAS_APPLE_OR_PESTER)
+    set_location_rule(world, course(BULBASAUR, LVL_RIVER), Category.MULTIPLE_PHOTO, _HAS_APPLE_OR_PESTER)
 
-    set_location_rule(world, "Magikarp (River)", Category.NORMAL_PHOTO, _HAS_APPLE_OR_PESTER)
-    set_location_rule(world, "Magikarp (River)", Category.WONDERFUL_PHOTO, _HAS_APPLE_OR_PESTER)
+    set_location_rule(world, course(MAGIKARP, LVL_RIVER), Category.NORMAL_PHOTO, _HAS_APPLE_OR_PESTER)
+    set_location_rule(world, course(MAGIKARP, LVL_RIVER), Category.WONDERFUL_PHOTO, _HAS_APPLE_OR_PESTER)
 
     # Speed pikachu has no requirements, it will begin to run if you take a close picture
 
@@ -169,29 +169,29 @@ def set_river_rules(world: "PokemonSnapWorld"):
 
 
 def set_cave_rules(world: "PokemonSnapWorld"):
-    set_location_rule(world, "Victreebel", Category.NORMAL_PHOTO, _HAS_APPLE_OR_PESTER)
-    set_location_rule(world, "Victreebel", Category.WONDERFUL_PHOTO, _HAS_APPLE_OR_PESTER)
+    set_location_rule(world, VICTREEBEL, Category.NORMAL_PHOTO, _HAS_APPLE_OR_PESTER)
+    set_location_rule(world, VICTREEBEL, Category.WONDERFUL_PHOTO, _HAS_APPLE_OR_PESTER)
 
-    set_location_rule(world, "Jigglypuff", Category.MULTIPLE_PHOTO, _HAS_APPLE_OR_PESTER)
+    set_location_rule(world, JIGGLYPUFF, Category.MULTIPLE_PHOTO, _HAS_APPLE_OR_PESTER)
 
-    set_location_rule(world, "Ditto", Category.NORMAL_PHOTO, _HAS_PESTER)
-    set_location_rule(world, "Ditto", Category.WONDERFUL_PHOTO, _HAS_PESTER)
-    set_location_rule(world, "Ditto", Category.MULTIPLE_PHOTO, _HAS_PESTER)
+    set_location_rule(world, DITTO, Category.NORMAL_PHOTO, _HAS_PESTER)
+    set_location_rule(world, DITTO, Category.WONDERFUL_PHOTO, _HAS_PESTER)
+    set_location_rule(world, DITTO, Category.MULTIPLE_PHOTO, _HAS_PESTER)
 
-    set_location_rule(world, "Articuno", Category.NORMAL_PHOTO, _HAS_FLUTE)
-    set_location_rule(world, "Articuno", Category.WONDERFUL_PHOTO, _HAS_FLUTE)
+    set_location_rule(world, ARTICUNO, Category.NORMAL_PHOTO, _HAS_FLUTE)
+    set_location_rule(world, ARTICUNO, Category.WONDERFUL_PHOTO, _HAS_FLUTE)
 
-    set_location_rule(world, "Muk", Category.NORMAL_PHOTO, _HAS_PESTER)
-    set_location_rule(world, "Muk", Category.WONDERFUL_PHOTO, _HAS_PESTER)
+    set_location_rule(world, MUK, Category.NORMAL_PHOTO, _HAS_PESTER)
+    set_location_rule(world, MUK, Category.WONDERFUL_PHOTO, _HAS_PESTER)
 
-    set_location_rule(world, "Jynx", Category.MULTIPLE_PHOTO, _HAS_FLUTE)
+    set_location_rule(world, JYNX, Category.MULTIPLE_PHOTO, _HAS_FLUTE)
 
-    set_location_rule(world, "Magikarp (Cave)", Category.NORMAL_PHOTO, _HAS_APPLE_OR_PESTER)
-    set_location_rule(world, "Magikarp (Cave)", Category.WONDERFUL_PHOTO, _HAS_APPLE_OR_PESTER)
+    set_location_rule(world, course(MAGIKARP, LVL_CAVE), Category.NORMAL_PHOTO, _HAS_APPLE_OR_PESTER)
+    set_location_rule(world, course(MAGIKARP, LVL_CAVE), Category.WONDERFUL_PHOTO, _HAS_APPLE_OR_PESTER)
 
     # TODO: [SOFT] base: Technically possible without anything (difficult)
-    set_location_rule(world, "Pikachu (Cave)", Category.NORMAL_PHOTO, _HAS_APPLE_OR_PESTER)
-    set_location_rule(world, "Pikachu (Cave)", Category.WONDERFUL_PHOTO, _HAS_APPLE_OR_PESTER)
+    set_location_rule(world, course(PIKACHU, LVL_CAVE), Category.NORMAL_PHOTO, _HAS_APPLE_OR_PESTER)
+    set_location_rule(world, course(PIKACHU, LVL_CAVE), Category.WONDERFUL_PHOTO, _HAS_APPLE_OR_PESTER)
 
     set_location_rule(world, BALLOON_PIKACHU, Category.SPECIAL_POSE, _HAS_APPLE_OR_PESTER)
     set_location_rule(world, FLYING_PIKACHU, Category.SPECIAL_POSE, And(_HAS_FLUTE, _HAS_APPLE_OR_PESTER))
@@ -203,33 +203,33 @@ def set_cave_rules(world: "PokemonSnapWorld"):
 
 def set_valley_rules(world: "PokemonSnapWorld"):
     # TODO: [SOFT] wdfl: Technically possible without anything. mult: Technically possible with just dash (difficult)
-    set_location_rule(world, "Squirtle", Category.WONDERFUL_PHOTO, _HAS_PESTER)
-    set_location_rule(world, "Squirtle", Category.MULTIPLE_PHOTO, _HAS_PESTER)
+    set_location_rule(world, SQUIRTLE, Category.WONDERFUL_PHOTO, _HAS_PESTER)
+    set_location_rule(world, SQUIRTLE, Category.MULTIPLE_PHOTO, _HAS_PESTER)
 
-    set_location_rule(world, "Goldeen", Category.NORMAL_PHOTO, _HAS_APPLE_OR_PESTER)
-    set_location_rule(world, "Goldeen", Category.WONDERFUL_PHOTO, _HAS_APPLE_OR_PESTER)
-
-    set_location_rule(world, "Magikarp (Valley)", Category.NORMAL_PHOTO, HasAny(PESTER_BALL, POKEMON_FOOD, DASH_ENGINE))
-    set_location_rule(world, "Magikarp (Valley)", Category.WONDERFUL_PHOTO, _HAS_APPLE_OR_PESTER)
-    set_location_rule(world, "Magikarp (Valley)", Category.MULTIPLE_PHOTO, _HAS_APPLE_OR_PESTER)
+    set_location_rule(world, GOLDEEN, Category.NORMAL_PHOTO, _HAS_APPLE_OR_PESTER)
+    set_location_rule(world, GOLDEEN, Category.WONDERFUL_PHOTO, _HAS_APPLE_OR_PESTER)
 
     # TODO: [SOFT] wdfl&mult: Technically possible without anything (difficult)
-    set_location_rule(world, "Graveler", Category.WONDERFUL_PHOTO, HasAny(PESTER_BALL, POKEFLUTE))
-    set_location_rule(world, "Graveler", Category.MULTIPLE_PHOTO, _HAS_FLUTE)
+    set_location_rule(world, GRAVELER, Category.WONDERFUL_PHOTO, HasAny(PESTER_BALL, POKEFLUTE))
+    set_location_rule(world, GRAVELER, Category.MULTIPLE_PHOTO, _HAS_FLUTE)
 
-    set_location_rule(world, "Gyarados", Category.NORMAL_PHOTO, _HAS_PESTER)
-    set_location_rule(world, "Gyarados", Category.WONDERFUL_PHOTO, _HAS_PESTER)
+    set_location_rule(world, GYARADOS, Category.NORMAL_PHOTO, _HAS_PESTER)
+    set_location_rule(world, GYARADOS, Category.WONDERFUL_PHOTO, _HAS_PESTER)
 
-    set_location_rule(world, "Dragonite", Category.NORMAL_PHOTO, _HAS_PESTER)
-    set_location_rule(world, "Dragonite", Category.WONDERFUL_PHOTO, _HAS_PESTER)
+    set_location_rule(world, DRAGONITE, Category.NORMAL_PHOTO, _HAS_PESTER)
+    set_location_rule(world, DRAGONITE, Category.WONDERFUL_PHOTO, _HAS_PESTER)
 
-    set_location_rule(world, "Sandshrew", Category.NORMAL_PHOTO, HasAny(PESTER_BALL, DASH_ENGINE))
-    set_location_rule(world, "Sandshrew", Category.WONDERFUL_PHOTO, _HAS_PESTER)
-    set_location_rule(world, "Sandshrew", Category.MULTIPLE_PHOTO, HasAll(PESTER_BALL, POKEMON_FOOD))
+    set_location_rule(world, SANDSHREW, Category.NORMAL_PHOTO, HasAny(PESTER_BALL, DASH_ENGINE))
+    set_location_rule(world, SANDSHREW, Category.WONDERFUL_PHOTO, _HAS_PESTER)
+    set_location_rule(world, SANDSHREW, Category.MULTIPLE_PHOTO, HasAll(PESTER_BALL, POKEMON_FOOD))
 
-    set_location_rule(world, "Sandslash", Category.WONDERFUL_PHOTO, HasAny(PESTER_BALL, DASH_ENGINE))
+    set_location_rule(world, SANDSLASH, Category.WONDERFUL_PHOTO, HasAny(PESTER_BALL, DASH_ENGINE))
 
-    set_location_rule(world, "Dratini", Category.MULTIPLE_PHOTO, _HAS_APPLE_OR_PESTER)
+    set_location_rule(world, DRATINI, Category.MULTIPLE_PHOTO, _HAS_APPLE_OR_PESTER)
+
+    set_location_rule(world, course(MAGIKARP, LVL_VALLEY), Category.NORMAL_PHOTO, HasAny(PESTER_BALL, POKEMON_FOOD, DASH_ENGINE))
+    set_location_rule(world, course(MAGIKARP, LVL_VALLEY), Category.WONDERFUL_PHOTO, _HAS_APPLE_OR_PESTER)
+    set_location_rule(world, course(MAGIKARP, LVL_VALLEY), Category.MULTIPLE_PHOTO, _HAS_APPLE_OR_PESTER)
 
     set_location_rule(world, GRAVELERS_GROUP_DANCE, Category.SPECIAL_POSE, _HAS_FLUTE)
 
