@@ -56,7 +56,8 @@ class IncludeRNGChecks(Toggle):
 class IncludeHardChecks(Toggle):
     """
     Include the hard photos as checks. They are:
-      Staryu: Multiple, Starmie: Multiple, and Zubat (Cave): Multiple.
+      Goldeen: Good Technique, Staryu: Multiple, Starmie: Multiple,
+      Pikachy (River): Good Technique and Zubat (Cave): Multiple.
     """
     display_name = "Include hard checks"
 
