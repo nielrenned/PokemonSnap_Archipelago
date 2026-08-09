@@ -43,11 +43,6 @@ def set_rules(world: "PokemonSnapWorld"):
 
     world.set_rule(world.get_entrance(f'{START_GAME} -> {LVL_CLOUD}'), HasAll(*SIGN_PIC_NAMES))
 
-    # Secret Exits
-    set_location_rule(world, LVL_TUNNEL, Category.SECRET_EXIT, _HAS_APPLE_OR_PESTER)
-    set_location_rule(world, LVL_RIVER,  Category.SECRET_EXIT, _HAS_PESTER)
-    set_location_rule(world, LVL_VALLEY, Category.SECRET_EXIT, _HAS_PESTER)
-
     # World Location Rules
     set_beach_rules(world)
     set_tunnel_rules(world)
@@ -101,6 +96,7 @@ def set_tunnel_rules(world: "PokemonSnapWorld"):
     set_location_rule(world, "Zapdos", Category.WONDERFUL_PHOTO, HasAll(POKEMON_FOOD, POKEFLUTE))
 
     set_location_rule(world, TUNNEL_SIGN, Category.POKEMON_SIGN, HasAll(SIGN_DETECTOR, POKEMON_FOOD, POKEFLUTE))
+    set_location_rule(world, LVL_TUNNEL, Category.SECRET_EXIT, _HAS_APPLE_OR_PESTER)
 
 
 def set_volcano_rules(world: "PokemonSnapWorld"):
@@ -169,6 +165,7 @@ def set_river_rules(world: "PokemonSnapWorld"):
     # Speed pikachu has no requirements, it will begin to run if you take a close picture
 
     set_location_rule(world, RIVER_SIGN, Category.POKEMON_SIGN, HasAll(SIGN_DETECTOR, POKEFLUTE))
+    set_location_rule(world, LVL_RIVER,  Category.SECRET_EXIT, _HAS_PESTER)
 
 
 def set_cave_rules(world: "PokemonSnapWorld"):
@@ -237,3 +234,4 @@ def set_valley_rules(world: "PokemonSnapWorld"):
     set_location_rule(world, GRAVELERS_GROUP_DANCE, Category.SPECIAL_POSE, _HAS_FLUTE)
 
     set_location_rule(world, VALLEY_SIGN, Category.POKEMON_SIGN, Has(SIGN_DETECTOR))
+    set_location_rule(world, LVL_VALLEY, Category.SECRET_EXIT, _HAS_PESTER)
