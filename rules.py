@@ -146,6 +146,8 @@ def set_river_rules(world: "PokemonSnapWorld"):
 
     set_location_rule(world, PSYDUCK, Category.MULTIPLE_PHOTO, _HAS_APPLE_OR_PESTER)
 
+    # TODO: [SOFT] base: Technically possible without anything (difficult)
+    set_location_rule(world, POLIWAG, Category.NORMAL_PHOTO, _HAS_APPLE_OR_PESTER)
     set_location_rule(world, POLIWAG, Category.WONDERFUL_PHOTO, _HAS_APPLE_OR_PESTER)
     set_location_rule(world, POLIWAG, Category.MULTIPLE_PHOTO, _HAS_APPLE_OR_PESTER)
 

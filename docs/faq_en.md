@@ -111,7 +111,7 @@ The technical requirements for these shots (as far as we are aware of them) are 
  - Volcano - Multiple Vulpix requires Apples (sometimes Dash Engine)
  - River - Wonderful & Multiple Shellder requires the Dash Engine (nothing)
  - River - Wonderful & Multiple Metapod requires Pester Balls (nothing)
- - River - Wonderful Poliwag requires a throwable (nothing)
+ - River - Base & Wonderful Poliwag requires a throwable (nothing)
  - Cave - Base Pikachu requires a throwable (nothing)
  - Valley - Wonderful Squirtle requires a Pester Ball (nothing)
  - Valley - Multiple Squirtle requires a Pester Ball (Dash Engine)
