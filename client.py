@@ -81,7 +81,6 @@ class PokemonSnapContext(CommonContext, PJ64Context):
         self.tracker_enabled = _tracker_loaded
         self.pj64_status = INITIAL_STATUS
         self.ap_port = ap_port
-        self.checked_snap_locations: set[int] = set()
 
     def on_package(self, cmd: str, args: dict):
         """
@@ -172,14 +171,17 @@ class PokemonSnapContext(CommonContext, PJ64Context):
         await self.send_connect()
 
     async def check_snap_locations(self):
-        # TODO: condense into one read and split based on addresses
         if not self.slot or not await self._expansion_loaded():
             return
 
+        # TODO: condense into one read and split based on addresses
         level_id = (await pj64_read_memory(self, "s32", addr.LEVEL_ID, 4))[0]
+        raw_scores = await pj64_read_memory(self, "u16", addr.SPECIES_SCORES, addr.NUM_SPECIES_SCORES * 6 * 2)
+        sign_flags = await pj64_read_memory(self, "u8", addr.SIGN_FLAGS, addr.NUM_SIGNS)
+        secret_exit_flags = (await pj64_read_memory(self, "u8", addr.SECRET_EXIT_FLAGS, 1))[0]
+
         if level_id != self.current_level_id:
             self.current_level_id = level_id
-            logger.debug(f"Pokemon Snap Level changed to {level_id}")
             await self.send_msgs([{
                 "cmd": "Bounce",
                 "slots": [self.slot],
@@ -189,44 +191,28 @@ class PokemonSnapContext(CommonContext, PJ64Context):
                 }
             }])
 
-        scores = []
-        raw_scores = await pj64_read_memory(self, "u16", addr.SPECIES_SCORES, addr.NUM_SPECIES_SCORES * 6 * 2)
-        for i in range(0, addr.NUM_SPECIES_SCORES * 6, 6):
-            report_score = PokemonSnapReportScore(*raw_scores[i:i+6])
-            scores.append(report_score)
+        all_checks = set()
 
-        new_checks = set()
+        scores = [PokemonSnapReportScore(*raw_scores[i:i+6]) for i in range(0, addr.NUM_SPECIES_SCORES * 6, 6)]
         for slot, report in enumerate(scores):
             if report.score() == 0: continue
 
-            poses_seen_ids = [i+1 for i in range(12) if ((1 << i) & report.special_pose_bits) != 0]
-            for pose_id in poses_seen_ids:
-                if special_pose_id(pose_id) not in self.checked_snap_locations:
-                    new_checks.add(special_pose_id(pose_id))
-
             location_id = slot + 1
-            if location_id not in self.checked_snap_locations:
-                new_checks.add(location_id)
-            if report.technique_score != 0 and wdfl_id(location_id) not in self.checked_snap_locations:
-                new_checks.add(wdfl_id(location_id))
-            if report.same_pokemon_score != 0 and mult_id(location_id) not in self.checked_snap_locations:
-                new_checks.add(mult_id(location_id))
+            all_checks.add(location_id)
+            if report.technique_score > 0:    all_checks.add(wdfl_id(location_id))
+            if report.same_pokemon_score > 0: all_checks.add(mult_id(location_id))
 
-        sign_flags = await pj64_read_memory(self, "u8", addr.SIGN_FLAGS, addr.NUM_SIGNS)
-        new_checks |= {sign_id(i) for i, f in enumerate(sign_flags) 
-                       if f != 0 and sign_id(i) not in self.checked_snap_locations}
+            poses_seen_ids = [i+1 for i in range(12) if ((1 << i) & report.special_pose_bits) != 0]
+            all_checks |= {special_pose_id(pose_id) for pose_id in poses_seen_ids}
+        
+        all_checks |= {sign_id(i) for i, f in enumerate(sign_flags) if f != 0}
+        all_checks |= {secret_exit_id(i) for i in range(6) if (secret_exit_flags & (1 << i)) != 0}
+        all_checks |= {bonus_id(id) for id in all_checks}
 
-        secret_exit_flags = (await pj64_read_memory(self, "u8", addr.SECRET_EXIT_FLAGS, 1))[0]
-        new_checks |= {secret_exit_id(i) for i in range(6) 
-                       if (secret_exit_flags & (1 << i)) != 0 
-                       and secret_exit_id(i) not in self.checked_snap_locations}
-
-        new_checks |= {bonus_id(id) for id in new_checks 
-                       if bonus_id(id) not in self.checked_snap_locations}
-
-        if new_checks:
-            self.checked_snap_locations |= new_checks
-            await self.check_locations(list(new_checks))
+        # CommonClient.check_locations filters locations to just those missing 
+        # from the server, so we can send every check we find every time.
+        self.checked_locations |= all_checks
+        await self.check_locations(all_checks)
 
     async def receive_snap_items(self):
         if not self.slot or not await self._expansion_loaded():
