@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING
 
 from rule_builder.rules import Has, HasAll, HasAny, And, Rule
 from .items import SIGN_PIC_NAMES
-from .locations import wonderful as wdfl, multiple as mult, secret_exit, bonus, PokemonSnapLocationCategory as Category
+from .locations import wonderful, multiple, secret_exit, bonus, PokemonSnapLocationCategory as Category
 from .constants import *
 
 if TYPE_CHECKING:
@@ -16,8 +16,8 @@ _HAS_APPLE_OR_PESTER = HasAny(PESTER_BALL, POKEMON_FOOD)
 
 location_name_functions = {
     Category.NORMAL_PHOTO: (lambda s: s),
-    Category.WONDERFUL_PHOTO: wdfl,
-    Category.MULTIPLE_PHOTO: mult,
+    Category.WONDERFUL_PHOTO: wonderful,
+    Category.MULTIPLE_PHOTO: multiple,
     Category.SPECIAL_POSE: (lambda s: s),
     Category.POKEMON_SIGN: (lambda s: s),
     Category.SECRET_EXIT: secret_exit,
