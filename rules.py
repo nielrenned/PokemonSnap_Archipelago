@@ -48,8 +48,19 @@ def set_rules(world: "PokemonSnapWorld"):
     set_location_rule(world, LVL_RIVER,  Category.SECRET_EXIT, _HAS_PESTER)
     set_location_rule(world, LVL_VALLEY, Category.SECRET_EXIT, _HAS_PESTER)
 
+    # World Location Rules
+    set_beach_rules(world)
+    set_tunnel_rules(world)
+    set_volcano_rules(world)
+    set_river_rules(world)
+    set_cave_rules(world)
+    set_valley_rules(world)
 
-    # beach
+    # Rainbow Cloud Rules
+    set_location_rule(world, MEW, Category.NORMAL_PHOTO, _HAS_PESTER)
+
+
+def set_beach_rules(world: "PokemonSnapWorld"):
     set_location_rule(world, "Scyther", Category.NORMAL_PHOTO, _HAS_PESTER)
     set_location_rule(world, "Scyther", Category.WONDERFUL_PHOTO, _HAS_PESTER)
 
@@ -72,7 +83,7 @@ def set_rules(world: "PokemonSnapWorld"):
     set_location_rule(world, BEACH_SIGN, Category.POKEMON_SIGN, Has(SIGN_DETECTOR))
 
 
-    # tunnel
+def set_tunnel_rules(world: "PokemonSnapWorld"):
     # TODO: [SOFT] mult: Technically possible without anything (difficult)
     set_location_rule(world, "Kakuna", Category.MULTIPLE_PHOTO, HasAny(PESTER_BALL, POKEMON_FOOD, DASH_ENGINE))
 
@@ -92,7 +103,7 @@ def set_rules(world: "PokemonSnapWorld"):
     set_location_rule(world, TUNNEL_SIGN, Category.POKEMON_SIGN, HasAll(SIGN_DETECTOR, POKEMON_FOOD, POKEFLUTE))
 
 
-    # volcano
+def set_volcano_rules(world: "PokemonSnapWorld"):
     set_location_rule(world, "Charmander", Category.MULTIPLE_PHOTO, _HAS_APPLE)
 
     set_location_rule(world, "Charmeleon", Category.NORMAL_PHOTO, _HAS_APPLE_OR_PESTER)
@@ -125,7 +136,7 @@ def set_rules(world: "PokemonSnapWorld"):
     set_location_rule(world, VOLCANO_SIGN, Category.POKEMON_SIGN, HasAll(SIGN_DETECTOR, PESTER_BALL))
 
 
-    # river
+def set_river_rules(world: "PokemonSnapWorld"):
     # TODO: [SOFT] wdfl&mult: Technically possible without anything (rng)
     set_location_rule(world, "Shellder", Category.WONDERFUL_PHOTO, Has(DASH_ENGINE))
     set_location_rule(world, "Shellder", Category.MULTIPLE_PHOTO, Has(DASH_ENGINE))
@@ -160,7 +171,7 @@ def set_rules(world: "PokemonSnapWorld"):
     set_location_rule(world, RIVER_SIGN, Category.POKEMON_SIGN, HasAll(SIGN_DETECTOR, POKEFLUTE))
 
 
-    # cave
+def set_cave_rules(world: "PokemonSnapWorld"):
     set_location_rule(world, "Victreebel", Category.NORMAL_PHOTO, _HAS_APPLE_OR_PESTER)
     set_location_rule(world, "Victreebel", Category.WONDERFUL_PHOTO, _HAS_APPLE_OR_PESTER)
 
@@ -193,7 +204,7 @@ def set_rules(world: "PokemonSnapWorld"):
     set_location_rule(world, CAVE_SIGN, Category.POKEMON_SIGN, Has(SIGN_DETECTOR))
 
 
-    # valley
+def set_valley_rules(world: "PokemonSnapWorld"):
     # TODO: [SOFT] wdfl: Technically possible without anything. mult: Technically possible with just dash (difficult)
     set_location_rule(world, "Squirtle", Category.WONDERFUL_PHOTO, _HAS_PESTER)
     set_location_rule(world, "Squirtle", Category.MULTIPLE_PHOTO, _HAS_PESTER)
@@ -226,7 +237,3 @@ def set_rules(world: "PokemonSnapWorld"):
     set_location_rule(world, "Graveler's Group Dance", Category.SPECIAL_POSE, _HAS_FLUTE)
 
     set_location_rule(world, VALLEY_SIGN, Category.POKEMON_SIGN, Has(SIGN_DETECTOR))
-
-
-    # rainbow cloud
-    set_location_rule(world, "Mew", Category.NORMAL_PHOTO, _HAS_PESTER)
