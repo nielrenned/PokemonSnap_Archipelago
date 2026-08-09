@@ -68,49 +68,20 @@ class PokemonSnapLocation(Location):
         self.locked = True
         item.location = self
 
+# Location naming functions
+wonderful   = lambda name:         f'{name}: Good Technique'
+multiple    = lambda name:         f'{name}: Multiple'
+course      = lambda name, course: f'{name} ({course})'
+secret_exit = lambda level_name:   f'{level_name}: Secret Exit'
+bonus       = lambda loc_name:     f'{loc_name} 2'
 
-def wonderful(pokemon_name: str):
-    return f'{pokemon_name}: Good Technique'
-
-
-def wonderful_id(id: int):
-    return 100 + id
-
-
-def multiple(pokemon_name: str):
-    return f'{pokemon_name}: Multiple'
-
-
-def multiple_id(id: int):
-    return 200 + id
-
-
-def special_pose_id(pose_id: int):
-    return 300 + pose_id
-
-
-def sign_id(level_id: int):
-    return 400 + level_id
-
-
-def secret_exit(level_name: str):
-    return f'{level_name}: Secret Exit'
-
-
-def secret_exit_id(level_id: int):
-    return 500 + level_id
-
-
-def bonus(name: str):
-    return f'{name} 2'
-
-
-def bonus_id(id: int):
-    return 1000 + id
-
-
-def course(name: str, course: str):
-    return f'{name} ({course})'
+# Alternate ID functions
+wonderful_id    = lambda poke_id:  100 + poke_id
+multiple_id     = lambda poke_id:  200 + poke_id
+special_pose_id = lambda pose_id:  300 + pose_id
+sign_id         = lambda lvl_id:   400 + lvl_id
+secret_exit_id  = lambda lvl_id:   500 + lvl_id
+bonus_id        = lambda loc_id:  1000 + loc_id
 
 
 RNG_LOCATIONS = [
@@ -130,97 +101,97 @@ HARD_LOCATIONS = [
 
 species_data_tables = {
     LVL_BEACH: [
-        PokemonSnapSpeciesData(id=7,  name="Butterfree", multiple=True),
-        PokemonSnapSpeciesData(id=9,  name="Pidgey", multiple=True),
-        PokemonSnapSpeciesData(id=19, name="Meowth"),
-        PokemonSnapSpeciesData(id=34, name="Doduo"),
-        PokemonSnapSpeciesData(id=42, name="Chansey"),
-        PokemonSnapSpeciesData(id=43, name="Kangaskhan"),
-        PokemonSnapSpeciesData(id=47, name="Scyther"),
-        PokemonSnapSpeciesData(id=53, name="Lapras", multiple=True),
-        PokemonSnapSpeciesData(id=55, name="Eevee"),
-        PokemonSnapSpeciesData(id=57, name="Snorlax"),
+        PokemonSnapSpeciesData(id=7,  name=BUTTERFREE, multiple=True),
+        PokemonSnapSpeciesData(id=9,  name=PIDGEY, multiple=True),
+        PokemonSnapSpeciesData(id=19, name=MEOWTH),
+        PokemonSnapSpeciesData(id=34, name=DODUO),
+        PokemonSnapSpeciesData(id=42, name=CHANSEY),
+        PokemonSnapSpeciesData(id=43, name=KANGASKHAN),
+        PokemonSnapSpeciesData(id=47, name=SCYTHER),
+        PokemonSnapSpeciesData(id=53, name=LAPRAS, multiple=True),
+        PokemonSnapSpeciesData(id=55, name=EEVEE),
+        PokemonSnapSpeciesData(id=57, name=SNORLAX),
 
-        PokemonSnapSpeciesData(id=10, name="Pikachu (Beach)", multiple=True),
-        PokemonSnapSpeciesData(id=51, name="Magikarp (Beach)"),
+        PokemonSnapSpeciesData(id=10, name=course(PIKACHU, LVL_BEACH), multiple=True),
+        PokemonSnapSpeciesData(id=51, name=course(MAGIKARP, LVL_BEACH)),
     ],
     LVL_TUNNEL: [
-        PokemonSnapSpeciesData(id=8,  name="Kakuna", multiple=True),
-        PokemonSnapSpeciesData(id=17, name="Diglett"),
-        PokemonSnapSpeciesData(id=18, name="Dugtrio", multiple=True),
-        PokemonSnapSpeciesData(id=32, name="Magnemite", multiple=True),
-        PokemonSnapSpeciesData(id=33, name="Magneton"),
-        PokemonSnapSpeciesData(id=39, name="Haunter"),
-        PokemonSnapSpeciesData(id=40, name="Electrode", multiple=True),
-        PokemonSnapSpeciesData(id=49, name="Electabuzz", multiple=True),
-        PokemonSnapSpeciesData(id=59, name="Zapdos"),
+        PokemonSnapSpeciesData(id=8,  name=KAKUNA, multiple=True),
+        PokemonSnapSpeciesData(id=17, name=DIGLETT),
+        PokemonSnapSpeciesData(id=18, name=DUGTRIO, multiple=True),
+        PokemonSnapSpeciesData(id=32, name=MAGNEMITE, multiple=True),
+        PokemonSnapSpeciesData(id=33, name=MAGNETON),
+        PokemonSnapSpeciesData(id=39, name=HAUNTER),
+        PokemonSnapSpeciesData(id=40, name=ELECTRODE, multiple=True),
+        PokemonSnapSpeciesData(id=49, name=ELECTABUZZ, multiple=True),
+        PokemonSnapSpeciesData(id=59, name=ZAPDOS),
 
-        PokemonSnapSpeciesData(id=15, name="Zubat (Tunnel)"),
-        PokemonSnapSpeciesData(id=65, name="Magikarp (Tunnel)"),
-        PokemonSnapSpeciesData(id=70, name="Pikachu (Tunnel)"),
+        PokemonSnapSpeciesData(id=15, name=course(ZUBAT, LVL_TUNNEL)),
+        PokemonSnapSpeciesData(id=65, name=course(MAGIKARP, LVL_TUNNEL)),
+        PokemonSnapSpeciesData(id=70, name=course(PIKACHU, LVL_TUNNEL)),
     ],
     LVL_VOLCANO: [
-        PokemonSnapSpeciesData(id=2,  name="Charmander", multiple=True),
-        PokemonSnapSpeciesData(id=3,  name="Charmeleon"),
-        PokemonSnapSpeciesData(id=4,  name="Charizard"),
-        PokemonSnapSpeciesData(id=13, name="Vulpix", multiple=True),
-        PokemonSnapSpeciesData(id=22, name="Growlithe", multiple=True),
-        PokemonSnapSpeciesData(id=23, name="Arcanine", multiple=True),
-        PokemonSnapSpeciesData(id=29, name="Rapidash", multiple=True),
-        PokemonSnapSpeciesData(id=50, name="Magmar", multiple=True),
-        PokemonSnapSpeciesData(id=60, name="Moltres"),
+        PokemonSnapSpeciesData(id=2,  name=CHARMANDER, multiple=True),
+        PokemonSnapSpeciesData(id=3,  name=CHARMELEON),
+        PokemonSnapSpeciesData(id=4,  name=CHARIZARD),
+        PokemonSnapSpeciesData(id=13, name=VULPIX, multiple=True),
+        PokemonSnapSpeciesData(id=22, name=GROWLITHE, multiple=True),
+        PokemonSnapSpeciesData(id=23, name=ARCANINE, multiple=True),
+        PokemonSnapSpeciesData(id=29, name=RAPIDASH, multiple=True),
+        PokemonSnapSpeciesData(id=50, name=MAGMAR, multiple=True),
+        PokemonSnapSpeciesData(id=60, name=MOLTRES),
 
-        PokemonSnapSpeciesData(id=66, name="Magikarp (Volcano)"),
+        PokemonSnapSpeciesData(id=66, name=course(MAGIKARP, LVL_VOLCANO)),
     ],
     LVL_RIVER: [
-        PokemonSnapSpeciesData(id=6,  name="Metapod", multiple=True),
-        PokemonSnapSpeciesData(id=16, name="Vileplume"),
-        PokemonSnapSpeciesData(id=20, name="Psyduck", multiple=True),
-        PokemonSnapSpeciesData(id=24, name="Poliwag", multiple=True),
-        PokemonSnapSpeciesData(id=30, name="Slowpoke"),
-        PokemonSnapSpeciesData(id=31, name="Slowbro"),
-        PokemonSnapSpeciesData(id=37, name="Shellder", multiple=True),
-        PokemonSnapSpeciesData(id=38, name="Cloyster", multiple=True),
-        PokemonSnapSpeciesData(id=56, name="Porygon", multiple=True),
+        PokemonSnapSpeciesData(id=6,  name=METAPOD, multiple=True),
+        PokemonSnapSpeciesData(id=16, name=VILEPLUME),
+        PokemonSnapSpeciesData(id=20, name=PSYDUCK, multiple=True),
+        PokemonSnapSpeciesData(id=24, name=POLIWAG, multiple=True),
+        PokemonSnapSpeciesData(id=30, name=SLOWPOKE),
+        PokemonSnapSpeciesData(id=31, name=SLOWBRO),
+        PokemonSnapSpeciesData(id=37, name=SHELLDER, multiple=True),
+        PokemonSnapSpeciesData(id=38, name=CLOYSTER, multiple=True),
+        PokemonSnapSpeciesData(id=56, name=PORYGON, multiple=True),
 
-        PokemonSnapSpeciesData(id=1,  name="Bulbasaur (River)", multiple=True),
-        PokemonSnapSpeciesData(id=67, name="Magikarp (River)"),
-        PokemonSnapSpeciesData(id=71, name="Pikachu (River)"),
+        PokemonSnapSpeciesData(id=1,  name=course(BULBASAUR, LVL_RIVER), multiple=True),
+        PokemonSnapSpeciesData(id=67, name=course(MAGIKARP, LVL_RIVER)),
+        PokemonSnapSpeciesData(id=71, name=course(PIKACHU, LVL_RIVER)),
     ],
     LVL_CAVE: [
-        PokemonSnapSpeciesData(id=14, name="Jigglypuff", multiple=True),
-        PokemonSnapSpeciesData(id=25, name="Weepinbell"),
-        PokemonSnapSpeciesData(id=26, name="Victreebel"),
-        PokemonSnapSpeciesData(id=35, name="Grimer"),
-        PokemonSnapSpeciesData(id=36, name="Muk"),
-        PokemonSnapSpeciesData(id=48, name="Jynx", multiple=True),
-        PokemonSnapSpeciesData(id=54, name="Ditto", multiple=True),
-        PokemonSnapSpeciesData(id=58, name="Articuno"),
-        PokemonSnapSpeciesData(id=41, name="Koffing"),
+        PokemonSnapSpeciesData(id=14, name=JIGGLYPUFF, multiple=True),
+        PokemonSnapSpeciesData(id=25, name=WEEPINBELL),
+        PokemonSnapSpeciesData(id=26, name=VICTREEBEL),
+        PokemonSnapSpeciesData(id=35, name=GRIMER),
+        PokemonSnapSpeciesData(id=36, name=MUK),
+        PokemonSnapSpeciesData(id=48, name=JYNX, multiple=True),
+        PokemonSnapSpeciesData(id=54, name=DITTO, multiple=True),
+        PokemonSnapSpeciesData(id=58, name=ARTICUNO),
+        PokemonSnapSpeciesData(id=41, name=KOFFING),
 
-        PokemonSnapSpeciesData(id=64, name="Bulbasaur (Cave)", multiple=True),
-        PokemonSnapSpeciesData(id=68, name="Magikarp (Cave)"),
-        PokemonSnapSpeciesData(id=72, name="Pikachu (Cave)"),
-        PokemonSnapSpeciesData(id=73, name="Zubat (Cave)", multiple=True),
+        PokemonSnapSpeciesData(id=64, name=course(BULBASAUR, LVL_CAVE), multiple=True),
+        PokemonSnapSpeciesData(id=68, name=course(MAGIKARP, LVL_CAVE)),
+        PokemonSnapSpeciesData(id=72, name=course(PIKACHU, LVL_CAVE)),
+        PokemonSnapSpeciesData(id=73, name=course(ZUBAT, LVL_CAVE), multiple=True),
     ],
     LVL_VALLEY: [
-        PokemonSnapSpeciesData(id=5,  name="Squirtle", multiple=True),
-        PokemonSnapSpeciesData(id=11, name="Sandshrew", multiple=True),
-        PokemonSnapSpeciesData(id=12, name="Sandslash"),
-        PokemonSnapSpeciesData(id=21, name="Mankey"),
-        PokemonSnapSpeciesData(id=27, name="Geodude", multiple=True),
-        PokemonSnapSpeciesData(id=28, name="Graveler", multiple=True),
-        PokemonSnapSpeciesData(id=44, name="Goldeen"),
-        PokemonSnapSpeciesData(id=45, name="Staryu", multiple=True),
-        PokemonSnapSpeciesData(id=46, name="Starmie", multiple=True),
-        PokemonSnapSpeciesData(id=52, name="Gyarados"),
-        PokemonSnapSpeciesData(id=61, name="Dratini", multiple=True),
-        PokemonSnapSpeciesData(id=62, name="Dragonite"),
+        PokemonSnapSpeciesData(id=5,  name=SQUIRTLE, multiple=True),
+        PokemonSnapSpeciesData(id=11, name=SANDSHREW, multiple=True),
+        PokemonSnapSpeciesData(id=12, name=SANDSLASH),
+        PokemonSnapSpeciesData(id=21, name=MANKEY),
+        PokemonSnapSpeciesData(id=27, name=GEODUDE, multiple=True),
+        PokemonSnapSpeciesData(id=28, name=GRAVELER, multiple=True),
+        PokemonSnapSpeciesData(id=44, name=GOLDEEN),
+        PokemonSnapSpeciesData(id=45, name=STARYU, multiple=True),
+        PokemonSnapSpeciesData(id=46, name=STARMIE, multiple=True),
+        PokemonSnapSpeciesData(id=52, name=GYARADOS),
+        PokemonSnapSpeciesData(id=61, name=DRATINI, multiple=True),
+        PokemonSnapSpeciesData(id=62, name=DRAGONITE),
 
-        PokemonSnapSpeciesData(id=69, name="Magikarp (Valley)", multiple=True),
+        PokemonSnapSpeciesData(id=69, name=course(MAGIKARP, LVL_VALLEY), multiple=True),
     ],
     LVL_CLOUD: [
-        PokemonSnapSpeciesData(id=63, name="Mew", wonderful=False, multiple=False),
+        PokemonSnapSpeciesData(id=63, name=MEW, wonderful=False, multiple=False),
     ],
 }
 
@@ -242,18 +213,18 @@ for region, species_data_list in species_data_tables.items():
 
 
 special_poses = {
-    1: "Surfing Pikachu",
-    2: "Pikachu on a Ball",
-    3: "Balloon Pikachu",
-    4: "Speed Pikachu",
-    5: "Pikachu on a Stump",
-    6: "Flying Pikachu",
-    7: "Gust-Using Pidgey",
-    8: "Jigglypuff on Stage",
-    9: "Graveler's Group Dance",
-    10: "Rare Pokemon Mew",
-    11: "Fighting Magmar",
-    12: "Jigglypuff Trio on Stage",
+    1:  SURFING_PIKACHU,
+    2:  PIKACHU_ON_A_BALL,
+    3:  BALLOON_PIKACHU,
+    4:  SPEED_PIKACHU,
+    5:  PIKACHU_ON_A_STUMP,
+    6:  FLYING_PIKACHU,
+    7:  GUST_USING_PIDGEY,
+    8:  JIGGLYPUFF_ON_STAGE,
+    9:  GRAVELERS_GROUP_DANCE,
+    10: RARE_POKEMON_MEW,
+    11: FIGHTING_MAGMAR,
+    12: JIGGLYPUFF_TRIO,
 }
 
 pose_locations = {
