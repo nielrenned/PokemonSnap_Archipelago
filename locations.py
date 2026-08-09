@@ -242,18 +242,18 @@ for region, species_data_list in species_data_tables.items():
 
 
 special_poses = {
-    1: "Surfing Pikachu",
-    2: "Pikachu on a Ball",
-    3: "Balloon Pikachu",
-    4: "Speed Pikachu",
-    5: "Pikachu on a Stump",
-    6: "Flying Pikachu",
-    7: "Gust-Using Pidgey",
-    8: "Jigglypuff on Stage",
-    9: "Graveler's Group Dance",
-    10: "Rare Pokemon Mew",
-    11: "Fighting Magmar",
-    12: "Jigglypuff Trio on Stage",
+    1: SURFING_PIKACHU,
+    2: PIKACHU_ON_A_BALL,
+    3: BALLOON_PIKACHU,
+    4: SPEED_PIKACHU,
+    5: PIKACHU_ON_A_STUMP,
+    6: FLYING_PIKACHU,
+    7: GUST_USING_PIDGEY,
+    8: JIGGLYPUFF_ON_STAGE,
+    9: GRAVELERS_GROUP_DANCE,
+    10: RARE_POKEMON_MEW,
+    11: FIGHTING_MAGMAR,
+    12: JIGGLYPUFF_TRIO,
 }
 
 pose_locations = {

@@ -77,8 +77,8 @@ def set_beach_rules(world: "PokemonSnapWorld"):
 
     set_location_rule(world, "Pikachu (Beach)", Category.MULTIPLE_PHOTO, _HAS_PESTER)
 
-    set_location_rule(world, "Surfing Pikachu", Category.SPECIAL_POSE, _HAS_APPLE)
-    set_location_rule(world, "Pikachu on a Stump", Category.SPECIAL_POSE, _HAS_PESTER)
+    set_location_rule(world, SURFING_PIKACHU, Category.SPECIAL_POSE, _HAS_APPLE)
+    set_location_rule(world, PIKACHU_ON_A_STUMP, Category.SPECIAL_POSE, _HAS_PESTER)
 
     set_location_rule(world, BEACH_SIGN, Category.POKEMON_SIGN, Has(SIGN_DETECTOR))
 
@@ -131,7 +131,7 @@ def set_volcano_rules(world: "PokemonSnapWorld"):
     set_location_rule(world, "Magikarp (Volcano)", Category.NORMAL_PHOTO, _HAS_APPLE_OR_PESTER)
     set_location_rule(world, "Magikarp (Volcano)", Category.WONDERFUL_PHOTO, _HAS_APPLE_OR_PESTER)
 
-    set_location_rule(world, "Fighting Magmar", Category.SPECIAL_POSE, _HAS_APPLE)
+    set_location_rule(world, FIGHTING_MAGMAR, Category.SPECIAL_POSE, _HAS_APPLE)
 
     set_location_rule(world, VOLCANO_SIGN, Category.POKEMON_SIGN, HasAll(SIGN_DETECTOR, PESTER_BALL))
 
@@ -196,10 +196,10 @@ def set_cave_rules(world: "PokemonSnapWorld"):
     set_location_rule(world, "Pikachu (Cave)", Category.NORMAL_PHOTO, _HAS_APPLE_OR_PESTER)
     set_location_rule(world, "Pikachu (Cave)", Category.WONDERFUL_PHOTO, _HAS_APPLE_OR_PESTER)
 
-    set_location_rule(world, "Balloon Pikachu", Category.SPECIAL_POSE, _HAS_APPLE_OR_PESTER)
-    set_location_rule(world, "Flying Pikachu", Category.SPECIAL_POSE, And(_HAS_FLUTE, _HAS_APPLE_OR_PESTER))
-    set_location_rule(world, "Jigglypuff on Stage", Category.SPECIAL_POSE, _HAS_APPLE_OR_PESTER)
-    set_location_rule(world, "Jigglypuff Trio on Stage", Category.SPECIAL_POSE, _HAS_APPLE_OR_PESTER)
+    set_location_rule(world, BALLOON_PIKACHU, Category.SPECIAL_POSE, _HAS_APPLE_OR_PESTER)
+    set_location_rule(world, FLYING_PIKACHU, Category.SPECIAL_POSE, And(_HAS_FLUTE, _HAS_APPLE_OR_PESTER))
+    set_location_rule(world, JIGGLYPUFF_ON_STAGE, Category.SPECIAL_POSE, _HAS_APPLE_OR_PESTER)
+    set_location_rule(world, JIGGLYPUFF_TRIO, Category.SPECIAL_POSE, _HAS_APPLE_OR_PESTER)
 
     set_location_rule(world, CAVE_SIGN, Category.POKEMON_SIGN, Has(SIGN_DETECTOR))
 
@@ -234,6 +234,6 @@ def set_valley_rules(world: "PokemonSnapWorld"):
 
     set_location_rule(world, "Dratini", Category.MULTIPLE_PHOTO, _HAS_APPLE_OR_PESTER)
 
-    set_location_rule(world, "Graveler's Group Dance", Category.SPECIAL_POSE, _HAS_FLUTE)
+    set_location_rule(world, GRAVELERS_GROUP_DANCE, Category.SPECIAL_POSE, _HAS_FLUTE)
 
     set_location_rule(world, VALLEY_SIGN, Category.POKEMON_SIGN, Has(SIGN_DETECTOR))

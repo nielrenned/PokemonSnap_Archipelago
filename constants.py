@@ -43,7 +43,22 @@ VALLEY_SIGN  = "Dugtrio Mountain"
 
 ALL_SIGNS = [BEACH_SIGN, TUNNEL_SIGN, VOLCANO_SIGN, RIVER_SIGN, CAVE_SIGN, VALLEY_SIGN]
 
-# Pokemon Species
+# Special Poses
+SURFING_PIKACHU       = "Surfing Pikachu"
+PIKACHU_ON_A_BALL     = "Pikachu on a Ball"
+BALLOON_PIKACHU       = "Balloon Pikachu"
+SPEED_PIKACHU         = "Speed Pikachu"
+PIKACHU_ON_A_STUMP    = "Pikachu on a Stump"
+FLYING_PIKACHU        = "Flying Pikachu"
+
+GUST_USING_PIDGEY     = "Gust-Using Pidgey"
+JIGGLYPUFF_ON_STAGE   = "Jigglypuff on Stage"
+GRAVELERS_GROUP_DANCE = "Graveler's Group Dance"
+RARE_POKEMON_MEW      = "Rare Pokemon Mew"
+FIGHTING_MAGMAR       = "Fighting Magmar"
+JIGGLYPUFF_TRIO       = "Jigglypuff Trio on Stage"
+
+# Pokemon Species (in-game)
 ARCANINE = "Arcanine"
 ARTICUNO = "Articuno"
 BULBASAUR = "Bulbasaur"
