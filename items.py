@@ -121,9 +121,9 @@ def build_item_pool(world: "PokemonSnapWorld") -> list[PokemonSnapItemData]:
     item_pool.extend(item_dictionary[FILM_UPGRADE] for _ in range(9)) # Nine +5 film upgrades take the cap from 15 up to the max of 60.
     item_pool.extend(pokemon_pics)
 
-    if world.options.start_with_dash_engine:
-        dash_engine = item_dictionary[DASH_ENGINE]
-        item_pool.remove(dash_engine)
+    # Remove items depending on options
+    if world.options.start_with_dash_engine: item_pool.remove(item_dictionary[DASH_ENGINE])
+    if not world.options.pokemon_signs:      item_pool.remove(item_dictionary[SIGN_DETECTOR])
     
     ## Fill with one of each custom trash item, then one of each trash pokemon pic, then random pokemon pics
     trash_items = [item for item in _all_items if item.category is PokemonSnapItemCategory.TRASH_CUSTOM]
