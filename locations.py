@@ -68,49 +68,20 @@ class PokemonSnapLocation(Location):
         self.locked = True
         item.location = self
 
+# Location naming functions
+wonderful   = lambda name:         f'{name}: Good Technique'
+multiple    = lambda name:         f'{name}: Multiple'
+course      = lambda name, course: f'{name} ({course})'
+secret_exit = lambda level_name:   f'{level_name}: Secret Exit'
+bonus       = lambda loc_name:     f'{loc_name} 2'
 
-def wonderful(pokemon_name: str):
-    return f'{pokemon_name}: Good Technique'
-
-
-def wonderful_id(id: int):
-    return 100 + id
-
-
-def multiple(pokemon_name: str):
-    return f'{pokemon_name}: Multiple'
-
-
-def multiple_id(id: int):
-    return 200 + id
-
-
-def special_pose_id(pose_id: int):
-    return 300 + pose_id
-
-
-def sign_id(level_id: int):
-    return 400 + level_id
-
-
-def secret_exit(level_name: str):
-    return f'{level_name}: Secret Exit'
-
-
-def secret_exit_id(level_id: int):
-    return 500 + level_id
-
-
-def bonus(name: str):
-    return f'{name} 2'
-
-
-def bonus_id(id: int):
-    return 1000 + id
-
-
-def course(name: str, course: str):
-    return f'{name} ({course})'
+# Alternate ID functions
+wonderful_id    = lambda poke_id:  100 + poke_id
+multiple_id     = lambda poke_id:  200 + poke_id
+special_pose_id = lambda pose_id:  300 + pose_id
+sign_id         = lambda lvl_id:   400 + lvl_id
+secret_exit_id  = lambda lvl_id:   500 + lvl_id
+bonus_id        = lambda loc_id:  1000 + loc_id
 
 
 RNG_LOCATIONS = [
@@ -242,15 +213,15 @@ for region, species_data_list in species_data_tables.items():
 
 
 special_poses = {
-    1: SURFING_PIKACHU,
-    2: PIKACHU_ON_A_BALL,
-    3: BALLOON_PIKACHU,
-    4: SPEED_PIKACHU,
-    5: PIKACHU_ON_A_STUMP,
-    6: FLYING_PIKACHU,
-    7: GUST_USING_PIDGEY,
-    8: JIGGLYPUFF_ON_STAGE,
-    9: GRAVELERS_GROUP_DANCE,
+    1:  SURFING_PIKACHU,
+    2:  PIKACHU_ON_A_BALL,
+    3:  BALLOON_PIKACHU,
+    4:  SPEED_PIKACHU,
+    5:  PIKACHU_ON_A_STUMP,
+    6:  FLYING_PIKACHU,
+    7:  GUST_USING_PIDGEY,
+    8:  JIGGLYPUFF_ON_STAGE,
+    9:  GRAVELERS_GROUP_DANCE,
     10: RARE_POKEMON_MEW,
     11: FIGHTING_MAGMAR,
     12: JIGGLYPUFF_TRIO,
