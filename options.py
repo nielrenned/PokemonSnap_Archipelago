@@ -1,8 +1,7 @@
 from dataclasses import dataclass
 
 from Options import Choice, DefaultOnToggle, PerGameCommonOptions, Toggle
-from .constants import *
-from .locations import HARD_LOCATIONS, RNG_LOCATIONS
+
 
 class PhotoBonusChecks(Choice):
     """
@@ -19,14 +18,14 @@ class PhotoBonusChecks(Choice):
 
 
 class SpecialPoses(DefaultOnToggle):
-    f"""
+    """
     Include the 11 "Special Pose" photos as checks. The special poses are:
-    - Beach:   {SURFING_PIKACHU}, {PIKACHU_ON_A_STUMP}, {GUST_USING_PIDGEY}
-    - Tunnel:  {PIKACHU_ON_A_BALL}
-    - Volcano: {FIGHTING_MAGMAR}
-    - River:   {SPEED_PIKACHU}
-    - Cave:    {BALLOON_PIKACHU}, {FLYING_PIKACHU}, {JIGGLYPUFF_ON_STAGE}, {JIGGLYPUFF_TRIO}
-    - Valley:  {GRAVELERS_GROUP_DANCE}
+    - Beach:   Surfing Pikachu, Pikachu on a Stump, Gust-Using Pidgey
+    - Tunnel:  Pikachu on a Ball
+    - Volcano: Fighting Magmar
+    - River:   Speed Pikachu
+    - Cave:    Balloon Pikachu, Flying Pikachu, Jigglypuff on Stage, Jigglypuff Trio on Stage
+    - Valley:  Graveler's Group Dance
     """
     display_name = "Include special poses"
 
@@ -46,24 +45,25 @@ class SecretExits(DefaultOnToggle):
 
 
 class IncludeRNGChecks(Toggle):
-    f"""
+    """
     Include the luck-heavy photos as checks. They are:
-      {', '.join(RNG_LOCATIONS)}
+      Arcanine: Multiple, Cloyster: Multiple, Dratini: Multiple, 
+      Magikarp (Valley): Multiple, and Psyduck: Multiple
     """
     display_name = "Include random checks"
 
 
 class IncludeHardChecks(Toggle):
-    f"""
+    """
     Include the hard photos as checks. They are:
-      {', '.join(HARD_LOCATIONS)}
+      Staryu: Multiple, Starmie: Multiple, and Zubat (Cave): Multiple.
     """
     display_name = "Include hard checks"
 
 
 class StartWithDashEngine(Toggle):
-    f"""
-    Start with the {DASH_ENGINE}.
+    """
+    Start with the Dash Engine.
 
     This makes up to six more checks available from the beginning.
     """
