@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 
-from Options import Choice, DefaultOnToggle, PerGameCommonOptions, Toggle
-
+from Options import Choice, DefaultOnToggle, PerGameCommonOptions, Toggle, OptionGroup, StartInventoryPool
 
 class PhotoBonusChecks(Choice):
     """
@@ -81,3 +80,29 @@ class PokemonSnapOption(PerGameCommonOptions):
     hard_checks: IncludeHardChecks
 
     start_with_dash_engine: StartWithDashEngine
+    start_inventory_from_pool: StartInventoryPool
+
+pokemon_snap_option_groups = [
+    OptionGroup(
+        "Checks - Categories",
+    [
+        PhotoBonusChecks,
+        SpecialPoses,
+        PokemonSigns,
+        SecretExits,
+    ],
+    ),
+    OptionGroup(
+        "Checks - Pokemon",
+	[
+		IncludeRNGChecks,
+		IncludeHardChecks
+	],
+	),
+    OptionGroup(
+        "Quality Of Life",
+	[
+		StartWithDashEngine,
+	],
+	),
+]
