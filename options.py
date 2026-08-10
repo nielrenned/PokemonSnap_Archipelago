@@ -1,7 +1,38 @@
 from dataclasses import dataclass
+from constants import DEFAULT_GOAL_TYPE, DEFAULT_SIGN_REQUIREMENT, DEFAULT_POKEMON_REQUIREMENT
+from Options import Choice, DefaultOnToggle, PerGameCommonOptions, Toggle, Range
 
-from Options import Choice, DefaultOnToggle, PerGameCommonOptions, Toggle
 
+class GoalType(Choice):
+    """
+    Determines what is required to unlock Mew, who can then be snapped to finish the game.
+    - signs: What is used in Vanilla Pokemon Snap. The number of Signs can be adjusted.
+    - pokemon_pictures: A number of pokemon pictures. These can be adjusted elsewhere.
+    """
+    display_name = "Goal Type"
+    default = DEFAULT_GOAL_TYPE
+    option_signs = 0
+    option_pokemon_pictures = 1
+
+class SignsRequired(Range):
+    """
+    The number of pokemon signs required to unlock the final level.
+    Only matters if Goal Type is set to "Signs"
+    """
+    display_name = "Signs Required"
+    range_start = 1
+    range_end = 6
+    default = DEFAULT_SIGN_REQUIREMENT
+
+class PokemonRequired(Range):
+    """
+    The number of pokemon photos required to unlock the final level.
+    Only matters if Goal Type is set to "Pokemon"
+    """
+    display_name = "Pokemon Required"
+    range_start = 1
+    range_end = 63
+    default = DEFAULT_POKEMON_REQUIREMENT
 
 class PhotoBonusChecks(Choice):
     """
@@ -72,6 +103,11 @@ class StartWithDashEngine(Toggle):
 
 @dataclass
 class PokemonSnapOption(PerGameCommonOptions):
+    goal_type: GoalType
+    signs_required: SignsRequired
+    pokemon_required: PokemonRequired
+
+
     photo_bonuses: PhotoBonusChecks
     special_poses: SpecialPoses
     pokemon_signs: PokemonSigns

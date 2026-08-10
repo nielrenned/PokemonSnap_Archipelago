@@ -54,11 +54,11 @@ class PokemonSnapWorld(World):
     options: PokemonSnapOption
     topology_present: bool = True
 
+    item_name_groups = items.item_name_groups
     enabled_location_categories: set[PokemonSnapLocationCategory]
     required_client_version = (0, 6, 7)
     item_name_to_id = PokemonSnapItem.get_name_to_id()
     location_name_to_id = PokemonSnapLocation.get_name_to_id()
-    item_name_groups = items.item_name_groups
     settings: ClassVar[PokemonSnapSettings]
     start_area: PokemonSnapItemData
     auth: bytes
@@ -176,7 +176,8 @@ class PokemonSnapWorld(World):
     def create_item(self, name: str) -> PokemonSnapItem:
         data = self.item_name_to_id[name]
 
-        if name in key_item_names:
+        key_items = key_item_names(self)
+        if name in key_items:
             item_classification = ItemClassification.progression
         elif name in useful_item_names:
             item_classification = ItemClassification.useful

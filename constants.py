@@ -164,3 +164,7 @@ TRASH_PIC_ADJECTIVES = [
     "Dusty", "Musty", "Singed", 
     "Faded", "Pretty Bad"
 ]
+
+DEFAULT_GOAL_TYPE = 0
+DEFAULT_SIGN_REQUIREMENT = 6
+DEFAULT_POKEMON_REQUIREMENT = 50

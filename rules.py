@@ -1,10 +1,10 @@
 from typing import TYPE_CHECKING
 
-from rule_builder.rules import Has, HasAll, HasAny, And, Rule
-from .items import SIGN_PIC_NAMES
+from rule_builder.rules import Has, HasAll, HasAny, And, Rule, HasGroup
+from .items import SIGN_PIC_NAMES, POKEMON_PIC_NAMES
 from .locations import wonderful, multiple, secret_exit, course, bonus, PokemonSnapLocationCategory as Category
 from .constants import *
-
+from .items import PokemonSnapItemCategory
 if TYPE_CHECKING:
     from . import PokemonSnapWorld
 
@@ -41,7 +41,14 @@ def set_rules(world: "PokemonSnapWorld"):
     for level in [LVL_BEACH, LVL_TUNNEL, LVL_VOLCANO, LVL_RIVER, LVL_CAVE, LVL_VALLEY]:
         world.set_rule(world.get_entrance(f'{START_GAME} -> {level}'), Has(level))
 
-    world.set_rule(world.get_entrance(f'{START_GAME} -> {LVL_CLOUD}'), HasAll(*SIGN_PIC_NAMES))
+    if world.options.goal_type == 0:
+        world.set_rule(world.get_entrance(f'{START_GAME} -> {LVL_CLOUD}'),
+                       HasGroup(f"{PokemonSnapItemCategory.SIGN_PIC}", world.options.signs_required.value))
+    elif world.options.goal_type == 1:
+        world.set_rule(world.get_entrance(f'{START_GAME} -> {LVL_CLOUD}'),
+                       HasGroup(f"{PokemonSnapItemCategory.POKEMON_PIC}", world.options.pokemon_required.value))
+    else:
+        assert"Invalid goal type set. Must be 0 or 1."
 
     # World Location Rules
     set_beach_rules(world)

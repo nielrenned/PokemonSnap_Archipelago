@@ -34,7 +34,7 @@ class PokemonSnapItem(Item):
         return {item_data.name: item_data.ps_code for item_data in _all_items}
 
 
-key_item_names = {
+base_key_item_names = {
     VICTORY_ITEM_NAME,
     LVL_BEACH, LVL_TUNNEL, LVL_VOLCANO, LVL_RIVER, LVL_CAVE, LVL_VALLEY, LVL_CLOUD,
     POKEMON_FOOD, PESTER_BALL, POKEFLUTE, DASH_ENGINE, SIGN_DETECTOR
@@ -45,16 +45,25 @@ useful_item_names = {
 }
 
 pokemon_pics = [
-    PokemonSnapItemData(f"A Picture of {name}", 5000 + i, PokemonSnapItemCategory.POKEMON_PIC)
+    PokemonSnapItemData(f"Pokemon Picture: {name}", 5000 + i, PokemonSnapItemCategory.POKEMON_PIC)
     for i, name in enumerate(ALL_INGAME_POKEMON)
 ]
+POKEMON_PIC_NAMES = {item.name for item in pokemon_pics}
 
 sign_pics = [
-    PokemonSnapItemData(f"A Picture of {name}", 6000 + i, PokemonSnapItemCategory.SIGN_PIC)
+    PokemonSnapItemData(f"Sign Picture: {name}", 6000 + i, PokemonSnapItemCategory.SIGN_PIC)
     for i, name in enumerate(ALL_SIGNS)
 ]
 SIGN_PIC_NAMES = {item.name for item in sign_pics}
-key_item_names |= SIGN_PIC_NAMES
+
+def key_item_names(world: "PokemonSnapWorld") -> list:
+    key_item_names_list = base_key_item_names
+    if world.options.goal_type == 0:
+        key_item_names_list |= SIGN_PIC_NAMES
+    elif world.options.goal_type == 1:
+        key_item_names_list |= POKEMON_PIC_NAMES
+
+    return key_item_names_list
 
 # We're doing this weirdness so that each adjective/pokemon combo has its own ID.
 # This way, when a tracker connects, it knows exactly which trash item you got.
@@ -104,8 +113,6 @@ _all_items = [PokemonSnapItemData(row[0], row[1], row[2]) for row in [
 
 filler_item_names = [item.name for item in _all_items if item.category is PokemonSnapItemCategory.TRASH_CUSTOM]
 
-item_name_groups = {}
-
 item_dictionary = {item_data.name: item_data for item_data in _all_items}
 
 def build_item_pool(world: "PokemonSnapWorld") -> list[PokemonSnapItemData]:
@@ -137,3 +144,12 @@ def build_item_pool(world: "PokemonSnapWorld") -> list[PokemonSnapItemData]:
 
     world.random.shuffle(item_pool)
     return item_pool
+
+
+item_name_groups: typing.Dict[str, typing.Set[str]] = {}
+for item in _all_items:
+    category = f"{item.category}"
+    if category not in item_name_groups.keys():
+        item_name_groups[category] = set()
+    item_name_groups[category].add(item.name)
+
