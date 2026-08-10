@@ -43,6 +43,15 @@ class SecretExits(DefaultOnToggle):
     display_name = "Include secret exits"
 
 
+class OakRewards(DefaultOnToggle):
+    """
+    Include the six checkpoint rewards from Professor Oak as checks. They are:
+    - Having 6, 22, and 40 Pokemon in your Pokemon Report
+    - Having a score of 24,000, 72,500, and 130,000 in your Pokemon Report
+    """
+    display_name = "Professor Oak's Rewards"
+
+
 class IncludeRNGChecks(Toggle):
     """
     Include the luck-heavy photos as checks. They are:
@@ -77,6 +86,7 @@ class PokemonSnapOption(PerGameCommonOptions):
     special_poses: SpecialPoses
     pokemon_signs: PokemonSigns
     secret_exits:  SecretExits
+    oak_rewards:   OakRewards
 
     rng_checks:  IncludeRNGChecks
     hard_checks: IncludeHardChecks
@@ -92,6 +102,7 @@ pokemon_snap_option_groups = [
         SpecialPoses,
         PokemonSigns,
         SecretExits,
+        OakRewards
     ],
     ),
     OptionGroup(

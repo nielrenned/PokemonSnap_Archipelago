@@ -71,7 +71,7 @@ class PokemonSnapWorld(World):
 
     def generate_early(self):
         self.enabled_location_categories |= {
-            PokemonSnapLocationCategory.NORMAL_PHOTO
+            PokemonSnapLocationCategory.NORMAL_PHOTO,
         }
 
         if self.options.photo_bonuses == PhotoBonusChecks.option_technique_and_multiple:
@@ -86,6 +86,8 @@ class PokemonSnapWorld(World):
             self.enabled_location_categories.add(PokemonSnapLocationCategory.POKEMON_SIGN)
         if self.options.secret_exits:
             self.enabled_location_categories.add(PokemonSnapLocationCategory.SECRET_EXIT)
+        if self.options.oak_rewards:
+            self.enabled_location_categories.add(PokemonSnapLocationCategory.OAK_REWARD)
 
         # Per-seed connect token, baked into the ROM and registered server-side.
         self.auth = self.random.randbytes(16)

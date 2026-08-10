@@ -13,6 +13,7 @@ class PokemonSnapLocationCategory(IntEnum):
     SPECIAL_POSE    = 3
     POKEMON_SIGN    = 4
     SECRET_EXIT     = 5
+    OAK_REWARD      = 6
 
     # for when there aren't enough locations in the pool
     BONUS_LOCATION = 10
@@ -81,6 +82,7 @@ multiple_id     = lambda poke_id:  200 + poke_id
 special_pose_id = lambda pose_id:  300 + pose_id
 sign_id         = lambda lvl_id:   400 + lvl_id
 secret_exit_id  = lambda lvl_id:   500 + lvl_id
+oak_reward_id   = lambda reward:   600 + reward
 bonus_id        = lambda loc_id:  1000 + loc_id
 
 
@@ -261,7 +263,22 @@ for level in [LVL_TUNNEL, LVL_RIVER, LVL_VALLEY]:
     location_tables[level].append(PokemonSnapLocationData(id, name, PokemonSnapLocationCategory.SECRET_EXIT))
 
 
-# Add the bonus locations
+OAK_REWARDS = {
+    1: POKEMON_TOTAL_LVL_1,
+    2: POKEMON_TOTAL_LVL_2,
+    3: POKEMON_TOTAL_LVL_3,
+
+    4: REPORT_SCORE_LVL_1,
+    5: REPORT_SCORE_LVL_2,
+    6: REPORT_SCORE_LVL_3,
+}
+
+# Add the oak rewards
+for id, name in OAK_REWARDS.items():
+    location_tables[START_GAME].append(PokemonSnapLocationData(oak_reward_id(id), name, PokemonSnapLocationCategory.OAK_REWARD))
+
+
+# Must be done last: add the bonus locations
 for region, location_data_list in location_tables.items():
     location_data_list.extend([
         PokemonSnapLocationData(bonus_id(id), bonus(name), PokemonSnapLocationCategory.BONUS_LOCATION)

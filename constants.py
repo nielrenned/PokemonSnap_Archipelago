@@ -22,6 +22,8 @@ LVL_CAVE    = "Cave"
 LVL_VALLEY  = "Valley"
 LVL_CLOUD   = "Rainbow Cloud"
 
+ALL_LEVELS = [LVL_BEACH, LVL_TUNNEL, LVL_VOLCANO, LVL_RIVER, LVL_CAVE, LVL_VALLEY]
+
 # Items
 FILM_UPGRADE  = "Film Capacity Upgrade"
 PESTER_BALL   = "Pester Ball"
@@ -57,6 +59,15 @@ GRAVELERS_GROUP_DANCE = "Graveler's Group Dance"
 RARE_POKEMON_MEW      = "Rare Pokemon Mew"
 FIGHTING_MAGMAR       = "Fighting Magmar"
 JIGGLYPUFF_TRIO       = "Jigglypuff Trio on Stage"
+
+# Oak Rewards
+POKEMON_TOTAL_LVL_1 = "6 Pokemon Photographed"
+POKEMON_TOTAL_LVL_2 = "22 Pokemon Photographed"
+POKEMON_TOTAL_LVL_3 = "40 Pokemon Photographed"
+
+REPORT_SCORE_LVL_1 = "Report Score ≥ 24,000"
+REPORT_SCORE_LVL_2 = "Report Score ≥ 72,500"
+REPORT_SCORE_LVL_3 = "Report Score ≥ 130,000"
 
 # Pokemon Species (in-game)
 ARCANINE = "Arcanine"
