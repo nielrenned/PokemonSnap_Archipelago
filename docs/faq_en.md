@@ -113,6 +113,7 @@ The technical requirements for these shots (as far as we are aware of them) are 
  - River - Wonderful & Multiple Metapod requires Pester Balls (nothing)
  - River - Base & Wonderful Poliwag requires a throwable (nothing)
  - Cave - Base Pikachu requires a throwable (nothing)
+ - Valley - Base Sandshrew requires a Pester Ball (Dash Engine)
  - Valley - Wonderful Squirtle requires a Pester Ball (nothing)
  - Valley - Multiple Squirtle requires a Pester Ball (Dash Engine)
  - Valley - Wonderful Graveler requires a Pester Ball or Pokeflute (nothing)

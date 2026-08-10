@@ -221,7 +221,7 @@ def set_valley_rules(world: "PokemonSnapWorld"):
     set_location_rule(world, DRAGONITE, Category.NORMAL_PHOTO, _HAS_PESTER)
     set_location_rule(world, DRAGONITE, Category.WONDERFUL_PHOTO, _HAS_PESTER)
 
-    set_location_rule(world, SANDSHREW, Category.NORMAL_PHOTO, HasAny(PESTER_BALL, DASH_ENGINE))
+    set_location_rule(world, SANDSHREW, Category.NORMAL_PHOTO, HasAny(PESTER_BALL))
     set_location_rule(world, SANDSHREW, Category.WONDERFUL_PHOTO, _HAS_PESTER)
     set_location_rule(world, SANDSHREW, Category.MULTIPLE_PHOTO, HasAll(PESTER_BALL, POKEMON_FOOD))
 
