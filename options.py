@@ -3,6 +3,7 @@ from constants import DEFAULT_GOAL_TYPE, DEFAULT_SIGN_REQUIREMENT, DEFAULT_POKEM
 from Options import Choice, DefaultOnToggle, PerGameCommonOptions, Toggle, Range
 
 
+from Options import Choice, DefaultOnToggle, PerGameCommonOptions, Toggle, OptionGroup, StartInventoryPool, Range
 class GoalType(Choice):
     """
     Determines what is required to unlock Mew, who can then be snapped to finish the game.
@@ -23,6 +24,7 @@ class SignsRequired(Range):
     range_start = 1
     range_end = 6
     default = DEFAULT_SIGN_REQUIREMENT
+
 
 class PokemonRequired(Range):
     """
@@ -117,3 +119,29 @@ class PokemonSnapOption(PerGameCommonOptions):
     hard_checks: IncludeHardChecks
 
     start_with_dash_engine: StartWithDashEngine
+    start_inventory_from_pool: StartInventoryPool
+
+pokemon_snap_option_groups = [
+    OptionGroup(
+        "Checks - Categories",
+    [
+        PhotoBonusChecks,
+        SpecialPoses,
+        PokemonSigns,
+        SecretExits,
+    ],
+    ),
+    OptionGroup(
+        "Checks - Pokemon",
+	[
+		IncludeRNGChecks,
+		IncludeHardChecks
+	],
+	),
+    OptionGroup(
+        "Quality Of Life",
+	[
+		StartWithDashEngine,
+	],
+	),
+]

@@ -11,7 +11,7 @@ from .items import PokemonSnapItem, PokemonSnapItemCategory, key_item_names, use
     _all_items, build_item_pool, PokemonSnapItemData
 from .locations import PokemonSnapLocation, PokemonSnapLocationCategory, location_tables, bonus, \
     RNG_LOCATIONS, HARD_LOCATIONS
-from .options import PokemonSnapOption, PhotoBonusChecks
+from .options import PokemonSnapOption, PhotoBonusChecks, pokemon_snap_option_groups
 from .psnap_settings import PokemonSnapSettings
 from .rom import PokemonSnapProcedurePatch
 from .rules import set_rules
@@ -36,10 +36,11 @@ class PokemonSnapWeb(WebWorld):
         "English",
         "setup_en.md",
         "setup/en",
-        ["ArsonAssassin", "SomeJakeGuy", "gerbiljames", "nielrenned"]
+        ["ArsonAssassin", "SomeJakeGuy", "gerbiljames", "nielrenned", "cobyw"]
     )
 
     tutorials = [setup_en]
+    option_groups = pokemon_snap_option_groups
 
 
 class PokemonSnapWorld(World):
