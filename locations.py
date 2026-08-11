@@ -200,6 +200,16 @@ species_data_tables = {
     ],
 }
 
+POKEMON_TO_SLOTS = {
+    pokemon.name: [pokemon.id]
+    for species_data in species_data_tables.values() for pokemon in species_data if pokemon.name in ALL_INGAME_POKEMON
+} | {
+    BULBASAUR: [1, 64],
+    MAGIKARP: [1, 65, 66, 67, 68, 69],
+    PIKACHU: [10, 70, 71, 72],
+    ZUBAT: [15, 73]
+}
+
 
 location_tables = {
     START_GAME: [],
@@ -265,17 +275,17 @@ for level in [LVL_TUNNEL, LVL_RIVER, LVL_VALLEY]:
 
 
 OAK_REWARDS = {
-    1: POKEMON_TOTAL_6,
-    2: POKEMON_TOTAL_22,
-    3: POKEMON_TOTAL_40,
+    POKEMON_TOTAL_6 : 1,
+    POKEMON_TOTAL_22: 2,
+    POKEMON_TOTAL_40: 3,
 
-    4: REPORT_SCORE_24_000,
-    5: REPORT_SCORE_72_500,
-    6: REPORT_SCORE_130_000,
+    REPORT_SCORE_24_000:  4,
+    REPORT_SCORE_72_500:  5,
+    REPORT_SCORE_130_000: 6,
 }
 
 # Add the oak rewards
-for id, name in OAK_REWARDS.items():
+for name, id in OAK_REWARDS.items():
     category = PokemonSnapLocationCategory.PHOTO_COUNT if id <= 3 else PokemonSnapLocationCategory.REPORT_SCORE
     location_tables[START_GAME].append(PokemonSnapLocationData(oak_reward_id(id), name, category))
 
