@@ -69,13 +69,13 @@ def set_oak_rules(world: "PokemonSnapWorld"):
         if course(pokemon_name, level) in LOCATION_RULES
     ]
 
-    set_location_rule(world, POKEMON_TOTAL_LVL_1, Category.OAK_REWARD, AtLeast(6, *can_reach_all_pokemon))
-    set_location_rule(world, POKEMON_TOTAL_LVL_2, Category.OAK_REWARD, AtLeast(22, *can_reach_all_pokemon))
-    set_location_rule(world, POKEMON_TOTAL_LVL_3, Category.OAK_REWARD, AtLeast(40, *can_reach_all_pokemon))
+    set_location_rule(world, POKEMON_TOTAL_6, Category.OAK_REWARD, AtLeast(6, *can_reach_all_pokemon))
+    set_location_rule(world, POKEMON_TOTAL_22, Category.OAK_REWARD, AtLeast(22, *can_reach_all_pokemon))
+    set_location_rule(world, POKEMON_TOTAL_40, Category.OAK_REWARD, AtLeast(40, *can_reach_all_pokemon))
 
-    set_location_rule(world, REPORT_SCORE_LVL_1, Category.OAK_REWARD, ReportScoreAchievable( 24_000))
-    set_location_rule(world, REPORT_SCORE_LVL_2, Category.OAK_REWARD, ReportScoreAchievable( 72_500))
-    set_location_rule(world, REPORT_SCORE_LVL_3, Category.OAK_REWARD, ReportScoreAchievable(130_000))
+    set_location_rule(world, REPORT_SCORE_24_000, Category.OAK_REWARD, ReportScoreAchievable( 24_000))
+    set_location_rule(world, REPORT_SCORE_72_500, Category.OAK_REWARD, ReportScoreAchievable( 72_500))
+    set_location_rule(world, REPORT_SCORE_130_000, Category.OAK_REWARD, ReportScoreAchievable(130_000))
 
 
 @dataclass()
