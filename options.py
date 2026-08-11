@@ -1,9 +1,7 @@
 from dataclasses import dataclass
-from constants import DEFAULT_GOAL_TYPE, DEFAULT_SIGN_REQUIREMENT, DEFAULT_POKEMON_REQUIREMENT
-from Options import Choice, DefaultOnToggle, PerGameCommonOptions, Toggle, Range
-
-
+from .constants import DEFAULT_GOAL_TYPE, DEFAULT_SIGN_REQUIREMENT, DEFAULT_POKEMON_REQUIREMENT
 from Options import Choice, DefaultOnToggle, PerGameCommonOptions, Toggle, OptionGroup, StartInventoryPool, Range
+
 class GoalType(Choice):
     """
     Determines what is required to unlock Mew, who can then be snapped to finish the game.
@@ -124,6 +122,14 @@ class PokemonSnapOption(PerGameCommonOptions):
     start_inventory_from_pool: StartInventoryPool
 
 pokemon_snap_option_groups = [
+    OptionGroup(
+        "Goal Settings",
+    [
+            GoalType,
+            SignsRequired,
+            PokemonRequired,
+    ],
+    ),
     OptionGroup(
         "Checks - Categories",
     [
