@@ -96,6 +96,8 @@ HARD_LOCATIONS = [
     multiple(STARYU),
     multiple(STARMIE),
     multiple(course(ZUBAT, LVL_CAVE)),
+    wonderful(GOLDEEN),
+    wonderful(course(PIKACHU, LVL_RIVER)),
 ]
 
 
