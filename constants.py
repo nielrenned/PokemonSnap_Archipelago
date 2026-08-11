@@ -61,13 +61,13 @@ FIGHTING_MAGMAR       = "Fighting Magmar"
 JIGGLYPUFF_TRIO       = "Jigglypuff Trio on Stage"
 
 # Oak Rewards
-POKEMON_TOTAL_LVL_1 = "6 Pokemon Photographed"
-POKEMON_TOTAL_LVL_2 = "22 Pokemon Photographed"
-POKEMON_TOTAL_LVL_3 = "40 Pokemon Photographed"
+POKEMON_TOTAL_6  = "6 Pokemon Photographed"
+POKEMON_TOTAL_22 = "22 Pokemon Photographed"
+POKEMON_TOTAL_40 = "40 Pokemon Photographed"
 
-REPORT_SCORE_LVL_1 = "Report Score ≥ 24,000"
-REPORT_SCORE_LVL_2 = "Report Score ≥ 72,500"
-REPORT_SCORE_LVL_3 = "Report Score ≥ 130,000"
+REPORT_SCORE_24_000  = "Report Score ≥ 24,000"
+REPORT_SCORE_72_500  = "Report Score ≥ 72,500"
+REPORT_SCORE_130_000 = "Report Score ≥ 130,000"
 
 # Pokemon Species (in-game)
 ARCANINE = "Arcanine"
