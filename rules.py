@@ -2,9 +2,9 @@ from typing import TYPE_CHECKING, override
 from dataclasses import dataclass
 from itertools import product
 
-from rule_builder.rules import Has, HasAll, HasAny, And, Rule, AtLeast, CanReachLocation, CollectionState, True_, False_
+from rule_builder.rules import Has, HasAll, HasAny, And, Rule, AtLeast, CanReachLocation, CollectionState, False_
 from .items import SIGN_PIC_NAMES
-from .locations import wonderful, multiple, secret_exit, course, bonus, PokemonSnapLocationCategory as Category, species_data_tables
+from .locations import wonderful, multiple, secret_exit, course, bonus, PokemonSnapLocationCategory as Category, species_data_tables, RNG_LOCATIONS, HARD_LOCATIONS
 from .constants import *
 
 if TYPE_CHECKING:
@@ -15,6 +15,8 @@ _HAS_PESTER = Has(PESTER_BALL)
 _HAS_APPLE = Has(POKEMON_FOOD)
 _HAS_FLUTE = Has(POKEFLUTE)
 _HAS_APPLE_OR_PESTER = HasAny(PESTER_BALL, POKEMON_FOOD)
+
+REPORT_EXCLUSIONS = RNG_LOCATIONS + HARD_LOCATIONS
 
 location_name_functions = {
     Category.NORMAL_PHOTO: (lambda s: s),
@@ -113,24 +115,24 @@ class ReportScoreAchievable(Rule["PokemonSnapWorld"], game="Pokemon Snap"):
 
         return self.Resolved(self.score_goal, tuple(all_pokemon_rules), player=world.player)
 
-    def build_rules_triplet(self, world: "PokemonSnapWorld", pokemon_name: str):
-        species_data = [species_data for region in species_data_tables for species_data in species_data_tables[region] if species_data.name == pokemon_name][0]
+    def build_rules_triplet(self, world: "PokemonSnapWorld", location: str):
+        species_data = [species_data for region in species_data_tables for species_data in species_data_tables[region] if species_data.name == location][0]
         
-        normal_rule = CanReachLocation(location_name(pokemon_name, Category.NORMAL_PHOTO))
+        normal_rule = CanReachLocation(location_name(location, Category.NORMAL_PHOTO))
 
         wonderful_rule = False_()
-        if species_data.wonderful:
-            if (pokemon_name not in LOCATION_RULES or Category.WONDERFUL_PHOTO not in LOCATION_RULES[pokemon_name]):
+        if species_data.wonderful and wonderful(location) not in REPORT_EXCLUSIONS:
+            if (location not in LOCATION_RULES or Category.WONDERFUL_PHOTO not in LOCATION_RULES[location]):
                 wonderful_rule = normal_rule
             else:
-                wonderful_rule = And(normal_rule, LOCATION_RULES[pokemon_name][Category.WONDERFUL_PHOTO])
+                wonderful_rule = And(normal_rule, LOCATION_RULES[location][Category.WONDERFUL_PHOTO])
 
         multiple_rule = False_()
-        if species_data.multiple:
-            if (pokemon_name not in LOCATION_RULES or Category.MULTIPLE_PHOTO not in LOCATION_RULES[pokemon_name]):
+        if species_data.multiple and multiple(location) not in REPORT_EXCLUSIONS:
+            if (location not in LOCATION_RULES or Category.MULTIPLE_PHOTO not in LOCATION_RULES[location]):
                 multiple_rule = wonderful_rule
             else:
-                multiple_rule = And(wonderful_rule, LOCATION_RULES[pokemon_name][Category.MULTIPLE_PHOTO])
+                multiple_rule = And(wonderful_rule, LOCATION_RULES[location][Category.MULTIPLE_PHOTO])
 
         return normal_rule.resolve(world), wonderful_rule.resolve(world), multiple_rule.resolve(world)
 
