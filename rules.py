@@ -19,13 +19,14 @@ _HAS_APPLE_OR_PESTER = HasAny(PESTER_BALL, POKEMON_FOOD)
 REPORT_EXCLUSIONS = RNG_LOCATIONS + HARD_LOCATIONS
 
 location_name_functions = {
-    Category.NORMAL_PHOTO: (lambda s: s),
+    Category.NORMAL_PHOTO:   (lambda s: s),
     Category.WONDERFUL_PHOTO: wonderful,
     Category.MULTIPLE_PHOTO:  multiple,
-    Category.SPECIAL_POSE: (lambda s: s),
-    Category.POKEMON_SIGN: (lambda s: s),
-    Category.SECRET_EXIT: secret_exit,
-    Category.OAK_REWARD: (lambda s: s),
+    Category.SPECIAL_POSE:   (lambda s: s),
+    Category.POKEMON_SIGN:   (lambda s: s),
+    Category.SECRET_EXIT:     secret_exit,
+    Category.PHOTO_COUNT:    (lambda s: s),
+    Category.REPORT_SCORE:   (lambda s: s),
 }
 
 def location_name(name: str, category: Category):
@@ -69,13 +70,13 @@ def set_oak_rules(world: "PokemonSnapWorld"):
         if course(pokemon_name, level) in LOCATION_RULES
     ]
 
-    set_location_rule(world, POKEMON_TOTAL_6, Category.OAK_REWARD, AtLeast(6, *can_reach_all_pokemon))
-    set_location_rule(world, POKEMON_TOTAL_22, Category.OAK_REWARD, AtLeast(22, *can_reach_all_pokemon))
-    set_location_rule(world, POKEMON_TOTAL_40, Category.OAK_REWARD, AtLeast(40, *can_reach_all_pokemon))
+    set_location_rule(world, POKEMON_TOTAL_6,  Category.PHOTO_COUNT, AtLeast(6,  *can_reach_all_pokemon))
+    set_location_rule(world, POKEMON_TOTAL_22, Category.PHOTO_COUNT, AtLeast(22, *can_reach_all_pokemon))
+    set_location_rule(world, POKEMON_TOTAL_40, Category.PHOTO_COUNT, AtLeast(40, *can_reach_all_pokemon))
 
-    set_location_rule(world, REPORT_SCORE_24_000, Category.OAK_REWARD, ReportScoreAchievable( 24_000))
-    set_location_rule(world, REPORT_SCORE_72_500, Category.OAK_REWARD, ReportScoreAchievable( 72_500))
-    set_location_rule(world, REPORT_SCORE_130_000, Category.OAK_REWARD, ReportScoreAchievable(130_000))
+    set_location_rule(world, REPORT_SCORE_24_000,  Category.REPORT_SCORE, ReportScoreAchievable( 24_000))
+    set_location_rule(world, REPORT_SCORE_72_500,  Category.REPORT_SCORE, ReportScoreAchievable( 72_500))
+    set_location_rule(world, REPORT_SCORE_130_000, Category.REPORT_SCORE, ReportScoreAchievable(130_000))
 
 
 @dataclass()
