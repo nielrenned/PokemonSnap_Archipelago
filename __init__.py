@@ -1,6 +1,6 @@
 import os
 import pkgutil
-from typing import ClassVar
+from typing import ClassVar, Any
 
 from BaseClasses import MultiWorld, Region, Entrance, Tutorial, ItemClassification
 from NetUtils import MultiData
@@ -212,3 +212,6 @@ class PokemonSnapWorld(World):
             output_directory,
             f"{self.multiworld.get_out_file_name_base(self.player)}{patch.patch_file_ending}")
         patch.write(out_path)
+
+    def fill_slot_data(self) -> dict[str, Any]:
+        return self.options.as_dict("goal_type", "signs_required", "pokemon_required")
