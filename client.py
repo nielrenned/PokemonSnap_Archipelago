@@ -7,7 +7,7 @@ from NetUtils import ClientStatus
 
 from .pj64_connector import PJ64Context, pj64connect, pj64disconnect, pj64_read_memory, pj64_write_memory
 from .constants import *
-from .locations import wonderful_id as wdfl_id, multiple_id as mult_id, special_pose_id, secret_exit_id, sign_id, bonus_id
+from .locations import wonderful_id as wdfl_id, multiple_id as mult_id, special_pose_id, secret_exit_id, sign_id, bonus_id, oak_reward_id, OAK_REWARDS, POKEMON_TO_SLOTS
 from .update_pj64_config import safe_load_pj64_config
 from .items import item_dictionary, SIGN_PIC_NAMES
 from . import addresses as addr
@@ -29,21 +29,7 @@ class PokemonSnapReportScore(NamedTuple):
     technique_score: int
     same_pokemon_score: int
     special_pose_bits: int
-
-    def poses(self) -> list[int]:
-        pose_list = []
-        for i in range(12):
-            if self.special_pose_bits & (1 << i) != 0:
-                pose_list.append(i + 1)
-        return pose_list
-
-    def score(self) -> int:
-        # Note: this is probably inaccurate
-        score = self.special_bonus + self.pose_score + self.size_score
-        if self.technique_score != 0:
-            score *= 2
-        score += self.same_pokemon_score
-        return score
+    total_score: int
 
 class PokemonSnapCommandProcessor(ClientCommandProcessor):
     def __init__(self, ctx: CommonContext, server_address: str = None):
@@ -66,7 +52,18 @@ class PokemonSnapContext(CommonContext, PJ64Context):
     pj64_status: str
     finished_game: bool = False
     should_play_cloud_dialog: bool = True
+    oak_reward_dialog_flags = {x: [False, False] for x in OAK_REWARDS.values()}
     current_level_id: int = -1
+
+    oak_reward_checks = {
+        POKEMON_TOTAL_6:  (lambda count, score: count >= 6),
+        POKEMON_TOTAL_22: (lambda count, score: count >= 22),
+        POKEMON_TOTAL_40: (lambda count, score: count >= 40),
+
+        REPORT_SCORE_24_000:  (lambda count, score: score >= 24_000),
+        REPORT_SCORE_72_500:  (lambda count, score: score >= 72_500),
+        REPORT_SCORE_130_000: (lambda count, score: score >= 130_000),
+    }
 
     def __init__(self, server_address, password, ap_port):
         """
@@ -176,7 +173,7 @@ class PokemonSnapContext(CommonContext, PJ64Context):
 
         # TODO: condense into one read and split based on addresses
         level_id = (await pj64_read_memory(self, "s32", addr.LEVEL_ID, 4))[0]
-        raw_scores = await pj64_read_memory(self, "u16", addr.SPECIES_SCORES, addr.NUM_SPECIES_SCORES * 6 * 2)
+        raw_scores = await pj64_read_memory(self, "u16", addr.SPECIES_SCORES, addr.NUM_SPECIES_SCORES * 7 * 2)
         sign_flags = await pj64_read_memory(self, "u8", addr.SIGN_FLAGS, addr.NUM_SIGNS)
         secret_exit_flags = (await pj64_read_memory(self, "u8", addr.SECRET_EXIT_FLAGS, 1))[0]
 
@@ -193,9 +190,9 @@ class PokemonSnapContext(CommonContext, PJ64Context):
 
         all_checks = set()
 
-        scores = [PokemonSnapReportScore(*raw_scores[i:i+6]) for i in range(0, addr.NUM_SPECIES_SCORES * 6, 6)]
+        scores = [PokemonSnapReportScore(*raw_scores[i:i+7]) for i in range(0, addr.NUM_SPECIES_SCORES * 7, 7)]
         for slot, report in enumerate(scores):
-            if report.score() == 0: continue
+            if report.total_score == 0: continue
 
             location_id = slot + 1
             all_checks.add(location_id)
@@ -209,10 +206,63 @@ class PokemonSnapContext(CommonContext, PJ64Context):
         all_checks |= {secret_exit_id(i) for i in range(6) if (secret_exit_flags & (1 << i)) != 0}
         all_checks |= {bonus_id(id) for id in all_checks}
 
+        all_checks |= await self.do_oak_reward_checks(scores)
+
         # CommonClient.check_locations filters locations to just those missing 
         # from the server, so we can send every check we find every time.
         self.checked_locations |= all_checks
         await self.check_locations(all_checks)
+
+
+    async def do_oak_reward_checks(self, scores):
+        if 'pkmn_report' not in self.stored_data:
+            # Update here to make sure we restore after disconnect
+            await self.send_msgs([{
+                "cmd": "Get",
+                "keys": ["pkmn_report"]
+            }])
+        prev_report = self.stored_data.get('pkmn_report', dict())
+        pkmn_report = {
+            pokemon_name: max(
+                prev_report.get(pokemon_name, 0), 
+                max(scores[slot-1].total_score for slot in POKEMON_TO_SLOTS[pokemon_name])
+            )
+            for pokemon_name in ALL_INGAME_POKEMON
+        }
+
+        if pkmn_report != prev_report:
+            await self.send_msgs([{
+                "cmd": "Set",
+                "key": "pkmn_report",
+                "default": dict(),
+                "want_reply": True,
+                "operations": [{"operation": "update", "value": pkmn_report}]
+            }])
+            logger.info(pkmn_report)
+
+        pokemon_count = sum(1 for value in pkmn_report.values() if value > 0)
+        report_score = sum(value for value in pkmn_report.values())
+
+        dialog_flags = (await pj64_read_memory(self, "u32", addr.DIALOG_FLAGS, 4))[0]
+        for i, flags in self.oak_reward_dialog_flags.items():
+            # if dialog triggered and flag cleared
+            if flags[0] and (dialog_flags & (1 << i)) == 0:
+                flags[1] = True # mark dialog as played
+
+        oak_checks = set()
+        for oak_reward, reward_index in OAK_REWARDS.items():
+            if self.oak_reward_checks[oak_reward](pokemon_count, report_score):
+                triggered, played = self.oak_reward_dialog_flags[reward_index]
+                if not triggered:
+                    dialog_flags |= (1 << reward_index)
+                    self.oak_reward_dialog_flags[reward_index][0] = True
+                if triggered and played:
+                    oak_checks.add(oak_reward_id(reward_index))
+        
+        await pj64_write_memory(self, "u32", addr.DIALOG_FLAGS, [dialog_flags])
+        
+        return oak_checks
+
 
     async def receive_snap_items(self):
         if not self.slot or not await self._expansion_loaded():
