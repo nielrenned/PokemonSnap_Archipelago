@@ -5,7 +5,7 @@ from typing import ClassVar
 from BaseClasses import MultiWorld, Region, Entrance, Tutorial, ItemClassification
 from NetUtils import MultiData
 from worlds.AutoWorld import World, WebWorld
-from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess
+from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess, icon_paths
 from .constants import *
 from .items import PokemonSnapItem, PokemonSnapItemCategory, key_item_names, useful_item_names, \
     _all_items, build_item_pool, PokemonSnapItemData
@@ -22,9 +22,10 @@ def run_client(*args):
     launch_subprocess(main, name="PokemonSnapClient", args=args)
 
 # Adds the launcher for our component and our client logo.
+icon_paths['pokemon_snap_icon'] = f"ap:{__name__}/icon.png"
 components.append(
     Component("Pokemon Snap Client", func=run_client, component_type=Type.CLIENT,
-              file_identifier=SuffixIdentifier(".apsnap")))
+              file_identifier=SuffixIdentifier(".apsnap"), icon="pokemon_snap_icon"))
 
 
 class PokemonSnapWeb(WebWorld):
