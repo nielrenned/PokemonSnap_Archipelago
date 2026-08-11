@@ -273,6 +273,7 @@ LOCATION_RULES = {
         Category.MULTIPLE_PHOTO:  _HAS_APPLE_OR_PESTER,
     },
     POLIWAG: {
+        Category.NORMAL_PHOTO:    _HAS_APPLE_OR_PESTER,
         Category.WONDERFUL_PHOTO: _HAS_APPLE_OR_PESTER,
         Category.MULTIPLE_PHOTO:  _HAS_APPLE_OR_PESTER,
     },
@@ -361,7 +362,7 @@ LOCATION_RULES = {
         Category.WONDERFUL_PHOTO: _HAS_PESTER,
     },
     SANDSHREW: {
-        Category.NORMAL_PHOTO:    HasAny(PESTER_BALL, DASH_ENGINE),
+        Category.NORMAL_PHOTO:    _HAS_PESTER,
         Category.WONDERFUL_PHOTO: _HAS_PESTER,
         Category.MULTIPLE_PHOTO:  HasAll(PESTER_BALL, POKEMON_FOOD),
     },
