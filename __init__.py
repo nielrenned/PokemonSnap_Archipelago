@@ -86,8 +86,11 @@ class PokemonSnapWorld(World):
             self.enabled_location_categories.add(PokemonSnapLocationCategory.POKEMON_SIGN)
         if self.options.secret_exits:
             self.enabled_location_categories.add(PokemonSnapLocationCategory.SECRET_EXIT)
-        if self.options.oak_rewards:
-            self.enabled_location_categories.add(PokemonSnapLocationCategory.OAK_REWARD)
+        if self.options.report_photo_count:
+            self.enabled_location_categories.add(PokemonSnapLocationCategory.PHOTO_COUNT)
+        if self.options.report_score_total:
+            self.enabled_location_categories.add(PokemonSnapLocationCategory.REPORT_SCORE)
+
 
         # Per-seed connect token, baked into the ROM and registered server-side.
         self.auth = self.random.randbytes(16)

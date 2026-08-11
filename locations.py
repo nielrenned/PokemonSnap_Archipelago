@@ -13,7 +13,8 @@ class PokemonSnapLocationCategory(IntEnum):
     SPECIAL_POSE    = 3
     POKEMON_SIGN    = 4
     SECRET_EXIT     = 5
-    OAK_REWARD      = 6
+    PHOTO_COUNT     = 6
+    REPORT_SCORE    = 7
 
     # for when there aren't enough locations in the pool
     BONUS_LOCATION = 10
@@ -275,7 +276,8 @@ OAK_REWARDS = {
 
 # Add the oak rewards
 for id, name in OAK_REWARDS.items():
-    location_tables[START_GAME].append(PokemonSnapLocationData(oak_reward_id(id), name, PokemonSnapLocationCategory.OAK_REWARD))
+    category = PokemonSnapLocationCategory.PHOTO_COUNT if id <= 3 else PokemonSnapLocationCategory.REPORT_SCORE
+    location_tables[START_GAME].append(PokemonSnapLocationData(oak_reward_id(id), name, category))
 
 
 # Must be done last: add the bonus locations
