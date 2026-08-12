@@ -275,13 +275,13 @@ for level in [LVL_TUNNEL, LVL_RIVER, LVL_VALLEY]:
 
 
 OAK_REWARDS = {
-    POKEMON_TOTAL_6 : 1,
-    POKEMON_TOTAL_22: 2,
-    POKEMON_TOTAL_40: 3,
+    REPORT_SCORE_24_000:  1, # Normally unlocks Pokemon Food
+    REPORT_SCORE_72_500:  2, # Normally unlocks Pester Ball
+    REPORT_SCORE_130_000: 3, # Normally unlocks PokeFlute
 
-    REPORT_SCORE_24_000:  4,
-    REPORT_SCORE_72_500:  5,
-    REPORT_SCORE_130_000: 6,
+    POKEMON_TOTAL_6 : 4, # Normally unlocks Tunnel
+    POKEMON_TOTAL_22: 5, # Normally unlocks River
+    POKEMON_TOTAL_40: 6, # Normally unlocks Valley
 }
 
 # Add the oak rewards
