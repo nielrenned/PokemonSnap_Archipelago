@@ -52,10 +52,9 @@ class PokemonSnapContext(CommonContext, PJ64Context):
     pj64_status: str
     finished_game: bool = False
     should_play_cloud_dialog: bool = True
-    oak_reward_dialog_flags = {x: [False, False] for x in OAK_REWARDS.values()}
     current_level_id: int = -1
 
-    oak_reward_checks = {
+    OAK_REWARD_CHECK_FUNCTIONS = {
         POKEMON_TOTAL_6:  (lambda count, score: count >= 6),
         POKEMON_TOTAL_22: (lambda count, score: count >= 22),
         POKEMON_TOTAL_40: (lambda count, score: count >= 40),
@@ -215,18 +214,32 @@ class PokemonSnapContext(CommonContext, PJ64Context):
 
 
     async def do_oak_reward_checks(self, scores):
-        if 'pkmn_report' not in self.stored_data or len(self.stored_data.get('pkmn_report')) == 0:
+        # TODO: holy, we gotta clean this up
+        REPORT_KEY = f'POKEMON_SNAP_PKMN_REPORT_{self.team}_{self.slot}'
+        REWARD_FLAGS_KEY = f'POKEMON_SNAP_OAK_REWARD_KEYS_{self.team}_{self.slot}'
+
+        if REPORT_KEY not in self.stored_data or len(self.stored_data[REPORT_KEY]) == 0 or \
+           REWARD_FLAGS_KEY not in self.stored_data or len(self.stored_data[REWARD_FLAGS_KEY]) == 0:
             # Gate updating here to make sure we restore after disconnect
-            await self.send_msgs([{
-                "cmd": "Set",
-                "key": "pkmn_report",
-                "default": {pokemon_name: 0 for pokemon_name in ALL_INGAME_POKEMON},
-                "want_reply": True,
-                "operations": []
-            }])
+            await self.send_msgs([
+                {
+                    "cmd": "Set",
+                    "key": REPORT_KEY,
+                    "default": {pokemon_name: 0 for pokemon_name in ALL_INGAME_POKEMON},
+                    "want_reply": True,
+                    "operations": []
+                },
+                {
+                    "cmd": "Set",
+                    "key": REWARD_FLAGS_KEY,
+                    "default": {x: [False, False] for x in OAK_REWARDS},
+                    "want_reply": True,
+                    "operations": []
+                }])
             return set() # Return nothing
-        
-        prev_report = self.stored_data.get('pkmn_report')
+
+        # Update the report on the server
+        prev_report = self.stored_data[REPORT_KEY]
         pkmn_report = {
             pokemon_name: max(
                 prev_report.get(pokemon_name, 0), 
@@ -238,30 +251,46 @@ class PokemonSnapContext(CommonContext, PJ64Context):
         if pkmn_report != prev_report:
             await self.send_msgs([{
                 "cmd": "Set",
-                "key": "pkmn_report",
+                "key": REPORT_KEY,
                 "default": {pokemon_name: 0 for pokemon_name in ALL_INGAME_POKEMON},
                 "want_reply": True,
                 "operations": [{"operation": "update", "value": pkmn_report}]
             }])
-        
+            logger.info(pkmn_report)
+
+        prev_dialog_flags = self.stored_data[REWARD_FLAGS_KEY]
+        dialog_played_flags = {x: flags[:] for x, flags in prev_dialog_flags.items()}
+
+        # Trigger dialog and update trigger flags
         pokemon_count = sum(1 for value in pkmn_report.values() if value > 0)
         report_score = sum(value for value in pkmn_report.values())
 
         dialog_flags = (await pj64_read_memory(self, "u32", addr.DIALOG_FLAGS, 4))[0]
-        for i, flags in self.oak_reward_dialog_flags.items():
+        for reward, flags in dialog_played_flags.items():
             # if dialog triggered and flag cleared
-            if flags[0] and (dialog_flags & (1 << i)) == 0:
+            if flags[0] and (dialog_flags & (1 << OAK_REWARDS[reward])) == 0:
                 flags[1] = True # mark dialog as played
 
         oak_checks = set()
         for oak_reward, reward_index in OAK_REWARDS.items():
-            if self.oak_reward_checks[oak_reward](pokemon_count, report_score):
-                triggered, played = self.oak_reward_dialog_flags[reward_index]
-                if not triggered:
-                    dialog_flags |= (1 << reward_index)
-                    self.oak_reward_dialog_flags[reward_index][0] = True
-                if triggered and played:
-                    oak_checks.add(oak_reward_id(reward_index))
+            reward_check_func = self.OAK_REWARD_CHECK_FUNCTIONS[oak_reward]
+            if not reward_check_func(pokemon_count, report_score): continue
+            
+            triggered, played = dialog_played_flags[oak_reward]
+            if not triggered:
+                dialog_flags |= (1 << reward_index)
+                dialog_played_flags[oak_reward][0] = True
+            if triggered and played:
+                oak_checks.add(oak_reward_id(reward_index))
+
+        if dialog_played_flags != prev_dialog_flags:
+            await self.send_msgs([{
+                "cmd": "Set",
+                "key": REWARD_FLAGS_KEY,
+                "default": {x: [False, False] for x in OAK_REWARDS},
+                "want_reply": True,
+                "operations": [{"operation": "update", "value": dialog_played_flags}]
+            }])
         
         await pj64_write_memory(self, "u32", addr.DIALOG_FLAGS, [dialog_flags])
         

@@ -65,9 +65,9 @@ POKEMON_TOTAL_6  = "6 Pokemon Photographed"
 POKEMON_TOTAL_22 = "22 Pokemon Photographed"
 POKEMON_TOTAL_40 = "40 Pokemon Photographed"
 
-REPORT_SCORE_24_000  = "Report Score ≥ 24,000"
-REPORT_SCORE_72_500  = "Report Score ≥ 72,500"
-REPORT_SCORE_130_000 = "Report Score ≥ 130,000"
+REPORT_SCORE_24_000  = "PKMN Report Score: 24,000"
+REPORT_SCORE_72_500  = "PKMN Report Score: 72,500"
+REPORT_SCORE_130_000 = "PKMN Report Score: 130,000"
 
 # Pokemon Species (in-game)
 ARCANINE = "Arcanine"
