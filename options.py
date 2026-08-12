@@ -43,18 +43,18 @@ class SecretExits(DefaultOnToggle):
     display_name = "Include secret exits"
 
 
-class PokemonReportPhotoCount(DefaultOnToggle):
+class PokemonReportPhotoCount(Toggle):
     """
     Include the three photo count rewards from Professor Oak as checks. 
-    They are rewarded for having 6, 22, and 40 Pokemon in your Pokemon Report.
+    They are rewarded for having 6, 22, and 40 pictures in your PKMN Report.
     """
     display_name = "PKMN Report Photo Rewards"
 
 
-class PokemonReportTotalScore(DefaultOnToggle):
+class PokemonReportTotalScore(Toggle):
     """
-    Include the three report score checkpoint rewards from Professor Oak as checks. 
-    They are rewarded for having a score of 24,000, 72,500, and 130,000 in your Pokemon Report.
+    Include the three PKMN Report score checkpoint rewards from Professor Oak as checks. 
+    They are rewarded for having a score of 24,000, 72,500, and 130,000 in your PKMN Report.
     """
     display_name = "PKMN Report Score Rewards"
 
