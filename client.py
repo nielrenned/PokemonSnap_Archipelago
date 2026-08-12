@@ -216,7 +216,7 @@ class PokemonSnapContext(CommonContext, PJ64Context):
 
     async def do_oak_reward_checks(self, scores):
         if 'pkmn_report' not in self.stored_data or len(self.stored_data.get('pkmn_report')) == 0:
-            # Loop updating here to make sure we restore after disconnect
+            # Gate updating here to make sure we restore after disconnect
             await self.send_msgs([{
                 "cmd": "Set",
                 "key": "pkmn_report",
@@ -224,7 +224,7 @@ class PokemonSnapContext(CommonContext, PJ64Context):
                 "want_reply": True,
                 "operations": []
             }])
-            return
+            return set() # Return nothing
         
         prev_report = self.stored_data.get('pkmn_report')
         pkmn_report = {
@@ -243,7 +243,6 @@ class PokemonSnapContext(CommonContext, PJ64Context):
                 "want_reply": True,
                 "operations": [{"operation": "update", "value": pkmn_report}]
             }])
-            logger.info(pkmn_report)
         
         pokemon_count = sum(1 for value in pkmn_report.values() if value > 0)
         report_score = sum(value for value in pkmn_report.values())
