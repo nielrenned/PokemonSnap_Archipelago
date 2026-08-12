@@ -256,8 +256,7 @@ class PokemonSnapContext(CommonContext, PJ64Context):
                 "want_reply": True,
                 "operations": [{"operation": "update", "value": pkmn_report}]
             }])
-            logger.info(pkmn_report)
-
+        
         prev_dialog_flags = self.stored_data[REWARD_FLAGS_KEY]
         dialog_played_flags = {x: flags[:] for x, flags in prev_dialog_flags.items()}
 
