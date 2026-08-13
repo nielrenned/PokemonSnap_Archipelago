@@ -205,7 +205,7 @@ POKEMON_TO_SLOTS = {
     for species_data in species_data_tables.values() for pokemon in species_data if pokemon.name in ALL_INGAME_POKEMON
 } | {
     BULBASAUR: [1, 64],
-    MAGIKARP: [1, 65, 66, 67, 68, 69],
+    MAGIKARP: [51, 65, 66, 67, 68, 69],
     PIKACHU: [10, 70, 71, 72],
     ZUBAT: [15, 73]
 }
