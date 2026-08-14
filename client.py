@@ -258,16 +258,18 @@ class PokemonSnapContext(CommonContext, PJ64Context):
             }])
         
         prev_dialog_flags = self.stored_data[REWARD_FLAGS_KEY]
-        dialog_played_flags = {x: flags[:] for x, flags in prev_dialog_flags.items()}
+        dialog_flags = {x: flags[:] for x, flags in prev_dialog_flags.items()}
 
         # Trigger dialog and update trigger flags
         pokemon_count = sum(1 for value in pkmn_report.values() if value > 0)
         report_score = sum(value for value in pkmn_report.values())
 
-        dialog_flags = (await pj64_read_memory(self, "u32", addr.DIALOG_FLAGS, 4))[0]
-        for reward, flags in dialog_played_flags.items():
+        # Update what flags have been marked as played
+        dialog_request_flags = 0
+        dialog_played_flags = (await pj64_read_memory(self, "u32", addr.DIALOG_PLAYED_FLAGS, 4))[0]
+        for reward, flags in dialog_flags.items():
             # if dialog triggered and flag cleared
-            if flags[0] and (dialog_flags & (1 << OAK_REWARDS[reward])) == 0:
+            if flags[0] and (dialog_played_flags & (1 << OAK_REWARDS[reward])) != 0:
                 flags[1] = True # mark dialog as played
 
         oak_checks = set()
@@ -275,23 +277,24 @@ class PokemonSnapContext(CommonContext, PJ64Context):
             reward_check_func = self.OAK_REWARD_CHECK_FUNCTIONS[oak_reward]
             if not reward_check_func(pokemon_count, report_score): continue
             
-            triggered, played = dialog_played_flags[oak_reward]
+            triggered, played = dialog_flags[oak_reward]
             if not triggered:
-                dialog_flags |= (1 << reward_index)
-                dialog_played_flags[oak_reward][0] = True
+                dialog_request_flags |= (1 << reward_index)
+                dialog_flags[oak_reward][0] = True
             if triggered and played:
                 oak_checks.add(oak_reward_id(reward_index))
 
-        if dialog_played_flags != prev_dialog_flags:
+        if dialog_flags != prev_dialog_flags:
             await self.send_msgs([{
                 "cmd": "Set",
                 "key": REWARD_FLAGS_KEY,
                 "default": {x: [False, False] for x in OAK_REWARDS},
                 "want_reply": True,
-                "operations": [{"operation": "update", "value": dialog_played_flags}]
+                "operations": [{"operation": "update", "value": dialog_flags}]
             }])
-        
-        await pj64_write_memory(self, "u32", addr.DIALOG_FLAGS, [dialog_flags])
+
+        stored_request_flags = (await pj64_read_memory(self, "u32", addr.DIALOG_REQUEST_FLAGS, 4))[0]
+        await pj64_write_memory(self, "u32", addr.DIALOG_REQUEST_FLAGS, [dialog_request_flags | stored_request_flags])
         
         return oak_checks
 
@@ -305,7 +308,6 @@ class PokemonSnapContext(CommonContext, PJ64Context):
 
         can_use_mask = 0
         course_mask = 0
-        dialog_flags = (await pj64_read_memory(self, "u32", addr.DIALOG_FLAGS, 4))[0]
         film = addr.FILM_BASE
         sign_pic_count = 0
         for net_item in self.items_received:
@@ -330,12 +332,11 @@ class PokemonSnapContext(CommonContext, PJ64Context):
             course_mask |= 1 << addr.COURSE_IDS[LVL_CLOUD]
             if self.should_play_cloud_dialog:
                 self.should_play_cloud_dialog = False
-                dialog_flags |= 1
-
+                stored_request_flags = (await pj64_read_memory(self, "u32", addr.DIALOG_REQUEST_FLAGS, 4))[0]
+                await pj64_write_memory(self, "u32", addr.DIALOG_REQUEST_FLAGS, [stored_request_flags | 1])
 
         await pj64_write_memory(self, "u32", addr.CAN_USE_MASK, [can_use_mask])
         await pj64_write_memory(self, "u32", addr.COURSE_UNLOCK_MASK, [course_mask])
-        await pj64_write_memory(self, "u32", addr.DIALOG_FLAGS, [dialog_flags])
         await pj64_write_memory(self, "u32", addr.MAX_FILM, [film])
 
     async def wait_for_next_loop(self, time_to_wait: float):
