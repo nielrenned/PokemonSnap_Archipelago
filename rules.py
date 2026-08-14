@@ -192,6 +192,7 @@ LOCATION_RULES = {
 
 
     # Tunnel
+    # TODO: [SOFT] mult: Technically possible without anything (difficult)
     KAKUNA: {
         Category.MULTIPLE_PHOTO:  HasAny(PESTER_BALL, POKEMON_FOOD, DASH_ENGINE),
     },
@@ -275,6 +276,7 @@ LOCATION_RULES = {
     PSYDUCK: {
         Category.MULTIPLE_PHOTO:  _HAS_APPLE_OR_PESTER,
     },
+    # TODO: [SOFT] base: Technically possible without anything (difficult)
     POLIWAG: {
         Category.NORMAL_PHOTO:    _HAS_APPLE_OR_PESTER,
         Category.WONDERFUL_PHOTO: _HAS_APPLE_OR_PESTER,
