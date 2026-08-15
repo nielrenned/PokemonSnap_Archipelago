@@ -4,9 +4,10 @@ from Options import Choice, DefaultOnToggle, PerGameCommonOptions, Toggle, Optio
 
 class GoalType(Choice):
     """
-    Determines what is required to unlock Mew, who can then be snapped to finish the game.
-    - signs: What is used in Vanilla Pokemon Snap. The number of Signs can be adjusted.
-    - pokemon_pictures: A number of pokemon pictures. These can be adjusted elsewhere.
+    Determines what is required to unlock The Rainbow Cloud where Mew (the Goal Condtion) lives.
+    Note: If significantly lowering requirements, we recommend disabling the # pokemon and score cehcks
+    - signs: What is used in Vanilla Pokemon Snap - spread accross the multiworlds. Can be adjusted.
+    - pokemon_pictures: A number of Pokemon Pictures spread accross the multiworlds.  Can be adjusted.
     """
     display_name = "Goal Type"
     default = DEFAULT_GOAL_TYPE
@@ -15,7 +16,7 @@ class GoalType(Choice):
 
 class SignsRequired(Range):
     """
-    The number of pokemon signs required to unlock the final level.
+    Determines the number of Sign Pictures required to unlock the Rainbow Cloud.
     Only matters if Goal Type is set to "Signs"
     """
     display_name = "Signs Required"
@@ -26,7 +27,7 @@ class SignsRequired(Range):
 
 class PokemonRequired(Range):
     """
-    The number of pokemon photos required to unlock the final level.
+    Determines the number of Pokemon Pictures required to unlock the Rainbow Cloud.
     Only matters if Goal Type is set to "Pokemon"
     """
     display_name = "Pokemon Required"
