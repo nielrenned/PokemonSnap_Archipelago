@@ -13,6 +13,8 @@ class PokemonSnapLocationCategory(IntEnum):
     SPECIAL_POSE    = 3
     POKEMON_SIGN    = 4
     SECRET_EXIT     = 5
+    PHOTO_COUNT     = 6
+    REPORT_SCORE    = 7
 
     # for when there aren't enough locations in the pool
     BONUS_LOCATION = 10
@@ -81,6 +83,7 @@ multiple_id     = lambda poke_id:  200 + poke_id
 special_pose_id = lambda pose_id:  300 + pose_id
 sign_id         = lambda lvl_id:   400 + lvl_id
 secret_exit_id  = lambda lvl_id:   500 + lvl_id
+oak_reward_id   = lambda reward:   600 + reward
 bonus_id        = lambda loc_id:  1000 + loc_id
 
 
@@ -197,6 +200,16 @@ species_data_tables = {
     ],
 }
 
+POKEMON_TO_SLOTS = {
+    pokemon.name: [pokemon.id]
+    for species_data in species_data_tables.values() for pokemon in species_data if pokemon.name in ALL_INGAME_POKEMON
+} | {
+    BULBASAUR: [1, 64],
+    MAGIKARP: [51, 65, 66, 67, 68, 69],
+    PIKACHU: [10, 70, 71, 72],
+    ZUBAT: [15, 73]
+}
+
 
 location_tables = {
     START_GAME: [],
@@ -261,7 +274,23 @@ for level in [LVL_TUNNEL, LVL_RIVER, LVL_VALLEY]:
     location_tables[level].append(PokemonSnapLocationData(id, name, PokemonSnapLocationCategory.SECRET_EXIT))
 
 
-# Add the bonus locations
+OAK_REWARDS = {
+    REPORT_SCORE_24_000:  1, # Normally unlocks Pokemon Food
+    REPORT_SCORE_72_500:  2, # Normally unlocks Pester Ball
+    REPORT_SCORE_130_000: 3, # Normally unlocks PokeFlute
+
+    POKEMON_TOTAL_6 : 4, # Normally unlocks Tunnel
+    POKEMON_TOTAL_22: 5, # Normally unlocks River
+    POKEMON_TOTAL_40: 6, # Normally unlocks Valley
+}
+
+# Add the oak rewards
+for name, id in OAK_REWARDS.items():
+    category = PokemonSnapLocationCategory.PHOTO_COUNT if id <= 3 else PokemonSnapLocationCategory.REPORT_SCORE
+    location_tables[START_GAME].append(PokemonSnapLocationData(oak_reward_id(id), name, category))
+
+
+# Must be done last: add the bonus locations
 for region, location_data_list in location_tables.items():
     location_data_list.extend([
         PokemonSnapLocationData(bonus_id(id), bonus(name), PokemonSnapLocationCategory.BONUS_LOCATION)

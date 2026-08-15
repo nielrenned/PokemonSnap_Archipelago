@@ -5,7 +5,7 @@ from typing import ClassVar, Any
 from BaseClasses import MultiWorld, Region, Entrance, Tutorial, ItemClassification
 from NetUtils import MultiData
 from worlds.AutoWorld import World, WebWorld
-from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess
+from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess, icon_paths
 from .constants import *
 from .items import PokemonSnapItem, PokemonSnapItemCategory, key_item_names, useful_item_names, \
     _all_items, build_item_pool, PokemonSnapItemData
@@ -22,9 +22,10 @@ def run_client(*args):
     launch_subprocess(main, name="PokemonSnapClient", args=args)
 
 # Adds the launcher for our component and our client logo.
+icon_paths['pokemon_snap_icon'] = f"ap:{__name__}/icon.png"
 components.append(
     Component("Pokemon Snap Client", func=run_client, component_type=Type.CLIENT,
-              file_identifier=SuffixIdentifier(".apsnap")))
+              file_identifier=SuffixIdentifier(".apsnap"), icon="pokemon_snap_icon"))
 
 
 class PokemonSnapWeb(WebWorld):
@@ -70,7 +71,7 @@ class PokemonSnapWorld(World):
 
     def generate_early(self):
         self.enabled_location_categories |= {
-            PokemonSnapLocationCategory.NORMAL_PHOTO
+            PokemonSnapLocationCategory.NORMAL_PHOTO,
         }
 
         if self.options.photo_bonuses == PhotoBonusChecks.option_technique_and_multiple:
@@ -85,6 +86,11 @@ class PokemonSnapWorld(World):
             self.enabled_location_categories.add(PokemonSnapLocationCategory.POKEMON_SIGN)
         if self.options.secret_exits:
             self.enabled_location_categories.add(PokemonSnapLocationCategory.SECRET_EXIT)
+        if self.options.report_photo_count:
+            self.enabled_location_categories.add(PokemonSnapLocationCategory.PHOTO_COUNT)
+        if self.options.report_score_total:
+            self.enabled_location_categories.add(PokemonSnapLocationCategory.REPORT_SCORE)
+
 
         # Per-seed connect token, baked into the ROM and registered server-side.
         self.auth = self.random.randbytes(16)
@@ -213,5 +219,17 @@ class PokemonSnapWorld(World):
             f"{self.multiworld.get_out_file_name_base(self.player)}{patch.patch_file_ending}")
         patch.write(out_path)
 
+    def fill_slot_data(self):
+        return {
+            "photo_bonuses": self.options.photo_bonuses.value,
+            "special_poses": self.options.special_poses.value,
+            "pokemon_signs": self.options.pokemon_signs.value,
+            "secret_exits": self.options.secret_exits.value,
+            "report_photo_count": self.options.report_photo_count.value,
+            "report_score_total": self.options.report_score_total.value,
+
+            "rng_checks": self.options.rng_checks.value,
+            "hard_checks": self.options.hard_checks.value,
+        }
     def fill_slot_data(self) -> dict[str, Any]:
-        return self.options.as_dict("goal_type", "signs_required", "pokemon_required")
+        return self.options.as_dict("goal_type", "signs_required", "pokemon_required", "photo_bonuses",  "pokemon_signs", "secret_exits", "report_photo_count", "report_score_total", "rng_checks", "hard_checks")

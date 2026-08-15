@@ -22,6 +22,8 @@ LVL_CAVE    = "Cave"
 LVL_VALLEY  = "Valley"
 LVL_CLOUD   = "Rainbow Cloud"
 
+ALL_LEVELS = [LVL_BEACH, LVL_TUNNEL, LVL_VOLCANO, LVL_RIVER, LVL_CAVE, LVL_VALLEY]
+
 # Items
 FILM_UPGRADE  = "Film Capacity Upgrade"
 PESTER_BALL   = "Pester Ball"
@@ -57,6 +59,15 @@ GRAVELERS_GROUP_DANCE = "Graveler's Group Dance"
 RARE_POKEMON_MEW      = "Rare Pokemon Mew"
 FIGHTING_MAGMAR       = "Fighting Magmar"
 JIGGLYPUFF_TRIO       = "Jigglypuff Trio on Stage"
+
+# Oak Rewards
+POKEMON_TOTAL_6  = "6 Pokemon Photographed"
+POKEMON_TOTAL_22 = "22 Pokemon Photographed"
+POKEMON_TOTAL_40 = "40 Pokemon Photographed"
+
+REPORT_SCORE_24_000  = "24,000 PKMN Report Score"
+REPORT_SCORE_72_500  = "72,500 PKMN Report Score"
+REPORT_SCORE_130_000 = "130,000 PKMN Report Score"
 
 # Pokemon Species (in-game)
 ARCANINE = "Arcanine"
@@ -133,6 +144,10 @@ ALL_INGAME_POKEMON = [
     POLIWAG, PORYGON, PSYDUCK, RAPIDASH, SANDSHREW, SANDSLASH, SCYTHER, 
     SHELLDER, SLOWBRO, SLOWPOKE, SNORLAX, SQUIRTLE, STARMIE, STARYU, 
     VICTREEBEL, VILEPLUME, VULPIX, WEEPINBELL, ZAPDOS, ZUBAT, 
+]
+
+POKEMON_IN_MULTIPLE_LEVELS = [
+    BULBASAUR, MAGIKARP, PIKACHU, ZUBAT
 ]
 
 ORIGINAL_151 = [
