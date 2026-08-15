@@ -350,6 +350,9 @@ class PokemonSnapContext(CommonContext, PJ64Context):
                 stored_request_flags = (await pj64_read_memory(self, "u32", addr.DIALOG_REQUEST_FLAGS, 4))[0]
                 await pj64_write_memory(self, "u32", addr.DIALOG_REQUEST_FLAGS, [stored_request_flags | 1])
 
+        if self.slot_data['enable_left_bumper_to_start_stop']:
+            can_use_mask |= (1 << addr.CAN_USE_BITS['L_TO_STOP'])
+
         await pj64_write_memory(self, "u32", addr.CAN_USE_MASK, [can_use_mask])
         await pj64_write_memory(self, "u32", addr.COURSE_UNLOCK_MASK, [course_mask])
         await pj64_write_memory(self, "u32", addr.MAX_FILM, [film])

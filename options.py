@@ -120,6 +120,13 @@ class StartWithDashEngine(Toggle):
     display_name = "Start with Dash Engine"
 
 
+class PressLeftBumperToToggleZeroOne(Toggle):
+    """
+    Adds the ability to start/stop the Zero-One by pressing L.
+    """
+    display_name = "Press L to start/stop"
+
+
 @dataclass
 class PokemonSnapOption(PerGameCommonOptions):
     goal_type: GoalType
@@ -138,6 +145,7 @@ class PokemonSnapOption(PerGameCommonOptions):
     hard_checks: IncludeHardChecks
 
     start_with_dash_engine: StartWithDashEngine
+    enable_left_bumper_to_start_stop: PressLeftBumperToToggleZeroOne
     start_inventory_from_pool: StartInventoryPool
 
 pokemon_snap_option_groups = [
@@ -171,6 +179,7 @@ pokemon_snap_option_groups = [
         "Quality Of Life",
 	[
 		StartWithDashEngine,
+        PressLeftBumperToToggleZeroOne,
 	],
 	),
 ]
