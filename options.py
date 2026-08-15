@@ -1,6 +1,39 @@
 from dataclasses import dataclass
+from .constants import DEFAULT_GOAL_TYPE, DEFAULT_SIGN_REQUIREMENT, DEFAULT_POKEMON_REQUIREMENT, GOAL_SIGN_PICS, GOAL_POKEMON_PICS
+from Options import Choice, DefaultOnToggle, PerGameCommonOptions, Toggle, OptionGroup, StartInventoryPool, Range
 
-from Options import Choice, DefaultOnToggle, PerGameCommonOptions, Toggle, OptionGroup, StartInventoryPool
+class GoalType(Choice):
+    """
+    Determines what is required to unlock The Rainbow Cloud where Mew (the Goal Condtion) lives.
+    Note: If significantly lowering requirements, we recommend disabling the # pokemon and score cehcks
+    - signs: What is used in Vanilla Pokemon Snap - spread accross the multiworlds. Can be adjusted.
+    - pokemon_pictures: A number of Pokemon Pictures spread accross the multiworlds.  Can be adjusted.
+    """
+    display_name = "Goal Type"
+    default = DEFAULT_GOAL_TYPE
+    option_signs = GOAL_SIGN_PICS
+    option_pokemon_pictures = GOAL_POKEMON_PICS
+
+class SignsRequired(Range):
+    """
+    Determines the number of Sign Pictures required to unlock the Rainbow Cloud.
+    Only matters if Goal Type is set to "Signs"
+    """
+    display_name = "Signs Required"
+    range_start = 1
+    range_end = 6
+    default = DEFAULT_SIGN_REQUIREMENT
+
+
+class PokemonRequired(Range):
+    """
+    Determines the number of Pokemon Pictures required to unlock the Rainbow Cloud.
+    Only matters if Goal Type is set to "Pokemon"
+    """
+    display_name = "Pokemon Required"
+    range_start = 1
+    range_end = 63
+    default = DEFAULT_POKEMON_REQUIREMENT
 
 class PhotoBonusChecks(Choice):
     """
@@ -89,6 +122,11 @@ class StartWithDashEngine(Toggle):
 
 @dataclass
 class PokemonSnapOption(PerGameCommonOptions):
+    goal_type: GoalType
+    signs_required: SignsRequired
+    pokemon_required: PokemonRequired
+
+
     photo_bonuses: PhotoBonusChecks
     special_poses: SpecialPoses
     pokemon_signs: PokemonSigns
@@ -103,6 +141,14 @@ class PokemonSnapOption(PerGameCommonOptions):
     start_inventory_from_pool: StartInventoryPool
 
 pokemon_snap_option_groups = [
+    OptionGroup(
+        "Goal Settings",
+    [
+            GoalType,
+            SignsRequired,
+            PokemonRequired,
+    ],
+    ),
     OptionGroup(
         "Checks - Categories",
     [

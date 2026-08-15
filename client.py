@@ -9,8 +9,9 @@ from .pj64_connector import PJ64Context, pj64connect, pj64disconnect, pj64_read_
 from .constants import *
 from .locations import wonderful_id as wdfl_id, multiple_id as mult_id, special_pose_id, secret_exit_id, sign_id, bonus_id, oak_reward_id, OAK_REWARDS, POKEMON_TO_SLOTS
 from .update_pj64_config import safe_load_pj64_config
-from .items import item_dictionary, SIGN_PIC_NAMES
+from .items import item_dictionary, SIGN_PIC_NAMES, POKEMON_PIC_NAMES
 from . import addresses as addr
+from . import PokemonSnapWorld
 
 _code_to_name = {data.ps_code: name for name, data in item_dictionary.items()}
 
@@ -77,6 +78,10 @@ class PokemonSnapContext(CommonContext, PJ64Context):
         self.tracker_enabled = _tracker_loaded
         self.pj64_status = INITIAL_STATUS
         self.ap_port = ap_port
+        self.slot_data = {}
+        self.goal_type = DEFAULT_GOAL_TYPE
+        self.signs_required = DEFAULT_SIGN_REQUIREMENT
+        self.pokemon_required = DEFAULT_POKEMON_REQUIREMENT
 
     def on_package(self, cmd: str, args: dict):
         """
@@ -95,13 +100,16 @@ class PokemonSnapContext(CommonContext, PJ64Context):
 
             case "Connected":  # On Connect
                 self.slot_data = args.get("slot_data", {})
-                pass
+                self.goal_type = self.slot_data["goal_type"]
+                self.signs_required = self.slot_data["signs_required"]
+                self.pokemon_required = self.slot_data["pokemon_required"]
 
             case "Bounced":
                 if "tags" not in args:
                     return
                 if not hasattr(self, "instance_id"):
                     self.instance_id = time.time()
+
 
     def _main(self):
         if self.tracker_enabled:
@@ -311,6 +319,7 @@ class PokemonSnapContext(CommonContext, PJ64Context):
         course_mask = 0
         film = addr.FILM_BASE
         sign_pic_count = 0
+        pokemon_pic_count = 0
         for net_item in self.items_received:
             if not self.finished_game and net_item.item == VICTORY_ITEM_ID:
                 await self.send_msgs([{"cmd": "StatusUpdate", "status": ClientStatus.CLIENT_GOAL}])
@@ -328,8 +337,13 @@ class PokemonSnapContext(CommonContext, PJ64Context):
                 film = min(film + addr.FILM_STEP, addr.FILM_CAP)
             elif name in SIGN_PIC_NAMES:
                 sign_pic_count += 1
-            
-        if sign_pic_count >= 6:
+            elif name in POKEMON_PIC_NAMES:
+                pokemon_pic_count += 1
+
+        met_sign_goal = self.goal_type == GOAL_SIGN_PICS and sign_pic_count >= self.signs_required
+        met_pokemon_goal = self.goal_type == GOAL_POKEMON_PICS and pokemon_pic_count >= self.pokemon_required
+
+        if met_sign_goal or met_pokemon_goal:
             course_mask |= 1 << addr.COURSE_IDS[LVL_CLOUD]
             if self.should_play_cloud_dialog:
                 self.should_play_cloud_dialog = False

@@ -2,12 +2,12 @@ from typing import TYPE_CHECKING, override
 from dataclasses import dataclass
 from itertools import product
 
-from rule_builder.rules import Has, HasAll, HasAny, And, Rule, CanReachLocation, CollectionState, False_
+from rule_builder.rules import Has, HasAll, HasAny, And, Rule, CanReachLocation, CollectionState, False_, HasGroup
 from .future_rules import AtLeast
-from .items import SIGN_PIC_NAMES
+from .items import SIGN_PIC_NAMES, POKEMON_PIC_NAMES
 from .locations import wonderful, multiple, secret_exit, course, bonus, PokemonSnapLocationCategory as Category, species_data_tables, RNG_LOCATIONS, HARD_LOCATIONS
 from .constants import *
-
+from .items import PokemonSnapItemCategory
 if TYPE_CHECKING:
     from . import PokemonSnapWorld
 
@@ -50,7 +50,14 @@ def set_rules(world: "PokemonSnapWorld"):
     for level in [LVL_BEACH, LVL_TUNNEL, LVL_VOLCANO, LVL_RIVER, LVL_CAVE, LVL_VALLEY]:
         world.set_rule(world.get_entrance(f'{START_GAME} -> {level}'), Has(level))
 
-    world.set_rule(world.get_entrance(f'{START_GAME} -> {LVL_CLOUD}'), HasAll(*SIGN_PIC_NAMES))
+    if world.options.goal_type == GOAL_SIGN_PICS:
+        world.set_rule(world.get_entrance(f'{START_GAME} -> {LVL_CLOUD}'),
+                       HasGroup(f"{PokemonSnapItemCategory.SIGN_PIC}", world.options.signs_required.value))
+    elif world.options.goal_type == GOAL_POKEMON_PICS:
+        world.set_rule(world.get_entrance(f'{START_GAME} -> {LVL_CLOUD}'),
+                       HasGroup(f"{PokemonSnapItemCategory.POKEMON_PIC}", world.options.pokemon_required.value))
+    else:
+        assert"Invalid goal type set. Must be 0 or 1."
 
     # World location rules
     for name, categories in LOCATION_RULES.items():

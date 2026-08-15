@@ -1,6 +1,6 @@
 import os
 import pkgutil
-from typing import ClassVar
+from typing import ClassVar, Any
 
 from BaseClasses import MultiWorld, Region, Entrance, Tutorial, ItemClassification
 from NetUtils import MultiData
@@ -183,7 +183,8 @@ class PokemonSnapWorld(World):
     def create_item(self, name: str) -> PokemonSnapItem:
         data = self.item_name_to_id[name]
 
-        if name in key_item_names:
+        key_items = key_item_names(self)
+        if name in key_items:
             item_classification = ItemClassification.progression
         elif name in useful_item_names:
             item_classification = ItemClassification.useful
@@ -218,15 +219,8 @@ class PokemonSnapWorld(World):
             f"{self.multiworld.get_out_file_name_base(self.player)}{patch.patch_file_ending}")
         patch.write(out_path)
 
-    def fill_slot_data(self):
-        return {
-            "photo_bonuses": self.options.photo_bonuses.value,
-            "special_poses": self.options.special_poses.value,
-            "pokemon_signs": self.options.pokemon_signs.value,
-            "secret_exits": self.options.secret_exits.value,
-            "report_photo_count": self.options.report_photo_count.value,
-            "report_score_total": self.options.report_score_total.value,
-
-            "rng_checks": self.options.rng_checks.value,
-            "hard_checks": self.options.hard_checks.value,
-        }
+    def fill_slot_data(self) -> dict[str, Any]:
+        return self.options.as_dict(
+            "goal_type", "signs_required", "pokemon_required",
+            "photo_bonuses", "pokemon_signs", "secret_exits", "report_photo_count",
+            "report_score_total", "rng_checks", "hard_checks")
