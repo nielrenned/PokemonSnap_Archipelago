@@ -50,10 +50,10 @@ def set_rules(world: "PokemonSnapWorld"):
     for level in [LVL_BEACH, LVL_TUNNEL, LVL_VOLCANO, LVL_RIVER, LVL_CAVE, LVL_VALLEY]:
         world.set_rule(world.get_entrance(f'{START_GAME} -> {level}'), Has(level))
 
-    if world.options.goal_type == 0:
+    if world.options.goal_type == GOAL_SIGN_PICS:
         world.set_rule(world.get_entrance(f'{START_GAME} -> {LVL_CLOUD}'),
                        HasGroup(f"{PokemonSnapItemCategory.SIGN_PIC}", world.options.signs_required.value))
-    elif world.options.goal_type == 1:
+    elif world.options.goal_type == GOAL_POKEMON_PICS:
         world.set_rule(world.get_entrance(f'{START_GAME} -> {LVL_CLOUD}'),
                        HasGroup(f"{PokemonSnapItemCategory.POKEMON_PIC}", world.options.pokemon_required.value))
     else:

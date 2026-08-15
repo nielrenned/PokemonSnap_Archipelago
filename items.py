@@ -58,9 +58,9 @@ SIGN_PIC_NAMES = {item.name for item in sign_pics}
 
 def key_item_names(world: "PokemonSnapWorld") -> list:
     key_item_names_list = base_key_item_names
-    if world.options.goal_type == 0:
+    if world.options.goal_type == GOAL_SIGN_PICS:
         key_item_names_list |= SIGN_PIC_NAMES
-    elif world.options.goal_type == 1:
+    elif world.options.goal_type == GOAL_POKEMON_PICS:
         key_item_names_list |= POKEMON_PIC_NAMES
 
     return key_item_names_list
