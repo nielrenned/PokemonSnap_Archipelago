@@ -1,11 +1,12 @@
 
 from .bases import PokemonSnapTestBase
 from ..items import PokemonSnapItemCategory, build_item_pool
+from ..constants import *
 
 class TestAlternativeGoals(PokemonSnapTestBase):
 
     options = {
-        "goal_type" : 1,
+        "goal_type" : GOAL_POKEMON_PICS,
         "pokemon_required" : 63,
         "photo_bonuses": "none",
         "special_poses": False,

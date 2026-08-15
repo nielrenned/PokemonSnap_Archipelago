@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from .constants import DEFAULT_GOAL_TYPE, DEFAULT_SIGN_REQUIREMENT, DEFAULT_POKEMON_REQUIREMENT
+from .constants import DEFAULT_GOAL_TYPE, DEFAULT_SIGN_REQUIREMENT, DEFAULT_POKEMON_REQUIREMENT, GOAL_SIGN_PICS, GOAL_POKEMON_PICS
 from Options import Choice, DefaultOnToggle, PerGameCommonOptions, Toggle, OptionGroup, StartInventoryPool, Range
 
 class GoalType(Choice):
@@ -11,8 +11,8 @@ class GoalType(Choice):
     """
     display_name = "Goal Type"
     default = DEFAULT_GOAL_TYPE
-    option_signs = 0
-    option_pokemon_pictures = 1
+    option_signs = GOAL_SIGN_PICS
+    option_pokemon_pictures = GOAL_POKEMON_PICS
 
 class SignsRequired(Range):
     """

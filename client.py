@@ -340,8 +340,8 @@ class PokemonSnapContext(CommonContext, PJ64Context):
             elif name in POKEMON_PIC_NAMES:
                 pokemon_pic_count += 1
 
-        met_sign_goal = self.goal_type == 0 and sign_pic_count >= self.signs_required
-        met_pokemon_goal = self.goal_type == 1 and pokemon_pic_count >= self.pokemon_required
+        met_sign_goal = self.goal_type == GOAL_SIGN_PICS and sign_pic_count >= self.signs_required
+        met_pokemon_goal = self.goal_type == GOAL_POKEMON_PICS and pokemon_pic_count >= self.pokemon_required
 
         if met_sign_goal or met_pokemon_goal:
             course_mask |= 1 << addr.COURSE_IDS[LVL_CLOUD]
