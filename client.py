@@ -7,7 +7,7 @@ from NetUtils import ClientStatus
 
 from .pj64_connector import PJ64Context, pj64connect, pj64disconnect, pj64_read_memory, pj64_write_memory
 from .constants import *
-from .locations import wonderful_id as wdfl_id, multiple_id as mult_id, special_pose_id, secret_exit_id, sign_id, bonus_id
+from .locations import wonderful_id as wdfl_id, multiple_id as mult_id, special_pose_id, secret_exit_id, sign_id, bonus_id, oak_reward_id, OAK_REWARDS, POKEMON_TO_SLOTS
 from .update_pj64_config import safe_load_pj64_config
 from .items import item_dictionary, SIGN_PIC_NAMES
 from . import addresses as addr
@@ -29,21 +29,7 @@ class PokemonSnapReportScore(NamedTuple):
     technique_score: int
     same_pokemon_score: int
     special_pose_bits: int
-
-    def poses(self) -> list[int]:
-        pose_list = []
-        for i in range(12):
-            if self.special_pose_bits & (1 << i) != 0:
-                pose_list.append(i + 1)
-        return pose_list
-
-    def score(self) -> int:
-        # Note: this is probably inaccurate
-        score = self.special_bonus + self.pose_score + self.size_score
-        if self.technique_score != 0:
-            score *= 2
-        score += self.same_pokemon_score
-        return score
+    total_score: int
 
 class PokemonSnapCommandProcessor(ClientCommandProcessor):
     def __init__(self, ctx: CommonContext, server_address: str = None):
@@ -67,6 +53,16 @@ class PokemonSnapContext(CommonContext, PJ64Context):
     finished_game: bool = False
     should_play_cloud_dialog: bool = True
     current_level_id: int = -1
+
+    OAK_REWARD_CHECK_FUNCTIONS = {
+        POKEMON_TOTAL_6:  (lambda slot_data, count, _: count >= 6  and slot_data["report_photo_count"]),
+        POKEMON_TOTAL_22: (lambda slot_data, count, _: count >= 22 and slot_data["report_photo_count"]),
+        POKEMON_TOTAL_40: (lambda slot_data, count, _: count >= 40 and slot_data["report_photo_count"]),
+
+        REPORT_SCORE_24_000:  (lambda slot_data, _, score: score >= 24_000  and slot_data["report_score_total"]),
+        REPORT_SCORE_72_500:  (lambda slot_data, _, score: score >= 72_500  and slot_data["report_score_total"]),
+        REPORT_SCORE_130_000: (lambda slot_data, _, score: score >= 130_000 and slot_data["report_score_total"]),
+    }
 
     def __init__(self, server_address, password, ap_port):
         """
@@ -98,6 +94,7 @@ class PokemonSnapContext(CommonContext, PJ64Context):
                     print(str(countdown_var))
 
             case "Connected":  # On Connect
+                self.slot_data = args.get("slot_data", {})
                 pass
 
             case "Bounced":
@@ -176,7 +173,7 @@ class PokemonSnapContext(CommonContext, PJ64Context):
 
         # TODO: condense into one read and split based on addresses
         level_id = (await pj64_read_memory(self, "s32", addr.LEVEL_ID, 4))[0]
-        raw_scores = await pj64_read_memory(self, "u16", addr.SPECIES_SCORES, addr.NUM_SPECIES_SCORES * 6 * 2)
+        raw_scores = await pj64_read_memory(self, "u16", addr.SPECIES_SCORES, addr.NUM_SPECIES_SCORES * 7 * 2)
         sign_flags = await pj64_read_memory(self, "u8", addr.SIGN_FLAGS, addr.NUM_SIGNS)
         secret_exit_flags = (await pj64_read_memory(self, "u8", addr.SECRET_EXIT_FLAGS, 1))[0]
 
@@ -193,9 +190,9 @@ class PokemonSnapContext(CommonContext, PJ64Context):
 
         all_checks = set()
 
-        scores = [PokemonSnapReportScore(*raw_scores[i:i+6]) for i in range(0, addr.NUM_SPECIES_SCORES * 6, 6)]
+        scores = [PokemonSnapReportScore(*raw_scores[i:i+7]) for i in range(0, addr.NUM_SPECIES_SCORES * 7, 7)]
         for slot, report in enumerate(scores):
-            if report.score() == 0: continue
+            if report.total_score == 0: continue
 
             location_id = slot + 1
             all_checks.add(location_id)
@@ -209,10 +206,99 @@ class PokemonSnapContext(CommonContext, PJ64Context):
         all_checks |= {secret_exit_id(i) for i in range(6) if (secret_exit_flags & (1 << i)) != 0}
         all_checks |= {bonus_id(id) for id in all_checks}
 
+        all_checks |= await self.do_oak_reward_checks(scores)
+
         # CommonClient.check_locations filters locations to just those missing 
         # from the server, so we can send every check we find every time.
         self.checked_locations |= all_checks
         await self.check_locations(all_checks)
+
+
+    async def do_oak_reward_checks(self, scores):
+        # TODO: holy, we gotta clean this up
+        REPORT_KEY = f'POKEMON_SNAP_PKMN_REPORT_{self.team}_{self.slot}'
+        REWARD_FLAGS_KEY = f'POKEMON_SNAP_OAK_REWARD_KEYS_{self.team}_{self.slot}'
+
+        if REPORT_KEY not in self.stored_data or len(self.stored_data[REPORT_KEY]) == 0 or \
+           REWARD_FLAGS_KEY not in self.stored_data or len(self.stored_data[REWARD_FLAGS_KEY]) == 0:
+            # Gate updating here to make sure we restore after disconnect
+            await self.send_msgs([
+                {
+                    "cmd": "Set",
+                    "key": REPORT_KEY,
+                    "default": {pokemon_name: 0 for pokemon_name in ALL_INGAME_POKEMON},
+                    "want_reply": True,
+                    "operations": []
+                },
+                {
+                    "cmd": "Set",
+                    "key": REWARD_FLAGS_KEY,
+                    "default": {x: [False, False] for x in OAK_REWARDS},
+                    "want_reply": True,
+                    "operations": []
+                }])
+            return set() # Return nothing
+
+        # Update the report on the server
+        prev_report = self.stored_data[REPORT_KEY]
+        pkmn_report = {
+            pokemon_name: max(
+                prev_report.get(pokemon_name, 0), 
+                max(scores[slot-1].total_score for slot in POKEMON_TO_SLOTS[pokemon_name])
+            )
+            for pokemon_name in ALL_INGAME_POKEMON
+        }
+
+        if pkmn_report != prev_report:
+            await self.send_msgs([{
+                "cmd": "Set",
+                "key": REPORT_KEY,
+                "default": {pokemon_name: 0 for pokemon_name in ALL_INGAME_POKEMON},
+                "want_reply": True,
+                "operations": [{"operation": "update", "value": pkmn_report}]
+            }])
+        
+        prev_dialog_flags = self.stored_data[REWARD_FLAGS_KEY]
+        dialog_flags = {x: flags[:] for x, flags in prev_dialog_flags.items()}
+
+        # Trigger dialog and update trigger flags
+        pokemon_count = sum(1 for value in pkmn_report.values() if value > 0)
+        report_score = sum(value for value in pkmn_report.values())
+
+        # Update what flags have been marked as played
+        dialog_request_flags = 0
+        dialog_played_flags = (await pj64_read_memory(self, "u32", addr.DIALOG_PLAYED_FLAGS, 4))[0]
+        for reward, flags in dialog_flags.items():
+            # if dialog triggered and flag cleared
+            if flags[0] and (dialog_played_flags & (1 << OAK_REWARDS[reward])) != 0:
+                flags[1] = True # mark dialog as played
+
+        oak_checks = set()
+        for oak_reward, reward_index in OAK_REWARDS.items():
+            reward_check_func = self.OAK_REWARD_CHECK_FUNCTIONS[oak_reward]
+            if not reward_check_func(self.slot_data, pokemon_count, report_score): continue
+            
+            triggered, played = dialog_flags[oak_reward]
+            if not triggered:
+                dialog_request_flags |= (1 << reward_index)
+                dialog_flags[oak_reward][0] = True
+            if triggered and played:
+                oak_checks.add(oak_reward_id(reward_index))
+
+        if dialog_flags != prev_dialog_flags:
+            await self.send_msgs([{
+                "cmd": "Set",
+                "key": REWARD_FLAGS_KEY,
+                "default": {x: [False, False] for x in OAK_REWARDS},
+                "want_reply": True,
+                "operations": [{"operation": "update", "value": dialog_flags}]
+            }])
+
+        stored_request_flags = (await pj64_read_memory(self, "u32", addr.DIALOG_REQUEST_FLAGS, 4))[0]
+        await pj64_write_memory(self, "u32", addr.DIALOG_REQUEST_FLAGS, [dialog_request_flags | stored_request_flags])
+        
+        return oak_checks
+
 
     async def receive_snap_items(self):
         if not self.slot or not await self._expansion_loaded():
@@ -223,7 +309,6 @@ class PokemonSnapContext(CommonContext, PJ64Context):
 
         can_use_mask = 0
         course_mask = 0
-        dialog_flags = (await pj64_read_memory(self, "u32", addr.DIALOG_FLAGS, 4))[0]
         film = addr.FILM_BASE
         sign_pic_count = 0
         for net_item in self.items_received:
@@ -248,12 +333,11 @@ class PokemonSnapContext(CommonContext, PJ64Context):
             course_mask |= 1 << addr.COURSE_IDS[LVL_CLOUD]
             if self.should_play_cloud_dialog:
                 self.should_play_cloud_dialog = False
-                dialog_flags |= 1
-
+                stored_request_flags = (await pj64_read_memory(self, "u32", addr.DIALOG_REQUEST_FLAGS, 4))[0]
+                await pj64_write_memory(self, "u32", addr.DIALOG_REQUEST_FLAGS, [stored_request_flags | 1])
 
         await pj64_write_memory(self, "u32", addr.CAN_USE_MASK, [can_use_mask])
         await pj64_write_memory(self, "u32", addr.COURSE_UNLOCK_MASK, [course_mask])
-        await pj64_write_memory(self, "u32", addr.DIALOG_FLAGS, [dialog_flags])
         await pj64_write_memory(self, "u32", addr.MAX_FILM, [film])
 
     async def wait_for_next_loop(self, time_to_wait: float):

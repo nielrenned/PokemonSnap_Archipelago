@@ -43,6 +43,22 @@ class SecretExits(DefaultOnToggle):
     display_name = "Include secret exits"
 
 
+class PokemonReportPhotoCount(DefaultOnToggle):
+    """
+    Include the three photo count rewards from Professor Oak as checks. 
+    They are rewarded for having 6, 22, and 40 pictures in your PKMN Report.
+    """
+    display_name = "PKMN Report Photo Rewards"
+
+
+class PokemonReportTotalScore(DefaultOnToggle):
+    """
+    Include the three PKMN Report score checkpoint rewards from Professor Oak as checks. 
+    They are rewarded for having a score of 24,000, 72,500, and 130,000 in your PKMN Report.
+    """
+    display_name = "PKMN Report Score Rewards"
+
+
 class IncludeRNGChecks(Toggle):
     """
     Include the luck-heavy photos as checks. They are:
@@ -77,6 +93,8 @@ class PokemonSnapOption(PerGameCommonOptions):
     special_poses: SpecialPoses
     pokemon_signs: PokemonSigns
     secret_exits:  SecretExits
+    report_photo_count: PokemonReportPhotoCount
+    report_score_total: PokemonReportTotalScore
 
     rng_checks:  IncludeRNGChecks
     hard_checks: IncludeHardChecks
@@ -92,6 +110,8 @@ pokemon_snap_option_groups = [
         SpecialPoses,
         PokemonSigns,
         SecretExits,
+        PokemonReportPhotoCount,
+        PokemonReportTotalScore,
     ],
     ),
     OptionGroup(
