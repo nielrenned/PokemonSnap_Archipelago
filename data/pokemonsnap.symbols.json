@@ -33,7 +33,7 @@
       "addr": "0x8040000C",
       "type": "u32",
       "access": "rw",
-      "desc": "bit0=apple, 1=pester, 2=flute, 3=dash, 4=sign detector (used when gCanUseOverride==0)"
+      "desc": "bit0=apple, 1=pester, 2=flute, 3=dash, 4=sign detector, 5=press L to stop (used when gCanUseOverride==0)"
     },
     "gCourseOverride": {
       "addr": "0x80400010",
