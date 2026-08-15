@@ -55,11 +55,11 @@ class PokemonSnapWorld(World):
     options: PokemonSnapOption
     topology_present: bool = True
 
-    item_name_groups = items.item_name_groups
     enabled_location_categories: set[PokemonSnapLocationCategory]
     required_client_version = (0, 6, 7)
     item_name_to_id = PokemonSnapItem.get_name_to_id()
     location_name_to_id = PokemonSnapLocation.get_name_to_id()
+    item_name_groups = items.item_name_groups
     settings: ClassVar[PokemonSnapSettings]
     start_area: PokemonSnapItemData
     auth: bytes
