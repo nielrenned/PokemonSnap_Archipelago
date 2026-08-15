@@ -1,5 +1,5 @@
 import typing
-from enum import IntEnum
+from enum import StrEnum
 from typing import NamedTuple
 from .constants import *
 
@@ -9,15 +9,15 @@ if typing.TYPE_CHECKING:
     from worlds.pokemon_snap import PokemonSnapWorld
 
 
-class PokemonSnapItemCategory(IntEnum):
-    VICTORY = 0
-    TOOL = 1
-    AREA = 2
-    MISC = 3
-    POKEMON_PIC = 4
-    SIGN_PIC = 5
-    TRASH_CUSTOM = 10
-    TRASH_PICTURE = 11
+class PokemonSnapItemCategory(StrEnum):
+    VICTORY = "Victory"
+    TOOL = "Tools"
+    AREA = "Courses"
+    MISC = "Miscellaneous"
+    POKEMON_PIC = "Pokemon Pictures"
+    SIGN_PIC = "Sign Pictures"
+    TRASH_CUSTOM = "Special Garbage"
+    TRASH_PICTURE = "Garbage Photos"
 
 
 class PokemonSnapItemData(NamedTuple):
@@ -71,7 +71,7 @@ def key_item_names(world: "PokemonSnapWorld") -> list:
 trash_pokemon_pics = {
     pokemon_name: [
         PokemonSnapItemData(
-            f"A {adjective} Picture of {pokemon_name}", 
+            f"A {adjective} Photo of {pokemon_name}",
             10000 + i*len(TRASH_PIC_ADJECTIVES) + j, 
             PokemonSnapItemCategory.TRASH_PICTURE
         )
@@ -106,7 +106,7 @@ _all_items = [PokemonSnapItemData(row[0], row[1], row[2]) for row in [
     ("Several decades worth of nostalgia", 4004, PokemonSnapItemCategory.TRASH_CUSTOM),
     ("A burger king voucher", 4005, PokemonSnapItemCategory.TRASH_CUSTOM),
     ("A super close-up of a thumb", 4006, PokemonSnapItemCategory.TRASH_CUSTOM),
-    ("A Futuristic Picture of Mareep", 4007, PokemonSnapItemCategory.TRASH_CUSTOM),
+    ("A Futuristic Photo of Mareep", 4007, PokemonSnapItemCategory.TRASH_CUSTOM),
     ("A Full Art Swinub Card", 4008, PokemonSnapItemCategory.TRASH_CUSTOM),
 
 ]] + pokemon_pics + sign_pics + [pic for pics in trash_pokemon_pics.values() for pic in pics]
