@@ -395,5 +395,5 @@ LOCATION_RULES = {
     LVL_VALLEY:            { Category.SECRET_EXIT:  _HAS_PESTER },
 
     # Cloud
-    MEW: { Category.NORMAL_PHOTO:    _HAS_PESTER }
+    MEW: { Category.NORMAL_PHOTO: _HAS_APPLE_OR_PESTER }
 }
