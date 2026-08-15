@@ -2,7 +2,8 @@ from typing import TYPE_CHECKING, override
 from dataclasses import dataclass
 from itertools import product
 
-from rule_builder.rules import Has, HasAll, HasAny, And, Rule, AtLeast, CanReachLocation, CollectionState, False_
+from rule_builder.rules import Has, HasAll, HasAny, And, Rule, CanReachLocation, CollectionState, False_
+from .future_rules import AtLeast
 from .items import SIGN_PIC_NAMES
 from .locations import wonderful, multiple, secret_exit, course, bonus, PokemonSnapLocationCategory as Category, species_data_tables, RNG_LOCATIONS, HARD_LOCATIONS
 from .constants import *
