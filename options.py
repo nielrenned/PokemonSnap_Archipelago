@@ -127,6 +127,18 @@ class PressLeftBumperToToggleZeroOne(Toggle):
     display_name = "Press L to start/stop"
 
 
+class CameraInversion(Choice):
+    """
+    Choose if the camera controls are Normal or Inverted.
+    """
+    display_name = "Camera Inversion"
+
+    # DO NOT change these values, they match the values in the ROM
+    default = 1
+    option_inverted = 0
+    option_normal = 1
+
+
 @dataclass
 class PokemonSnapOption(PerGameCommonOptions):
     goal_type: GoalType
@@ -146,6 +158,7 @@ class PokemonSnapOption(PerGameCommonOptions):
 
     start_with_dash_engine: StartWithDashEngine
     enable_left_bumper_to_start_stop: PressLeftBumperToToggleZeroOne
+    camera_inversion: CameraInversion
     start_inventory_from_pool: StartInventoryPool
 
 pokemon_snap_option_groups = [
@@ -180,6 +193,7 @@ pokemon_snap_option_groups = [
 	[
 		StartWithDashEngine,
         PressLeftBumperToToggleZeroOne,
+        CameraInversion,
 	],
 	),
 ]

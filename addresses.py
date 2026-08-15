@@ -30,6 +30,7 @@ COURSE_OVERRIDE = _addr("symbols", "gCourseOverride")
 COURSE_UNLOCK_MASK = _addr("symbols", "gCourseUnlockMask")
 DIALOG_REQUEST_FLAGS = _addr("symbols", "gDialogRequestFlags")
 DIALOG_PLAYED_FLAGS = _addr("symbols", "gDialogPlayedFlags")
+CAMERA_INVERSION = _addr("symbols", "gCameraInversionYAMLOption")
 LEVEL_ID = _addr("symbols", "gLevelID")
 
 # Vanilla save block (read-only)
