@@ -55,13 +55,13 @@ class PokemonSnapContext(CommonContext, PJ64Context):
     current_level_id: int = -1
 
     OAK_REWARD_CHECK_FUNCTIONS = {
-        POKEMON_TOTAL_6:  (lambda count, score: count >= 6),
-        POKEMON_TOTAL_22: (lambda count, score: count >= 22),
-        POKEMON_TOTAL_40: (lambda count, score: count >= 40),
+        POKEMON_TOTAL_6:  (lambda slot_data, count, _: count >= 6  and slot_data["report_photo_count"]),
+        POKEMON_TOTAL_22: (lambda slot_data, count, _: count >= 22 and slot_data["report_photo_count"]),
+        POKEMON_TOTAL_40: (lambda slot_data, count, _: count >= 40 and slot_data["report_photo_count"]),
 
-        REPORT_SCORE_24_000:  (lambda count, score: score >= 24_000),
-        REPORT_SCORE_72_500:  (lambda count, score: score >= 72_500),
-        REPORT_SCORE_130_000: (lambda count, score: score >= 130_000),
+        REPORT_SCORE_24_000:  (lambda slot_data, _, score: score >= 24_000  and slot_data["report_score_total"]),
+        REPORT_SCORE_72_500:  (lambda slot_data, _, score: score >= 72_500  and slot_data["report_score_total"]),
+        REPORT_SCORE_130_000: (lambda slot_data, _, score: score >= 130_000 and slot_data["report_score_total"]),
     }
 
     def __init__(self, server_address, password, ap_port):
@@ -94,6 +94,7 @@ class PokemonSnapContext(CommonContext, PJ64Context):
                     print(str(countdown_var))
 
             case "Connected":  # On Connect
+                self.slot_data = args.get("slot_data", {})
                 pass
 
             case "Bounced":
@@ -275,7 +276,7 @@ class PokemonSnapContext(CommonContext, PJ64Context):
         oak_checks = set()
         for oak_reward, reward_index in OAK_REWARDS.items():
             reward_check_func = self.OAK_REWARD_CHECK_FUNCTIONS[oak_reward]
-            if not reward_check_func(pokemon_count, report_score): continue
+            if not reward_check_func(self.slot_data, pokemon_count, report_score): continue
             
             triggered, played = dialog_flags[oak_reward]
             if not triggered:

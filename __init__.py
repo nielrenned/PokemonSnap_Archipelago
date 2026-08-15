@@ -217,3 +217,16 @@ class PokemonSnapWorld(World):
             output_directory,
             f"{self.multiworld.get_out_file_name_base(self.player)}{patch.patch_file_ending}")
         patch.write(out_path)
+
+    def fill_slot_data(self):
+        return {
+            "photo_bonuses": self.options.photo_bonuses.value,
+            "special_poses": self.options.special_poses.value,
+            "pokemon_signs": self.options.pokemon_signs.value,
+            "secret_exits": self.options.secret_exits.value,
+            "report_photo_count": self.options.report_photo_count.value,
+            "report_score_total": self.options.report_score_total.value,
+
+            "rng_checks": self.options.rng_checks.value,
+            "hard_checks": self.options.hard_checks.value,
+        }
