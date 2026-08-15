@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from .constants import DEFAULT_GOAL_TYPE, DEFAULT_SIGN_REQUIREMENT, DEFAULT_POKEMON_REQUIREMENT, GOAL_SIGN_PICS, GOAL_POKEMON_PICS
 from Options import Choice, DefaultOnToggle, PerGameCommonOptions, Toggle, OptionGroup, StartInventoryPool, Range
+from .addresses import CAMERA_INVERSION_OPTION_INVERTED, CAMERA_INVERSION_OPTION_NORMAL
+
 
 class GoalType(Choice):
     """
@@ -13,6 +15,7 @@ class GoalType(Choice):
     default = DEFAULT_GOAL_TYPE
     option_signs = GOAL_SIGN_PICS
     option_pokemon_pictures = GOAL_POKEMON_PICS
+
 
 class SignsRequired(Range):
     """
@@ -34,6 +37,7 @@ class PokemonRequired(Range):
     range_start = 1
     range_end = 63
     default = DEFAULT_POKEMON_REQUIREMENT
+
 
 class PhotoBonusChecks(Choice):
     """
@@ -134,9 +138,9 @@ class CameraInversion(Choice):
     display_name = "Camera Inversion"
 
     # DO NOT change these values, they match the values in the ROM
-    default = 1
-    option_inverted = 0
-    option_normal = 1
+    default = CAMERA_INVERSION_OPTION_NORMAL
+    option_inverted = CAMERA_INVERSION_OPTION_INVERTED
+    option_normal = CAMERA_INVERSION_OPTION_NORMAL
 
 
 @dataclass
