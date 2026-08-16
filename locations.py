@@ -88,19 +88,28 @@ bonus_id        = lambda loc_id:  1000 + loc_id
 
 
 RNG_LOCATIONS = [
+    # Volcano
     multiple(ARCANINE),
+    # River
     multiple(CLOYSTER),
+    multiple(PSYDUCK),
+    # Valley
     multiple(DRATINI),
     multiple(course(MAGIKARP, LVL_VALLEY)),
-    multiple(PSYDUCK),
 ]
 
 HARD_LOCATIONS = [
+    # River
+    wonderful(course(PIKACHU, LVL_RIVER)),
+    # Cave
+    wonderful(course(MAGIKARP, LVL_CAVE)),
+    multiple(course(ZUBAT, LVL_CAVE)),
+    BALLOON_PIKACHU,
+    FLYING_PIKACHU,
+    # Valley
     multiple(STARYU),
     multiple(STARMIE),
-    multiple(course(ZUBAT, LVL_CAVE)),
     wonderful(GOLDEEN),
-    wonderful(course(PIKACHU, LVL_RIVER)),
 ]
 
 
