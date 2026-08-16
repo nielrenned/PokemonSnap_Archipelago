@@ -356,6 +356,7 @@ class PokemonSnapContext(CommonContext, PJ64Context):
         await pj64_write_memory(self, "u32", addr.CAN_USE_MASK, [can_use_mask])
         await pj64_write_memory(self, "u32", addr.COURSE_UNLOCK_MASK, [course_mask])
         await pj64_write_memory(self, "u32", addr.MAX_FILM, [film])
+        await pj64_write_memory(self, "u32", addr.CAMERA_INVERSION, [self.slot_data['camera_inversion'] | 0x02]) # 0x02 is the "performed write" flag
 
     async def wait_for_next_loop(self, time_to_wait: float):
         await asyncio.sleep(time_to_wait)

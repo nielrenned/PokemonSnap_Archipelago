@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from .constants import DEFAULT_GOAL_TYPE, DEFAULT_SIGN_REQUIREMENT, DEFAULT_POKEMON_REQUIREMENT, GOAL_SIGN_PICS, GOAL_POKEMON_PICS
 from Options import Choice, DefaultOnToggle, PerGameCommonOptions, Toggle, OptionGroup, StartInventoryPool, Range
+from .addresses import CAMERA_INVERSION_OPTION_INVERTED, CAMERA_INVERSION_OPTION_NORMAL
+
 
 class GoalType(Choice):
     """
@@ -13,6 +15,7 @@ class GoalType(Choice):
     default = DEFAULT_GOAL_TYPE
     option_signs = GOAL_SIGN_PICS
     option_pokemon_pictures = GOAL_POKEMON_PICS
+
 
 class SignsRequired(Range):
     """
@@ -34,6 +37,7 @@ class PokemonRequired(Range):
     range_start = 1
     range_end = 63
     default = DEFAULT_POKEMON_REQUIREMENT
+
 
 class PhotoBonusChecks(Choice):
     """
@@ -127,6 +131,18 @@ class PressLeftBumperToToggleZeroOne(Toggle):
     display_name = "Press L to start/stop"
 
 
+class CameraInversion(Choice):
+    """
+    Choose if the camera controls are Normal or Inverted.
+    """
+    display_name = "Camera Inversion"
+
+    # DO NOT change these values, they match the values in the ROM
+    default = CAMERA_INVERSION_OPTION_NORMAL
+    option_inverted = CAMERA_INVERSION_OPTION_INVERTED
+    option_normal = CAMERA_INVERSION_OPTION_NORMAL
+
+
 @dataclass
 class PokemonSnapOption(PerGameCommonOptions):
     goal_type: GoalType
@@ -146,6 +162,7 @@ class PokemonSnapOption(PerGameCommonOptions):
 
     start_with_dash_engine: StartWithDashEngine
     enable_left_bumper_to_start_stop: PressLeftBumperToToggleZeroOne
+    camera_inversion: CameraInversion
     start_inventory_from_pool: StartInventoryPool
 
 pokemon_snap_option_groups = [
@@ -180,6 +197,7 @@ pokemon_snap_option_groups = [
 	[
 		StartWithDashEngine,
         PressLeftBumperToToggleZeroOne,
+        CameraInversion,
 	],
 	),
 ]
