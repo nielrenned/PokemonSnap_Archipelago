@@ -24,6 +24,9 @@ See [Setup Instructions](docs/setup_en.md) for set up and [FAQ](docs/faq_en.md) 
   * Kingler Rock, Pinsir's Shadow, Koffing Smoke, Cubone Tree, The Mewtwo Constellation, and Dugtrio Mountain
   * Requires the Pokémon Sign Detector item
 * Taking the Secret Exits in Tunnel, River, and Valley
+* Receive Oak's rewards for your PKMN Report
+  * 3 Checks for Photo Count: 6, 22, and 40 photos
+  * 3 Checks for Report Score: 24,000, 72,500, and 130,000
 
 ### Unlocks
 * The six courses: Beach, Tunnel, Volcano, River, Cave, and Valley (start with a random one)
