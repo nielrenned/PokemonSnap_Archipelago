@@ -99,8 +99,9 @@ class PokemonReportTotalScore(DefaultOnToggle):
 class IncludeRNGChecks(Toggle):
     """
     Include the luck-heavy photos as checks. They are:
-      Arcanine: Multiple, Cloyster: Multiple, Dratini: Multiple, 
-      Magikarp (Valley): Multiple, and Psyduck: Multiple
+    - [Volcano] Arcanine: Multiple
+    - [  River] Cloyster: Multiple and Psyduck: Multiple
+    - [ Valley] Magikarp (Valley): Multiple and Dratini: Multiple
     """
     display_name = "Include random checks"
 
@@ -108,9 +109,9 @@ class IncludeRNGChecks(Toggle):
 class IncludeHardChecks(Toggle):
     """
     Include the hard photos as checks. They are:
-      Staryu: Multiple, Starmie: Multiple, and Zubat (Cave): Multiple.
-      Goldeen: Good Technique, Staryu: Multiple, Starmie: Multiple,
-      Pikachy (River): Good Technique and Zubat (Cave): Multiple.
+    - [ River] Pikachu (River): Good Technique
+    - [  Cave] Zubat (Cave): Multiple, Magikarp (Cave): Wonderful, Balloon Pikachu, and Flying Pikachu
+    - [Valley] Staryu: Multiple, Starmie: Multiple, and Goldeen: Good Technique
     """
     display_name = "Include hard checks"
 
