@@ -61,6 +61,7 @@ CAN_USE_BITS = {
     POKEFLUTE:     2,
     DASH_ENGINE:   3,
     SIGN_DETECTOR: 4,
+    "L_TO_STOP":   5,
 }
 
 # Item name -> bit in gCourseUnlockMask.
