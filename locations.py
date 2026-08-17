@@ -283,21 +283,26 @@ for level in [LVL_TUNNEL, LVL_RIVER, LVL_VALLEY]:
     location_tables[level].append(PokemonSnapLocationData(id, name, PokemonSnapLocationCategory.SECRET_EXIT))
 
 
-OAK_REWARDS = {
+OAK_SCORE_REWARDS = {
     REPORT_SCORE_24_000:  1, # Normally unlocks Pokemon Food
     REPORT_SCORE_72_500:  2, # Normally unlocks Pester Ball
     REPORT_SCORE_130_000: 3, # Normally unlocks PokeFlute
+}
 
+OAK_COUNT_REWARDS = {
     POKEMON_TOTAL_6 : 4, # Normally unlocks Tunnel
     POKEMON_TOTAL_22: 5, # Normally unlocks River
     POKEMON_TOTAL_40: 6, # Normally unlocks Valley
 }
 
-# Add the oak rewards
-for name, id in OAK_REWARDS.items():
-    category = PokemonSnapLocationCategory.PHOTO_COUNT if id <= 3 else PokemonSnapLocationCategory.REPORT_SCORE
-    location_tables[START_GAME].append(PokemonSnapLocationData(oak_reward_id(id), name, category))
+OAK_REWARDS = OAK_SCORE_REWARDS | OAK_COUNT_REWARDS
 
+# Add the oak rewards
+for name, id in OAK_SCORE_REWARDS.items():
+    location_tables[START_GAME].append(PokemonSnapLocationData(oak_reward_id(id), name, PokemonSnapLocationCategory.REPORT_SCORE))
+
+for name, id in OAK_COUNT_REWARDS.items():
+    location_tables[START_GAME].append(PokemonSnapLocationData(oak_reward_id(id), name, PokemonSnapLocationCategory.PHOTO_COUNT))
 
 # Must be done last: add the bonus locations
 for region, location_data_list in location_tables.items():
