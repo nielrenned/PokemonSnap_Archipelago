@@ -19,7 +19,7 @@ jobs:
           path: Archipelago
           ref: 0.6.7
       - name: Clear worlds folder
-        run: rm -rf Archipelago/worlds/*
+        run: find Archipelago/worlds/ -mindepth 1 -type d -exec rm -rf {} +
       - name: Checkout Pokemon Snap
         uses: actions/checkout@v6
         with:
