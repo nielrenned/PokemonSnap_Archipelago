@@ -16,17 +16,15 @@ jobs:
           repository: ArchipelagoMW/Archipelago
           path: Archipelago
           ref: 0.6.7
-      - name: Clear worlds folder
-        run: find Archipelago/worlds/ -mindepth 1 -type d -exec rm -rf {} +
       - name: Checkout Pokemon Snap
         uses: actions/checkout@v6
         with:
           path: Archipelago/worlds/pokemon_snap
-      - name: Build Multiworld
+      - name: Build .apworld
         run: |
           cd Archipelago
           python -m pip install -r requirements.txt
-          python Launcher.py "Build APWorlds"
+          python Launcher.py "Build APWorlds" "Pokemon Snap"
       - name: Attach apworld to release
         uses: softprops/action-gh-release@v3
         with:
