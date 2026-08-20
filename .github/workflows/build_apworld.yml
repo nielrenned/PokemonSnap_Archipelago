@@ -27,7 +27,7 @@ jobs:
       - name: Build Multiworld
         run: |
           cd Archipelago
-          python -m pip install requirements.txt
+          python -m pip install -r requirements.txt
           python Launcher.py "Build APWorlds"
       - name: Attach apworld to release
         uses: softprops/action-gh-release@v3
