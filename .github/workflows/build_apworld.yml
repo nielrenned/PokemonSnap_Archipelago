@@ -16,6 +16,10 @@ jobs:
           repository: ArchipelagoMW/Archipelago
           path: Archipelago
           ref: 0.6.7
+      - name: Install Archipelago Requirements
+        run: |
+          cd Archipelago
+          python -m pip install -r requirements.txt
       - name: Checkout Pokemon Snap
         uses: actions/checkout@v6
         with:
@@ -23,8 +27,7 @@ jobs:
       - name: Build .apworld
         run: |
           cd Archipelago
-          python -m pip install -r requirements.txt
-          python Launcher.py "Build APWorlds" "Pokemon Snap"
+          SKIP_REQUIREMENTS_UPDATE=1 python Launcher.py "Build APWorlds" "Pokemon Snap"
       - name: Attach apworld to release
         uses: softprops/action-gh-release@v3
         with:
