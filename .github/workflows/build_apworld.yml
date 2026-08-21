@@ -33,4 +33,4 @@ jobs:
       - name: Attach apworld to release
         uses: softprops/action-gh-release@v3
         with:
-          files: Archipelago/build/pokemon_snap.apworld
+          files: Archipelago/build/apworlds/pokemon_snap.apworld
