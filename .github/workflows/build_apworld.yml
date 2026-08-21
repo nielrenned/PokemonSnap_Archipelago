@@ -10,21 +10,27 @@ jobs:
     permissions:
       contents: write
     steps:
-      - name: Checkout
+      - name: Checkout Archipelago
         uses: actions/checkout@v6
         with:
-          path: pokemon_snap
-      - name: Remove Excess Files
+          repository: ArchipelagoMW/Archipelago
+          path: Archipelago
+          ref: 0.6.7
+      - name: Install Archipelago Requirements
         run: |
-          cd pokemon_snap
-          rm -rf .git
-          rm -rf .gitignore
-          rm -rf .github
-          rm -rf docs
-          rm -rf test
-      - name: Zip apworld
-        run: zip -r pokemon_snap.apworld pokemon_snap
+          cd Archipelago
+          python -m pip install -r requirements.txt
+      - name: Clear worlds folder
+        run: find Archipelago/worlds/ -mindepth 1 -type d -exec rm -rf {} +          
+      - name: Checkout Pokemon Snap
+        uses: actions/checkout@v6
+        with:
+          path: Archipelago/worlds/pokemon_snap
+      - name: Build .apworld
+        run: |
+          cd Archipelago
+          python Launcher.py "Build APWorlds"
       - name: Attach apworld to release
         uses: softprops/action-gh-release@v3
         with:
-          files: pokemon_snap.apworld
+          files: Archipelago/build/apworlds/pokemon_snap.apworld
