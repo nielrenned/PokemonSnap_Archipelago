@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from .constants import DEFAULT_GOAL_TYPE, DEFAULT_SIGN_REQUIREMENT, DEFAULT_POKEMON_REQUIREMENT, GOAL_SIGN_PICS, GOAL_POKEMON_PICS
 from Options import Choice, DefaultOnToggle, PerGameCommonOptions, Toggle, OptionGroup, StartInventoryPool, Range
-from .addresses import CAMERA_INVERSION_OPTION_INVERTED, CAMERA_INVERSION_OPTION_NORMAL
+from .addresses import CAMERA_INVERSION_OPTION_INVERTED, CAMERA_INVERSION_OPTION_NORMAL, FILM_BASE, FILM_STEP, FILM_CAP
 
 
 class GoalType(Choice):
@@ -144,6 +144,50 @@ class CameraInversion(Choice):
     option_normal = CAMERA_INVERSION_OPTION_NORMAL
 
 
+class FilmRestriction(Toggle):
+    """
+    Enable or disable the film restriction mechanic.
+    When enabled, the player starts with "Starting Film" and can find "Film Capacity Upgrade"
+    items that add "Film Step" shots of film, up to "Film Cap".
+    When disabled, the player always has "Film Cap" shots of film and no upgrades are placed.
+    """
+    display_name = "Film Restriction"
+    default = True
+
+
+class FilmStart(Range):
+    """
+    The number of shots of film the player starts with.
+    Only matters if Film Restriction is enabled.
+    """
+    display_name = "Starting Film"
+    range_start = 1
+    range_end = 60
+    default = FILM_BASE
+
+
+class FilmStep(Range):
+    """
+    The number of shots of film each "Film Capacity Upgrade" adds.
+    Only matters if Film Restriction is enabled.
+    """
+    display_name = "Film Step"
+    range_start = 1
+    range_end = 30
+    default = FILM_STEP
+
+
+class FilmCap(Range):
+    """
+    The maximum number of shots of film the player can hold.
+    Only matters if Film Restriction is enabled.
+    """
+    display_name = "Film Cap"
+    range_start = 1
+    range_end = 60
+    default = FILM_CAP
+
+
 @dataclass
 class PokemonSnapOption(PerGameCommonOptions):
     goal_type: GoalType
@@ -164,6 +208,10 @@ class PokemonSnapOption(PerGameCommonOptions):
     start_with_dash_engine: StartWithDashEngine
     enable_left_bumper_to_start_stop: PressLeftBumperToToggleZeroOne
     camera_inversion: CameraInversion
+    film_restriction: FilmRestriction
+    film_start: FilmStart
+    film_step: FilmStep
+    film_cap: FilmCap
     start_inventory_from_pool: StartInventoryPool
 
 pokemon_snap_option_groups = [
@@ -199,6 +247,15 @@ pokemon_snap_option_groups = [
 		StartWithDashEngine,
         PressLeftBumperToToggleZeroOne,
         CameraInversion,
+	],
+	),
+    OptionGroup(
+        "Film",
+	[
+		FilmRestriction,
+        FilmStart,
+        FilmStep,
+        FilmCap,
 	],
 	),
 ]

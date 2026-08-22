@@ -125,7 +125,11 @@ def build_item_pool(world: "PokemonSnapWorld") -> list[PokemonSnapItemData]:
     item_pool.extend(item for item in _all_items if item.category is PokemonSnapItemCategory.TOOL)
     item_pool.extend(item for item in _all_items if item.category is PokemonSnapItemCategory.AREA and item.name != world.start_area.name)
     item_pool.extend(item for item in _all_items if item.category is PokemonSnapItemCategory.SIGN_PIC)
-    item_pool.extend(item_dictionary[FILM_UPGRADE] for _ in range(9)) # Nine +5 film upgrades take the cap from 15 up to the max of 60.
+    if world.options.film_restriction:
+        remaining_film = world.options.film_cap - world.options.film_start
+        if remaining_film > 0:
+            film_upgrade_count = (remaining_film + world.options.film_step - 1) // world.options.film_step
+            item_pool.extend(item_dictionary[FILM_UPGRADE] for _ in range(film_upgrade_count))
     item_pool.extend(pokemon_pics)
 
     # Remove items depending on options

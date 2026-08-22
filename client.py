@@ -317,7 +317,7 @@ class PokemonSnapContext(CommonContext, PJ64Context):
 
         can_use_mask = 0
         course_mask = 0
-        film = addr.FILM_BASE
+        film = self.slot_data['film_start'] if self.slot_data['film_restriction'] else self.slot_data['film_cap']
         sign_pic_count = 0
         pokemon_pic_count = 0
         for net_item in self.items_received:
@@ -334,7 +334,8 @@ class PokemonSnapContext(CommonContext, PJ64Context):
             elif name in addr.COURSE_IDS:
                 course_mask |= 1 << addr.COURSE_IDS[name]
             elif name == FILM_UPGRADE:
-                film = min(film + addr.FILM_STEP, addr.FILM_CAP)
+                if self.slot_data['film_restriction']:
+                    film = min(film + self.slot_data['film_step'], self.slot_data['film_cap'])
             elif name in SIGN_PIC_NAMES:
                 sign_pic_count += 1
             elif name in POKEMON_PIC_NAMES:
