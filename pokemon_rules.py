@@ -10,7 +10,7 @@ _NO_ITEMS = True_()
 class PokemonSnapPhotoLogic(NamedTuple):
     normal:    Optional[Rule]
     wonderful: Optional[Rule]
-    multiple:  Optional[Rule]
+    multiple:  Optional[Rule] = None
 
 
 class PokemonSnapSpeciesPhotoData(NamedTuple):
@@ -46,7 +46,6 @@ SPECIES_RULE_DATA = {
       soft_logic = PokemonSnapPhotoLogic(
         normal    = _NO_ITEMS,
         wonderful = _NO_ITEMS,
-        multiple  = None,
       ),
     ),
     PokemonSnapSpeciesPhotoData(
@@ -55,7 +54,6 @@ SPECIES_RULE_DATA = {
       soft_logic = PokemonSnapPhotoLogic(
         normal    = _NO_ITEMS,
         wonderful = _NO_ITEMS,
-        multiple  = None,
       ),
     ),
     PokemonSnapSpeciesPhotoData(
@@ -64,7 +62,6 @@ SPECIES_RULE_DATA = {
       soft_logic = PokemonSnapPhotoLogic(
         normal    = HasAny(POKEMON_FOOD, PESTER_BALL),
         wonderful = HasAny(POKEMON_FOOD, PESTER_BALL),
-        multiple  = None,
       ),
     ),
     PokemonSnapSpeciesPhotoData(
@@ -73,7 +70,6 @@ SPECIES_RULE_DATA = {
       soft_logic = PokemonSnapPhotoLogic(
         normal    = _NO_ITEMS,
         wonderful = HasAny(POKEMON_FOOD, PESTER_BALL),
-        multiple  = None,
       ),
     ),
     PokemonSnapSpeciesPhotoData(
@@ -82,7 +78,6 @@ SPECIES_RULE_DATA = {
       soft_logic = PokemonSnapPhotoLogic(
         normal    = Has(PESTER_BALL),
         wonderful = Has(PESTER_BALL),
-        multiple  = None,
       ),
     ),
     PokemonSnapSpeciesPhotoData(
@@ -100,7 +95,6 @@ SPECIES_RULE_DATA = {
       soft_logic = PokemonSnapPhotoLogic(
         normal    = _NO_ITEMS,
         wonderful = _NO_ITEMS,
-        multiple  = None,
       ),
     ),
     PokemonSnapSpeciesPhotoData(
@@ -109,7 +103,6 @@ SPECIES_RULE_DATA = {
       soft_logic = PokemonSnapPhotoLogic(
         normal    = HasAny(PESTER_BALL, POKEFLUTE),
         wonderful = HasAny(PESTER_BALL, POKEFLUTE),
-        multiple  = None,
       ),
     ),
     PokemonSnapSpeciesPhotoData(
@@ -127,7 +120,6 @@ SPECIES_RULE_DATA = {
       soft_logic = PokemonSnapPhotoLogic(
         normal    = HasAny(POKEMON_FOOD, PESTER_BALL),
         wonderful = HasAny(POKEMON_FOOD, PESTER_BALL),
-        multiple  = None,
       ),
     ),
   ],
@@ -149,7 +141,6 @@ SPECIES_RULE_DATA = {
       soft_logic = PokemonSnapPhotoLogic(
         normal    = _NO_ITEMS,
         wonderful = _NO_ITEMS,
-        multiple  = None,
       ),
     ),
     PokemonSnapSpeciesPhotoData(
@@ -176,7 +167,6 @@ SPECIES_RULE_DATA = {
       soft_logic = PokemonSnapPhotoLogic(
         normal    = Has(POKEMON_FOOD),
         wonderful = Has(POKEMON_FOOD),
-        multiple  = None,
       ),
     ),
     PokemonSnapSpeciesPhotoData(
@@ -185,7 +175,6 @@ SPECIES_RULE_DATA = {
       soft_logic = PokemonSnapPhotoLogic(
         normal    = _NO_ITEMS,
         wonderful = _NO_ITEMS,
-        multiple  = None,
       ),
     ),
     PokemonSnapSpeciesPhotoData(
@@ -212,7 +201,6 @@ SPECIES_RULE_DATA = {
       soft_logic = PokemonSnapPhotoLogic(
         normal    = HasAll(POKEMON_FOOD, POKEFLUTE),
         wonderful = HasAll(POKEMON_FOOD, POKEFLUTE),
-        multiple  = None,
       ),
     ),
     PokemonSnapSpeciesPhotoData(
@@ -221,7 +209,6 @@ SPECIES_RULE_DATA = {
       soft_logic = PokemonSnapPhotoLogic(
         normal    = _NO_ITEMS,
         wonderful = _NO_ITEMS,
-        multiple  = None,
       ),
     ),
     PokemonSnapSpeciesPhotoData(
@@ -230,7 +217,6 @@ SPECIES_RULE_DATA = {
       soft_logic = PokemonSnapPhotoLogic(
         normal    = _NO_ITEMS,
         wonderful = _NO_ITEMS,
-        multiple  = None,
       ),
     ),
     PokemonSnapSpeciesPhotoData(
@@ -239,7 +225,6 @@ SPECIES_RULE_DATA = {
       soft_logic = PokemonSnapPhotoLogic(
         normal    = _NO_ITEMS,
         wonderful = _NO_ITEMS,
-        multiple  = None,
       ),
     ),
   ],
@@ -260,7 +245,6 @@ SPECIES_RULE_DATA = {
       soft_logic = PokemonSnapPhotoLogic(
         normal    = HasAny(POKEMON_FOOD, PESTER_BALL),
         wonderful = HasAny(POKEMON_FOOD, PESTER_BALL),
-        multiple  = None,
       ),
     ),
     PokemonSnapSpeciesPhotoData(
@@ -269,7 +253,6 @@ SPECIES_RULE_DATA = {
       soft_logic = PokemonSnapPhotoLogic(
         normal    = HasAny(POKEMON_FOOD, PESTER_BALL),
         wonderful = HasAny(POKEMON_FOOD, PESTER_BALL),
-        multiple  = None,
       ),
     ),
     PokemonSnapSpeciesPhotoData(
@@ -324,7 +307,6 @@ SPECIES_RULE_DATA = {
       soft_logic = PokemonSnapPhotoLogic(
         normal    = HasAny(POKEMON_FOOD, PESTER_BALL),
         wonderful = HasAny(POKEMON_FOOD, PESTER_BALL),
-        multiple  = None,
       ),
     ),
     PokemonSnapSpeciesPhotoData(
@@ -333,7 +315,6 @@ SPECIES_RULE_DATA = {
       soft_logic = PokemonSnapPhotoLogic(
         normal    = HasAny(POKEMON_FOOD, PESTER_BALL),
         wonderful = HasAny(POKEMON_FOOD, PESTER_BALL),
-        multiple  = None,
       ),
     ),
   ],
@@ -355,7 +336,6 @@ SPECIES_RULE_DATA = {
       soft_logic = PokemonSnapPhotoLogic(
         normal    = Has(POKEFLUTE),
         wonderful = Has(POKEFLUTE),
-        multiple  = None,
       ),
     ),
     PokemonSnapSpeciesPhotoData(
@@ -383,7 +363,6 @@ SPECIES_RULE_DATA = {
       soft_logic = PokemonSnapPhotoLogic(
         normal    = _NO_ITEMS,
         wonderful = _NO_ITEMS,
-        multiple  = None,
       ),
     ),
     PokemonSnapSpeciesPhotoData(
@@ -392,7 +371,6 @@ SPECIES_RULE_DATA = {
       soft_logic = PokemonSnapPhotoLogic(
         normal    = Has(POKEMON_FOOD),
         wonderful = Has(POKEMON_FOOD),
-        multiple  = None,
       ),
     ),
     PokemonSnapSpeciesPhotoData(
@@ -438,7 +416,6 @@ SPECIES_RULE_DATA = {
       soft_logic = PokemonSnapPhotoLogic(
         normal    = HasAny(POKEMON_FOOD, PESTER_BALL),
         wonderful = HasAny(POKEMON_FOOD, PESTER_BALL),
-        multiple  = None,
       ),
     ),
     PokemonSnapSpeciesPhotoData(
@@ -447,7 +424,6 @@ SPECIES_RULE_DATA = {
       soft_logic = PokemonSnapPhotoLogic(
         normal    = _NO_ITEMS,
         wonderful = _NO_ITEMS,
-        multiple  = None,
       ),
     ),
   ],
@@ -468,7 +444,6 @@ SPECIES_RULE_DATA = {
       soft_logic = PokemonSnapPhotoLogic(
         normal    = _NO_ITEMS,
         wonderful = _NO_ITEMS,
-        multiple  = None,
       ),
     ),
     PokemonSnapSpeciesPhotoData(
@@ -477,7 +452,6 @@ SPECIES_RULE_DATA = {
       soft_logic = PokemonSnapPhotoLogic(
         normal    = HasAny(POKEMON_FOOD, PESTER_BALL),
         wonderful = HasAny(POKEMON_FOOD, PESTER_BALL),
-        multiple  = None,
       ),
     ),
     PokemonSnapSpeciesPhotoData(
@@ -486,7 +460,6 @@ SPECIES_RULE_DATA = {
       soft_logic = PokemonSnapPhotoLogic(
         normal    = _NO_ITEMS,
         wonderful = _NO_ITEMS,
-        multiple  = None,
       ),
     ),
     PokemonSnapSpeciesPhotoData(
@@ -495,7 +468,6 @@ SPECIES_RULE_DATA = {
       soft_logic = PokemonSnapPhotoLogic(
         normal    = Has(PESTER_BALL),
         wonderful = Has(PESTER_BALL),
-        multiple  = None,
       ),
     ),
     PokemonSnapSpeciesPhotoData(
@@ -522,7 +494,6 @@ SPECIES_RULE_DATA = {
       soft_logic = PokemonSnapPhotoLogic(
         normal    = Has(POKEFLUTE),
         wonderful = Has(POKEFLUTE),
-        multiple  = None,
       ),
     ),
     PokemonSnapSpeciesPhotoData(
@@ -531,7 +502,6 @@ SPECIES_RULE_DATA = {
       soft_logic = PokemonSnapPhotoLogic(
         normal    = _NO_ITEMS,
         wonderful = _NO_ITEMS,
-        multiple  = None,
       ),
     ),
     PokemonSnapSpeciesPhotoData(
@@ -549,7 +519,6 @@ SPECIES_RULE_DATA = {
       soft_logic = PokemonSnapPhotoLogic(
         normal    = HasAny(POKEMON_FOOD, PESTER_BALL),
         wonderful = HasAny(POKEMON_FOOD, PESTER_BALL),
-        multiple  = None,
       ),
     ),
     PokemonSnapSpeciesPhotoData(
@@ -558,7 +527,6 @@ SPECIES_RULE_DATA = {
       soft_logic = PokemonSnapPhotoLogic(
         normal    = HasAny(POKEMON_FOOD, PESTER_BALL),
         wonderful = HasAny(POKEMON_FOOD, PESTER_BALL),
-        multiple  = None,
       ),
       # TODO: [SOFT] base: Technically possible without anything (difficult)
     ),
@@ -599,7 +567,6 @@ SPECIES_RULE_DATA = {
       soft_logic = PokemonSnapPhotoLogic(
         normal    = _NO_ITEMS,
         wonderful = HasAny(DASH_ENGINE, PESTER_BALL),
-        multiple  = None,
       ),
     ),
     PokemonSnapSpeciesPhotoData(
@@ -608,7 +575,6 @@ SPECIES_RULE_DATA = {
       soft_logic = PokemonSnapPhotoLogic(
         normal    = _NO_ITEMS,
         wonderful = _NO_ITEMS,
-        multiple  = None,
       ),
     ),
     PokemonSnapSpeciesPhotoData(
@@ -636,7 +602,6 @@ SPECIES_RULE_DATA = {
       soft_logic = PokemonSnapPhotoLogic(
         normal    = HasAny(POKEMON_FOOD, PESTER_BALL),
         wonderful = HasAny(POKEMON_FOOD, PESTER_BALL),
-        multiple  = None,
       ),
     ),
     PokemonSnapSpeciesPhotoData(
@@ -663,7 +628,6 @@ SPECIES_RULE_DATA = {
       soft_logic = PokemonSnapPhotoLogic(
         normal    = Has(PESTER_BALL),
         wonderful = Has(PESTER_BALL),
-        multiple  = None,
       ),
     ),
     PokemonSnapSpeciesPhotoData(
@@ -681,7 +645,6 @@ SPECIES_RULE_DATA = {
       soft_logic = PokemonSnapPhotoLogic(
         normal    = Has(PESTER_BALL),
         wonderful = Has(PESTER_BALL),
-        multiple  = None,
       ),
     ),
     PokemonSnapSpeciesPhotoData(
@@ -702,7 +665,6 @@ SPECIES_RULE_DATA = {
       soft_logic = PokemonSnapPhotoLogic(
         normal    = HasAny(POKEMON_FOOD, PESTER_BALL),
         wonderful = None,
-        multiple  = None,
       ),
     ),
   ],
