@@ -1,8 +1,8 @@
 from rule_builder.rules import Rule, True_, Has, HasAny, HasAll
 from typing import NamedTuple, Optional
-from locations import course
-from constants import *
+from .constants import *
 
+course      = lambda name, course: f'{name} ({course})'
 
 _NO_ITEMS = True_()
 
@@ -141,6 +141,7 @@ SPECIES_RULE_DATA = {
         wonderful = _NO_ITEMS,
         multiple  = HasAny(POKEMON_FOOD, DASH_ENGINE, PESTER_BALL),
       ),
+      # TODO: [SOFT] mult: Technically possible without anything (difficult)
     ),
     PokemonSnapSpeciesPhotoData(
       name       = DIGLETT,
@@ -279,6 +280,7 @@ SPECIES_RULE_DATA = {
         wonderful = _NO_ITEMS,
         multiple  = Has(POKEMON_FOOD),
       ),
+      # TODO: [SOFT] mult: Technically possible with dash (rng)
     ),
     PokemonSnapSpeciesPhotoData(
       name       = GROWLITHE,
@@ -345,6 +347,7 @@ SPECIES_RULE_DATA = {
         wonderful = Has(PESTER_BALL),
         multiple  = Has(PESTER_BALL),
       ),
+      # TODO: [SOFT] wdfl&mult: Technically possible without anything (difficult)
     ),
     PokemonSnapSpeciesPhotoData(
       name       = VILEPLUME,
@@ -372,6 +375,7 @@ SPECIES_RULE_DATA = {
         wonderful = HasAny(POKEMON_FOOD, PESTER_BALL),
         multiple  = HasAny(POKEMON_FOOD, PESTER_BALL),
       ),
+      # TODO: [SOFT] base: Technically possible without anything (difficult)
     ),
     PokemonSnapSpeciesPhotoData(
       name       = SLOWPOKE,
@@ -399,6 +403,7 @@ SPECIES_RULE_DATA = {
         wonderful = Has(DASH_ENGINE),
         multiple  = Has(DASH_ENGINE),
       ),
+      # TODO: [SOFT] wdfl&mult: Technically possible without anything (rng)
     ),
     PokemonSnapSpeciesPhotoData(
       name       = CLOYSTER,
@@ -555,6 +560,7 @@ SPECIES_RULE_DATA = {
         wonderful = HasAny(POKEMON_FOOD, PESTER_BALL),
         multiple  = None,
       ),
+      # TODO: [SOFT] base: Technically possible without anything (difficult)
     ),
     PokemonSnapSpeciesPhotoData(
       name       = course(ZUBAT, LVL_CAVE),
@@ -576,6 +582,7 @@ SPECIES_RULE_DATA = {
         wonderful = Has(PESTER_BALL),
         multiple  = Has(PESTER_BALL),
       ),
+      # TODO: [SOFT] wdfl: Technically possible without anything. mult: Technically possible with just dash (difficult)
     ),
     PokemonSnapSpeciesPhotoData(
       name       = SANDSHREW,
@@ -621,6 +628,7 @@ SPECIES_RULE_DATA = {
         wonderful = HasAny(PESTER_BALL, POKEFLUTE),
         multiple  = Has(POKEFLUTE),
       ),
+      # TODO: [SOFT] wdfl&mult: Technically possible without anything (difficult)
     ),
     PokemonSnapSpeciesPhotoData(
       name       = GOLDEEN,
