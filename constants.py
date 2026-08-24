@@ -31,6 +31,9 @@ POKEMON_FOOD  = "Apple"
 POKEFLUTE     = "PokeFlute"
 DASH_ENGINE   = "Dash Engine"
 SIGN_DETECTOR = "Pokemon Sign Detector"
+WDFL_SCORING  = "Good Technique Scoring"
+MULT_SCORING  = "Multiple PKMN Scoring"
+PROG_SCORING  = "Progressive Scoring"
 
 VICTORY_ITEM_NAME = "A Picture of the Rare Pokémon Mew"
 VICTORY_ITEM_ID = 10000

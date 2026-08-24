@@ -39,6 +39,15 @@ class PokemonRequired(Range):
     default = DEFAULT_POKEMON_REQUIREMENT
 
 
+class ScoringBonus(Choice):
+    """
+    """
+    display_name = "Photo Score Bonuses"
+    option_always_available = 0
+    option_progressive      = 1
+    option_separate         = 2
+
+
 class PhotoBonusChecks(Choice):
     """
     Determines which photo bonuses to include as checks.
@@ -150,6 +159,7 @@ class PokemonSnapOption(PerGameCommonOptions):
     signs_required: SignsRequired
     pokemon_required: PokemonRequired
 
+    scoring_bonuses: ScoringBonus
 
     photo_bonuses: PhotoBonusChecks
     special_poses: SpecialPoses
@@ -167,38 +177,29 @@ class PokemonSnapOption(PerGameCommonOptions):
     start_inventory_from_pool: StartInventoryPool
 
 pokemon_snap_option_groups = [
-    OptionGroup(
-        "Goal Settings",
-    [
-            GoalType,
-            SignsRequired,
-            PokemonRequired,
-    ],
-    ),
-    OptionGroup(
-        "Checks - Categories",
-    [
+    OptionGroup("Goal Settings", [
+        GoalType,
+        SignsRequired,
+        PokemonRequired,
+    ]),
+    OptionGroup("Items", [
+        ScoringBonus,
+    ]),
+    OptionGroup("Checks - Categories", [
         PhotoBonusChecks,
         SpecialPoses,
         PokemonSigns,
         SecretExits,
         PokemonReportPhotoCount,
         PokemonReportTotalScore,
-    ],
-    ),
-    OptionGroup(
-        "Checks - Pokemon",
-	[
+    ]),
+    OptionGroup("Checks - Pokemon", [
 		IncludeRNGChecks,
-		IncludeHardChecks
-	],
-	),
-    OptionGroup(
-        "Quality Of Life",
-	[
+		IncludeHardChecks,
+	]),
+    OptionGroup("Quality Of Life", [
 		StartWithDashEngine,
         PressLeftBumperToToggleZeroOne,
         CameraInversion,
-	],
-	),
+	]),
 ]
