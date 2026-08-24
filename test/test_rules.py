@@ -1,7 +1,8 @@
 
 from BaseClasses import CollectionState
 from .bases import PokemonSnapTestBase
-from ..locations import species_data_tables, wonderful, multiple
+from ..locations import wonderful, multiple
+from ..pokemon_rules import SPECIES_RULE_DATA
 from ..items import PokemonSnapItemCategory, item_dictionary
 from itertools import chain, combinations
 
@@ -19,9 +20,9 @@ class TestRuleInheritance(PokemonSnapTestBase):
 
     def test_multiple_implies_wonderful(self):
         '''Professor Oak will not give you the multiple species bonus if the picture is not Wonderful'''
-        for _, species_data_list in species_data_tables.items():
+        for species_data_list in SPECIES_RULE_DATA.values():
             for species_data in species_data_list:
-                if not (species_data.multiple and species_data.wonderful):
+                if species_data.soft_logic.multiple is None or species_data.soft_logic.wonderful is None:
                     continue
 
                 with self.subTest(name=species_data.name):
