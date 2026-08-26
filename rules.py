@@ -7,7 +7,7 @@ from .locations import wonderful, multiple, secret_exit, course, bonus, species_
     PokemonSnapLocationCategory as Category, RNG_LOCATIONS, HARD_LOCATIONS, POKEMON_IN_MULTIPLE_LEVELS
 from .constants import *
 from .items import PokemonSnapItemCategory as ItemCategory
-from .options import GoalType
+from .options import GoalType, ScoringBonus
 if TYPE_CHECKING:
     from . import PokemonSnapWorld
 
@@ -44,6 +44,22 @@ def set_location_rule(world: "PokemonSnapWorld", name: str, category: Category, 
         # TODO: this is hacky, let's do it better eventually
         pass
 
+def wonderful_requirement(world: "PokemonSnapWorld"):
+    if world.options.scoring_bonuses == ScoringBonus.option_progressive:
+        return Has(PROG_SCORING, 1)
+    elif world.options.scoring_bonuses == ScoringBonus.option_separate:
+        return Has(WDFL_SCORING)
+    
+    return _NO_ITEMS
+
+def multiple_requirement(world: "PokemonSnapWorld"):
+    if world.options.scoring_bonuses == ScoringBonus.option_progressive:
+        return Has(PROG_SCORING, 2)
+    elif world.options.scoring_bonuses == ScoringBonus.option_separate:
+        return Has(MULT_SCORING)
+
+    return _NO_ITEMS
+
 def set_rules(world: "PokemonSnapWorld"):
     world.set_completion_rule(Has(VICTORY_ITEM_NAME))
 
@@ -60,6 +76,11 @@ def set_rules(world: "PokemonSnapWorld"):
     # World location rules
     for name, categories in LOCATION_RULES.items():
         for category, rule in categories.items():
+            if category == Category.WONDERFUL_PHOTO:
+                rule = And(wonderful_requirement(world), rule)
+            if category == Category.MULTIPLE_PHOTO:
+                rule = And(multiple_requirement(world), rule)
+            
             set_location_rule(world, name, category, rule)
 
 
@@ -110,14 +131,14 @@ class ReportScoreAchievable(Rule["PokemonSnapWorld"], game="Pokemon Snap"):
             if (location not in LOCATION_RULES or Category.WONDERFUL_PHOTO not in LOCATION_RULES[location]):
                 wonderful_rule = normal_rule
             else:
-                wonderful_rule = And(normal_rule, LOCATION_RULES[location][Category.WONDERFUL_PHOTO])
+                wonderful_rule = And(normal_rule, LOCATION_RULES[location][Category.WONDERFUL_PHOTO], wonderful_requirement(world))
 
         multiple_rule = False_()
         if species_data.multiple and multiple(location) not in REPORT_EXCLUSIONS:
             if (location not in LOCATION_RULES or Category.MULTIPLE_PHOTO not in LOCATION_RULES[location]):
                 multiple_rule = wonderful_rule
             else:
-                multiple_rule = And(wonderful_rule, LOCATION_RULES[location][Category.MULTIPLE_PHOTO])
+                multiple_rule = And(wonderful_rule, LOCATION_RULES[location][Category.MULTIPLE_PHOTO], multiple_requirement(world))
 
         return normal_rule.resolve(world), wonderful_rule.resolve(world), multiple_rule.resolve(world)
 

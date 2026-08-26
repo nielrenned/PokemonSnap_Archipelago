@@ -2,7 +2,7 @@ import typing
 from enum import StrEnum
 from typing import NamedTuple
 from .constants import *
-from .options import ScoringBonus, PhotoBonusChecks
+from .options import ScoringBonus
 
 from BaseClasses import Item
 
@@ -39,7 +39,8 @@ class PokemonSnapItem(Item):
 base_key_item_names = {
     VICTORY_ITEM_NAME,
     LVL_BEACH, LVL_TUNNEL, LVL_VOLCANO, LVL_RIVER, LVL_CAVE, LVL_VALLEY, LVL_CLOUD,
-    POKEMON_FOOD, PESTER_BALL, POKEFLUTE, DASH_ENGINE, SIGN_DETECTOR
+    POKEMON_FOOD, PESTER_BALL, POKEFLUTE, DASH_ENGINE, SIGN_DETECTOR,
+    PROG_SCORING, WDFL_SCORING, MULT_SCORING
 }
 
 useful_item_names = {
@@ -139,15 +140,9 @@ def build_item_pool(world: "PokemonSnapWorld") -> list[PokemonSnapItemData]:
     if not world.options.pokemon_signs:      item_pool.remove(item_dictionary[SIGN_DETECTOR])
 
     if world.options.scoring_bonuses == ScoringBonus.option_separate:
-        if world.options.photo_bonuses == PhotoBonusChecks.option_technique_and_multiple:
-            item_pool.extend([item_dictionary[WDFL_SCORING], item_dictionary[MULT_SCORING]])
-        elif world.options.photo_bonuses == PhotoBonusChecks.option_technique_only:
-            item_pool.append(item_dictionary[WDFL_SCORING])
+        item_pool.extend([item_dictionary[WDFL_SCORING], item_dictionary[MULT_SCORING]])
     elif world.options.scoring_bonuses == ScoringBonus.option_progressive:
-        if world.options.photo_bonuses == PhotoBonusChecks.option_technique_and_multiple:
-            item_pool.extend([item_dictionary[PROG_SCORING], item_dictionary[PROG_SCORING]])
-        elif world.options.photo_bonuses == PhotoBonusChecks.option_technique_only:
-            item_pool.append(item_dictionary[PROG_SCORING])
+        item_pool.extend([item_dictionary[PROG_SCORING], item_dictionary[PROG_SCORING]])
     
     ## Fill with one of each custom trash item, then one of each trash pokemon pic, then random pokemon pics
     trash_items = [item for item in _all_items if item.category is PokemonSnapItemCategory.TRASH_CUSTOM]
