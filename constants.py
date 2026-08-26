@@ -149,10 +149,6 @@ ALL_INGAME_POKEMON = [
     VICTREEBEL, VILEPLUME, VULPIX, WEEPINBELL, ZAPDOS, ZUBAT, 
 ]
 
-POKEMON_IN_MULTIPLE_LEVELS = [
-    BULBASAUR, MAGIKARP, PIKACHU, ZUBAT
-]
-
 ORIGINAL_151 = [
     "Bulbasaur", "Ivysaur", "Venusaur", "Charmander", "Charmeleon", "Charizard", "Squirtle",
     "Wartortle", "Blastoise", "Caterpie", "Metapod", "Butterfree", "Weedle", "Kakuna",

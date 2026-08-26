@@ -1,21 +1,21 @@
 from typing import TYPE_CHECKING, override
 from dataclasses import dataclass
-from itertools import product
 
-from rule_builder.rules import Has, HasAll, HasAny, And, Or, Rule, CanReachLocation, CollectionState, False_, HasGroup
+from rule_builder.rules import Rule, True_, False_, And, Or, Has, HasAll, HasAny, HasGroup, CanReachLocation, CollectionState
 from .future_rules import AtLeast
-from .items import SIGN_PIC_NAMES, POKEMON_PIC_NAMES
-from .locations import wonderful, multiple, secret_exit, course, bonus, PokemonSnapLocationCategory as Category, species_data_tables, RNG_LOCATIONS, HARD_LOCATIONS
+from .locations import wonderful, multiple, secret_exit, course, bonus, species_data_tables, \
+    PokemonSnapLocationCategory as Category, RNG_LOCATIONS, HARD_LOCATIONS, POKEMON_IN_MULTIPLE_LEVELS
 from .constants import *
-from .items import PokemonSnapItemCategory
+from .items import PokemonSnapItemCategory as ItemCategory
+from .options import GoalType
 if TYPE_CHECKING:
     from . import PokemonSnapWorld
 
-
+_NO_ITEMS   = True_()
 _HAS_PESTER = Has(PESTER_BALL)
-_HAS_APPLE = Has(POKEMON_FOOD)
-_HAS_FLUTE = Has(POKEFLUTE)
-_HAS_APPLE_OR_PESTER = HasAny(PESTER_BALL, POKEMON_FOOD)
+_HAS_APPLE  = Has(POKEMON_FOOD)
+_HAS_FLUTE  = Has(POKEFLUTE)
+_HAS_APPLE_OR_PESTER = HasAny(POKEMON_FOOD, PESTER_BALL)
 
 REPORT_EXCLUSIONS = RNG_LOCATIONS + HARD_LOCATIONS
 
@@ -50,44 +50,17 @@ def set_rules(world: "PokemonSnapWorld"):
     for level in [LVL_BEACH, LVL_TUNNEL, LVL_VOLCANO, LVL_RIVER, LVL_CAVE, LVL_VALLEY]:
         world.set_rule(world.get_entrance(f'{START_GAME} -> {level}'), Has(level))
 
-    if world.options.goal_type == GOAL_SIGN_PICS:
+    if world.options.goal_type == GoalType.option_signs:
         world.set_rule(world.get_entrance(f'{START_GAME} -> {LVL_CLOUD}'),
-                       HasGroup(f"{PokemonSnapItemCategory.SIGN_PIC}", world.options.signs_required.value))
-    elif world.options.goal_type == GOAL_POKEMON_PICS:
+                       HasGroup(ItemCategory.SIGN_PIC.value, world.options.signs_required.value))
+    elif world.options.goal_type == GoalType.option_pokemon_pictures:
         world.set_rule(world.get_entrance(f'{START_GAME} -> {LVL_CLOUD}'),
-                       HasGroup(f"{PokemonSnapItemCategory.POKEMON_PIC}", world.options.pokemon_required.value))
-    else:
-        assert"Invalid goal type set. Must be 0 or 1."
+                       HasGroup(ItemCategory.POKEMON_PIC.value, world.options.pokemon_required.value))
 
     # World location rules
     for name, categories in LOCATION_RULES.items():
         for category, rule in categories.items():
             set_location_rule(world, name, category, rule)
-
-    set_oak_rules(world)
-
-
-def set_oak_rules(world: "PokemonSnapWorld"):
-    can_reach_all_pokemon = [
-        CanReachLocation(pokemon_name)
-        for pokemon_name in ALL_INGAME_POKEMON
-        if pokemon_name not in POKEMON_IN_MULTIPLE_LEVELS
-    ] + [
-        Or(*[
-            CanReachLocation(course(pokemon_name, level))
-            for level in ALL_LEVELS
-            if course(pokemon_name, level) in LOCATION_RULES
-        ])
-        for pokemon_name in POKEMON_IN_MULTIPLE_LEVELS
-    ]
-
-    set_location_rule(world, POKEMON_TOTAL_6,  Category.PHOTO_COUNT, AtLeast(6,  *can_reach_all_pokemon))
-    set_location_rule(world, POKEMON_TOTAL_22, Category.PHOTO_COUNT, AtLeast(22, *can_reach_all_pokemon))
-    set_location_rule(world, POKEMON_TOTAL_40, Category.PHOTO_COUNT, AtLeast(40, *can_reach_all_pokemon))
-
-    set_location_rule(world, REPORT_SCORE_24_000,  Category.REPORT_SCORE, ReportScoreAchievable( 24_000))
-    set_location_rule(world, REPORT_SCORE_72_500,  Category.REPORT_SCORE, ReportScoreAchievable( 72_500))
-    set_location_rule(world, REPORT_SCORE_130_000, Category.REPORT_SCORE, ReportScoreAchievable(130_000))
 
 
 @dataclass()
@@ -173,43 +146,96 @@ class ReportScoreAchievable(Rule["PokemonSnapWorld"], game="Pokemon Snap"):
 
             return score
 
+
+_CAN_REACH_ALL_POKEMON = [
+    CanReachLocation(pokemon_name)
+    for pokemon_name in ALL_INGAME_POKEMON
+    if pokemon_name not in POKEMON_IN_MULTIPLE_LEVELS
+] + [
+    Or(*[
+        CanReachLocation(course(pokemon_name, level))
+        for level in ALL_LEVELS
+        if course(pokemon_name, level) in LOCATION_RULES
+    ])
+    for pokemon_name in POKEMON_IN_MULTIPLE_LEVELS
+]
+
+
 LOCATION_RULES = {
     # Beach
+    BUTTERFREE: {
+        Category.NORMAL_PHOTO:    _NO_ITEMS,
+        Category.WONDERFUL_PHOTO: _NO_ITEMS,
+        Category.MULTIPLE_PHOTO:  _NO_ITEMS,
+    },
+    PIDGEY: {
+        Category.NORMAL_PHOTO:    _NO_ITEMS,
+        Category.WONDERFUL_PHOTO: _NO_ITEMS,
+        Category.MULTIPLE_PHOTO:  _NO_ITEMS,
+    },
+    MEOWTH: {
+        Category.NORMAL_PHOTO:    _NO_ITEMS,
+        Category.WONDERFUL_PHOTO: _NO_ITEMS,
+    },
+    DODUO: {
+        Category.NORMAL_PHOTO:    _NO_ITEMS,
+        Category.WONDERFUL_PHOTO: _NO_ITEMS,
+    },
+    CHANSEY: {
+        Category.NORMAL_PHOTO:    _HAS_APPLE_OR_PESTER,
+        Category.WONDERFUL_PHOTO: _HAS_APPLE_OR_PESTER,
+    },
+    KANGASKHAN: {
+        Category.NORMAL_PHOTO:    _NO_ITEMS,
+        Category.WONDERFUL_PHOTO: _HAS_APPLE_OR_PESTER,
+    },
     SCYTHER: {
         Category.NORMAL_PHOTO:    _HAS_PESTER,
         Category.WONDERFUL_PHOTO: _HAS_PESTER,
     },
-    CHANSEY: {
-        Category.NORMAL_PHOTO:    _HAS_APPLE_OR_PESTER,
-        Category.WONDERFUL_PHOTO: _HAS_APPLE_OR_PESTER
+    LAPRAS: {
+        Category.NORMAL_PHOTO:    _NO_ITEMS,
+        Category.WONDERFUL_PHOTO: _NO_ITEMS,
+        Category.MULTIPLE_PHOTO:  _NO_ITEMS,
+    },
+    EEVEE: {
+        Category.NORMAL_PHOTO:    _NO_ITEMS,
+        Category.WONDERFUL_PHOTO: _NO_ITEMS,
     },
     SNORLAX: {
         Category.NORMAL_PHOTO:    HasAny(PESTER_BALL, POKEFLUTE),
         Category.WONDERFUL_PHOTO: HasAny(PESTER_BALL, POKEFLUTE),
     },
-    KANGASKHAN: {
-        Category.WONDERFUL_PHOTO: _HAS_APPLE_OR_PESTER
+    course(PIKACHU, LVL_BEACH): {
+        Category.NORMAL_PHOTO:    _NO_ITEMS,
+        Category.WONDERFUL_PHOTO: _NO_ITEMS,
+        Category.MULTIPLE_PHOTO:  _HAS_PESTER,
     },
     course(MAGIKARP, LVL_BEACH): {
         Category.NORMAL_PHOTO:    _HAS_APPLE_OR_PESTER,
-        Category.WONDERFUL_PHOTO: _HAS_APPLE_OR_PESTER
-    },
-    course(PIKACHU, LVL_BEACH): {
-        Category.MULTIPLE_PHOTO:  _HAS_PESTER
+        Category.WONDERFUL_PHOTO: _HAS_APPLE_OR_PESTER,
     },
     SURFING_PIKACHU:    { Category.SPECIAL_POSE: _HAS_APPLE },
     PIKACHU_ON_A_STUMP: { Category.SPECIAL_POSE: _HAS_PESTER },
+    GUST_USING_PIDGEY:  { Category.SPECIAL_POSE: _NO_ITEMS },
     BEACH_SIGN:         { Category.POKEMON_SIGN: Has(SIGN_DETECTOR) },
 
 
     # Tunnel
     # TODO: [SOFT] mult: Technically possible without anything (difficult)
     KAKUNA: {
-        Category.MULTIPLE_PHOTO:  HasAny(PESTER_BALL, POKEMON_FOOD, DASH_ENGINE),
+        Category.NORMAL_PHOTO:    _NO_ITEMS,
+        Category.WONDERFUL_PHOTO: _NO_ITEMS,
+        Category.MULTIPLE_PHOTO:  HasAny(POKEMON_FOOD, DASH_ENGINE, PESTER_BALL),
     },
-    # Without Zapdos you have to ignore the first Buzz and throw at the second - spoiler in doc
-    ELECTABUZZ: {
-        Category.MULTIPLE_PHOTO:  _HAS_APPLE_OR_PESTER,
+    DIGLETT: {
+        Category.NORMAL_PHOTO:    _NO_ITEMS,
+        Category.WONDERFUL_PHOTO: _NO_ITEMS,
+    },
+    DUGTRIO: {
+        Category.NORMAL_PHOTO:    _NO_ITEMS,
+        Category.WONDERFUL_PHOTO: _NO_ITEMS,
+        Category.MULTIPLE_PHOTO:  _NO_ITEMS,
     },
     MAGNEMITE: {
         Category.NORMAL_PHOTO:    _HAS_APPLE,
@@ -220,16 +246,46 @@ LOCATION_RULES = {
         Category.NORMAL_PHOTO:    _HAS_APPLE,
         Category.WONDERFUL_PHOTO: _HAS_APPLE,
     },
+    HAUNTER: {
+        Category.NORMAL_PHOTO:    _NO_ITEMS,
+        Category.WONDERFUL_PHOTO: _NO_ITEMS,
+    },
+    ELECTRODE: {
+        Category.NORMAL_PHOTO:    _NO_ITEMS,
+        Category.WONDERFUL_PHOTO: _NO_ITEMS,
+        Category.MULTIPLE_PHOTO:  _NO_ITEMS,
+    },
+    ELECTABUZZ: {
+        Category.NORMAL_PHOTO:    _NO_ITEMS,
+        Category.WONDERFUL_PHOTO: _NO_ITEMS,
+        # Without Zapdos you have to ignore the first Buzz and throw at the second - spoiler in doc
+        Category.MULTIPLE_PHOTO:  _HAS_APPLE_OR_PESTER,
+    },
     ZAPDOS: {
         Category.NORMAL_PHOTO:    HasAll(POKEMON_FOOD, POKEFLUTE),
         Category.WONDERFUL_PHOTO: HasAll(POKEMON_FOOD, POKEFLUTE),
     },
-    TUNNEL_SIGN: { Category.POKEMON_SIGN: HasAll(SIGN_DETECTOR, POKEMON_FOOD, POKEFLUTE) },
-    LVL_TUNNEL:  { Category.SECRET_EXIT: _HAS_APPLE_OR_PESTER },
+    course(ZUBAT, LVL_TUNNEL): {
+        Category.NORMAL_PHOTO:    _NO_ITEMS,
+        Category.WONDERFUL_PHOTO: _NO_ITEMS,
+    },
+    course(MAGIKARP, LVL_TUNNEL): {
+        Category.NORMAL_PHOTO:    _NO_ITEMS,
+        Category.WONDERFUL_PHOTO: _NO_ITEMS,
+    },
+    course(PIKACHU, LVL_TUNNEL): {
+        Category.NORMAL_PHOTO:    _NO_ITEMS,
+        Category.WONDERFUL_PHOTO: _NO_ITEMS,
+    },
+    PIKACHU_ON_A_BALL: { Category.SPECIAL_POSE: _NO_ITEMS },
+    TUNNEL_SIGN:       { Category.POKEMON_SIGN: HasAll(SIGN_DETECTOR, POKEMON_FOOD, POKEFLUTE) },
+    LVL_TUNNEL:        { Category.SECRET_EXIT: _HAS_APPLE_OR_PESTER },
 
 
     # Volcano
     CHARMANDER: {
+        Category.NORMAL_PHOTO:    _NO_ITEMS,
+        Category.WONDERFUL_PHOTO: _NO_ITEMS,
         Category.MULTIPLE_PHOTO:  _HAS_APPLE,
     },
     CHARMELEON: {
@@ -242,24 +298,33 @@ LOCATION_RULES = {
     },
     # TODO: [SOFT] mult: Technically possible with dash (rng)
     VULPIX: {
+        Category.NORMAL_PHOTO:    _NO_ITEMS,
+        Category.WONDERFUL_PHOTO: _NO_ITEMS,
         Category.MULTIPLE_PHOTO:  _HAS_APPLE,
     },
     GROWLITHE: {
         Category.NORMAL_PHOTO:    _HAS_PESTER,
         Category.WONDERFUL_PHOTO: _HAS_PESTER,
-        Category.MULTIPLE_PHOTO:  HasAll(PESTER_BALL, POKEMON_FOOD),
+        Category.MULTIPLE_PHOTO:  HasAll(POKEMON_FOOD, PESTER_BALL),
     },
     ARCANINE: {
         Category.NORMAL_PHOTO:    _HAS_PESTER,
         Category.WONDERFUL_PHOTO: _HAS_PESTER,
-        Category.MULTIPLE_PHOTO:  HasAll(PESTER_BALL, POKEMON_FOOD),
+        Category.MULTIPLE_PHOTO:  HasAll(POKEMON_FOOD, PESTER_BALL),
+    },
+    RAPIDASH: {
+        Category.NORMAL_PHOTO:    _NO_ITEMS,
+        Category.WONDERFUL_PHOTO: _NO_ITEMS,
+        Category.MULTIPLE_PHOTO:  _NO_ITEMS,
+    },
+    MAGMAR: {
+        Category.NORMAL_PHOTO:    _NO_ITEMS,
+        Category.WONDERFUL_PHOTO: _NO_ITEMS,
+        Category.MULTIPLE_PHOTO:  _HAS_APPLE_OR_PESTER,
     },
     MOLTRES: {
         Category.NORMAL_PHOTO:    _HAS_APPLE_OR_PESTER,
         Category.WONDERFUL_PHOTO: _HAS_APPLE_OR_PESTER,
-    },
-    MAGMAR: {
-        Category.MULTIPLE_PHOTO:  _HAS_APPLE_OR_PESTER,
     },
     course(MAGIKARP, LVL_VOLCANO): {
         Category.NORMAL_PHOTO:    _HAS_APPLE_OR_PESTER,
@@ -270,21 +335,19 @@ LOCATION_RULES = {
 
 
     # River
-    # TODO: [SOFT] wdfl&mult: Technically possible without anything (rng)
-    SHELLDER: {
-        Category.WONDERFUL_PHOTO: Has(DASH_ENGINE),
-        Category.MULTIPLE_PHOTO:  Has(DASH_ENGINE),
+    # TODO: [SOFT] wdfl&mult: Technically possible without anything (difficult)
+    METAPOD: {
+        Category.NORMAL_PHOTO:    _NO_ITEMS,
+        Category.WONDERFUL_PHOTO: _HAS_PESTER,
+        Category.MULTIPLE_PHOTO:  _HAS_PESTER,
     },
     VILEPLUME: {
         Category.NORMAL_PHOTO:    _HAS_FLUTE,
         Category.WONDERFUL_PHOTO: _HAS_FLUTE,
     },
-    # TODO: [SOFT] wdfl&mult: Technically possible without anything (difficult)
-    METAPOD: {
-        Category.WONDERFUL_PHOTO: _HAS_PESTER,
-        Category.MULTIPLE_PHOTO:  _HAS_PESTER,
-    },
     PSYDUCK: {
+        Category.NORMAL_PHOTO:    _NO_ITEMS,
+        Category.WONDERFUL_PHOTO: _NO_ITEMS,
         Category.MULTIPLE_PHOTO:  _HAS_APPLE_OR_PESTER,
     },
     # TODO: [SOFT] base: Technically possible without anything (difficult)
@@ -293,16 +356,32 @@ LOCATION_RULES = {
         Category.WONDERFUL_PHOTO: _HAS_APPLE_OR_PESTER,
         Category.MULTIPLE_PHOTO:  _HAS_APPLE_OR_PESTER,
     },
+    SLOWPOKE: {
+        Category.NORMAL_PHOTO:    _NO_ITEMS,
+        Category.WONDERFUL_PHOTO: _NO_ITEMS,
+    },
     SLOWBRO: {
         Category.NORMAL_PHOTO:    _HAS_APPLE,
         Category.WONDERFUL_PHOTO: _HAS_APPLE,
     },
+    # TODO: [SOFT] wdfl&mult: Technically possible without anything (rng)
+    SHELLDER: {
+        Category.NORMAL_PHOTO:    _NO_ITEMS,
+        Category.WONDERFUL_PHOTO: Has(DASH_ENGINE),
+        Category.MULTIPLE_PHOTO:  Has(DASH_ENGINE),
+    },
+    CLOYSTER: {
+        Category.NORMAL_PHOTO:    _NO_ITEMS,
+        Category.WONDERFUL_PHOTO: _NO_ITEMS,
+        Category.MULTIPLE_PHOTO:  _NO_ITEMS,
+    },
     PORYGON: {
         Category.NORMAL_PHOTO:    _HAS_PESTER,
         Category.WONDERFUL_PHOTO: _HAS_PESTER,
-        Category.MULTIPLE_PHOTO:  HasAll(PESTER_BALL, POKEMON_FOOD),
+        Category.MULTIPLE_PHOTO:  HasAll(POKEMON_FOOD, PESTER_BALL),
     },
     course(BULBASAUR, LVL_RIVER): {
+        Category.NORMAL_PHOTO:    _NO_ITEMS,
         Category.WONDERFUL_PHOTO: _HAS_APPLE_OR_PESTER,
         Category.MULTIPLE_PHOTO:  _HAS_APPLE_OR_PESTER,
     },
@@ -310,17 +389,41 @@ LOCATION_RULES = {
         Category.NORMAL_PHOTO:    _HAS_APPLE_OR_PESTER,
         Category.WONDERFUL_PHOTO: _HAS_APPLE_OR_PESTER,
     },
-    RIVER_SIGN: { Category.POKEMON_SIGN: HasAll(SIGN_DETECTOR, POKEFLUTE) },
-    LVL_RIVER:  { Category.SECRET_EXIT: _HAS_PESTER },
+    course(PIKACHU, LVL_RIVER): {
+        Category.NORMAL_PHOTO:    _NO_ITEMS,
+        Category.WONDERFUL_PHOTO: _NO_ITEMS,
+    },
+    SPEED_PIKACHU: { Category.SPECIAL_POSE: _NO_ITEMS },
+    RIVER_SIGN:    { Category.POKEMON_SIGN: HasAll(SIGN_DETECTOR, POKEFLUTE) },
+    LVL_RIVER:     { Category.SECRET_EXIT: _HAS_PESTER },
 
 
     # Cave
+    JIGGLYPUFF: {
+        Category.NORMAL_PHOTO:    _NO_ITEMS,
+        Category.WONDERFUL_PHOTO: _NO_ITEMS,
+        Category.MULTIPLE_PHOTO:  _HAS_APPLE_OR_PESTER,
+    },
+    WEEPINBELL: {
+        Category.NORMAL_PHOTO:    _NO_ITEMS,
+        Category.WONDERFUL_PHOTO: _NO_ITEMS,
+    },
     VICTREEBEL: {
         Category.NORMAL_PHOTO:    _HAS_APPLE_OR_PESTER,
         Category.WONDERFUL_PHOTO: _HAS_APPLE_OR_PESTER,
     },
-    JIGGLYPUFF: {
-        Category.MULTIPLE_PHOTO:  _HAS_APPLE_OR_PESTER,
+    GRIMER: {
+        Category.NORMAL_PHOTO:    _NO_ITEMS,
+        Category.WONDERFUL_PHOTO: _NO_ITEMS,
+    },
+    MUK: {
+        Category.NORMAL_PHOTO:    _HAS_PESTER,
+        Category.WONDERFUL_PHOTO: _HAS_PESTER,
+    },
+    JYNX: {
+        Category.NORMAL_PHOTO:    _NO_ITEMS,
+        Category.WONDERFUL_PHOTO: _NO_ITEMS,
+        Category.MULTIPLE_PHOTO:  _HAS_FLUTE,
     },
     DITTO: {
         Category.NORMAL_PHOTO:    _HAS_PESTER,
@@ -331,12 +434,14 @@ LOCATION_RULES = {
         Category.NORMAL_PHOTO:    _HAS_FLUTE,
         Category.WONDERFUL_PHOTO: _HAS_FLUTE,
     },
-    MUK: {
-        Category.NORMAL_PHOTO:    _HAS_PESTER,
-        Category.WONDERFUL_PHOTO: _HAS_PESTER,
+    KOFFING: {
+        Category.NORMAL_PHOTO:    _NO_ITEMS,
+        Category.WONDERFUL_PHOTO: _NO_ITEMS,
     },
-    JYNX: {
-        Category.MULTIPLE_PHOTO:  _HAS_FLUTE,
+    course(BULBASAUR, LVL_CAVE): {
+        Category.NORMAL_PHOTO:    _NO_ITEMS,
+        Category.WONDERFUL_PHOTO: _NO_ITEMS,
+        Category.MULTIPLE_PHOTO:  _NO_ITEMS,
     },
     course(MAGIKARP, LVL_CAVE): {
         Category.NORMAL_PHOTO:    _HAS_APPLE_OR_PESTER,
@@ -346,6 +451,11 @@ LOCATION_RULES = {
     course(PIKACHU, LVL_CAVE): {
         Category.NORMAL_PHOTO:    _HAS_APPLE_OR_PESTER,
         Category.WONDERFUL_PHOTO: _HAS_APPLE_OR_PESTER,
+    },
+    course(ZUBAT, LVL_CAVE): {
+        Category.NORMAL_PHOTO:    _NO_ITEMS,
+        Category.WONDERFUL_PHOTO: _NO_ITEMS,
+        Category.MULTIPLE_PHOTO:  _NO_ITEMS,
     },
     BALLOON_PIKACHU:     { Category.SPECIAL_POSE: _HAS_APPLE_OR_PESTER },
     FLYING_PIKACHU:      { Category.SPECIAL_POSE: And(_HAS_FLUTE, _HAS_APPLE_OR_PESTER) },
@@ -357,39 +467,63 @@ LOCATION_RULES = {
     # Valley
     # TODO: [SOFT] wdfl: Technically possible without anything. mult: Technically possible with just dash (difficult)
     SQUIRTLE: {
+        Category.NORMAL_PHOTO:    _NO_ITEMS,
         Category.WONDERFUL_PHOTO: _HAS_PESTER,
         Category.MULTIPLE_PHOTO:  _HAS_PESTER,
+    },
+    SANDSHREW: {
+        Category.NORMAL_PHOTO:    _HAS_PESTER,
+        Category.WONDERFUL_PHOTO: _HAS_PESTER,
+        Category.MULTIPLE_PHOTO:  HasAll(POKEMON_FOOD, PESTER_BALL),
+    },
+    SANDSLASH: {
+        Category.NORMAL_PHOTO:    _NO_ITEMS,
+        Category.WONDERFUL_PHOTO: HasAny(DASH_ENGINE, PESTER_BALL),
+    },
+    MANKEY: {
+        Category.NORMAL_PHOTO:    _NO_ITEMS,
+        Category.WONDERFUL_PHOTO: _NO_ITEMS,
+    },
+    GEODUDE: {
+        Category.NORMAL_PHOTO:    _NO_ITEMS,
+        Category.WONDERFUL_PHOTO: _NO_ITEMS,
+        Category.MULTIPLE_PHOTO:  _NO_ITEMS,
+    },
+    # TODO: [SOFT] wdfl&mult: Technically possible without anything (difficult)
+    GRAVELER: {
+        Category.NORMAL_PHOTO:    _NO_ITEMS,
+        Category.WONDERFUL_PHOTO: HasAny(PESTER_BALL, POKEFLUTE),
+        Category.MULTIPLE_PHOTO:  _HAS_FLUTE,
     },
     GOLDEEN: {
         Category.NORMAL_PHOTO:    _HAS_APPLE_OR_PESTER,
         Category.WONDERFUL_PHOTO: _HAS_APPLE_OR_PESTER,
     },
-    # TODO: [SOFT] wdfl&mult: Technically possible without anything (difficult)
-    GRAVELER: {
-        Category.WONDERFUL_PHOTO: HasAny(PESTER_BALL, POKEFLUTE),
-        Category.MULTIPLE_PHOTO:  _HAS_FLUTE,
+    STARYU: {
+        Category.NORMAL_PHOTO:    _NO_ITEMS,
+        Category.WONDERFUL_PHOTO: _NO_ITEMS,
+        Category.MULTIPLE_PHOTO:  _NO_ITEMS,
+    },
+    STARMIE: {
+        Category.NORMAL_PHOTO:    _NO_ITEMS,
+        Category.WONDERFUL_PHOTO: _NO_ITEMS,
+        Category.MULTIPLE_PHOTO:  _NO_ITEMS,
     },
     GYARADOS: {
         Category.NORMAL_PHOTO:    _HAS_PESTER,
         Category.WONDERFUL_PHOTO: _HAS_PESTER,
     },
+    DRATINI: {
+        Category.NORMAL_PHOTO:    _NO_ITEMS,
+        Category.WONDERFUL_PHOTO: _NO_ITEMS,
+        Category.MULTIPLE_PHOTO:  _HAS_APPLE_OR_PESTER,
+    },
     DRAGONITE: {
         Category.NORMAL_PHOTO:    _HAS_PESTER,
         Category.WONDERFUL_PHOTO: _HAS_PESTER,
     },
-    SANDSHREW: {
-        Category.NORMAL_PHOTO:    _HAS_PESTER,
-        Category.WONDERFUL_PHOTO: _HAS_PESTER,
-        Category.MULTIPLE_PHOTO:  HasAll(PESTER_BALL, POKEMON_FOOD),
-    },
-    SANDSLASH: {
-        Category.WONDERFUL_PHOTO: HasAny(PESTER_BALL, DASH_ENGINE),
-    },
-    DRATINI: {
-        Category.MULTIPLE_PHOTO:  _HAS_APPLE_OR_PESTER,
-    },
     course(MAGIKARP, LVL_VALLEY): {
-        Category.NORMAL_PHOTO:    HasAny(PESTER_BALL, POKEMON_FOOD, DASH_ENGINE),
+        Category.NORMAL_PHOTO:    HasAny(POKEMON_FOOD, DASH_ENGINE, PESTER_BALL),
         Category.WONDERFUL_PHOTO: _HAS_APPLE_OR_PESTER,
         Category.MULTIPLE_PHOTO:  _HAS_APPLE_OR_PESTER,
     },
@@ -398,5 +532,18 @@ LOCATION_RULES = {
     LVL_VALLEY:            { Category.SECRET_EXIT:  _HAS_PESTER },
 
     # Cloud
-    MEW: { Category.NORMAL_PHOTO: _HAS_APPLE_OR_PESTER }
+    # Rainbow Cloud
+    MEW: {
+        Category.NORMAL_PHOTO:    _HAS_APPLE_OR_PESTER,
+        Category.WONDERFUL_PHOTO: _HAS_APPLE_OR_PESTER
+    },
+
+    # Oak Rewards
+    POKEMON_TOTAL_6:  { Category.PHOTO_COUNT: AtLeast(6,  *_CAN_REACH_ALL_POKEMON) },
+    POKEMON_TOTAL_22: { Category.PHOTO_COUNT: AtLeast(22, *_CAN_REACH_ALL_POKEMON) },
+    POKEMON_TOTAL_40: { Category.PHOTO_COUNT: AtLeast(40, *_CAN_REACH_ALL_POKEMON) },
+
+    REPORT_SCORE_24_000:  { Category.REPORT_SCORE: ReportScoreAchievable( 24_000) },
+    REPORT_SCORE_72_500:  { Category.REPORT_SCORE: ReportScoreAchievable( 72_500) },
+    REPORT_SCORE_130_000: { Category.REPORT_SCORE: ReportScoreAchievable(130_000) },
 }
