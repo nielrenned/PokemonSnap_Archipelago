@@ -115,7 +115,10 @@ class PokemonSnapWorld(World):
         # Create more locations, if necessary
         location_count = sum(1 for loc in self.multiworld.get_locations(self.player) if not loc.locked)
         required_count = len(build_item_pool(self))
-        if location_count < required_count:
+        if getattr(self.multiworld, "generation_is_fake", False):
+            # Fix Universal Tracker issue with bonus locations (since they are random)
+            self.create_extra_locations(len(self.multiworld.get_locations(self.player)))
+        elif location_count < required_count:
             self.create_extra_locations(required_count - location_count)
 
         # Connect Regions
