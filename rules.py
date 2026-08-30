@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING, override
 from dataclasses import dataclass
 from itertools import product
 
-from rule_builder.rules import Has, HasAll, HasAny, And, Rule, CanReachLocation, CollectionState, False_, HasGroup
+from rule_builder.rules import Has, HasAll, HasAny, And, Or, Rule, CanReachLocation, CollectionState, False_, HasGroup
 from .future_rules import AtLeast
 from .items import SIGN_PIC_NAMES, POKEMON_PIC_NAMES
 from .locations import wonderful, multiple, secret_exit, course, bonus, PokemonSnapLocationCategory as Category, species_data_tables, RNG_LOCATIONS, HARD_LOCATIONS
@@ -73,9 +73,12 @@ def set_oak_rules(world: "PokemonSnapWorld"):
         for pokemon_name in ALL_INGAME_POKEMON
         if pokemon_name not in POKEMON_IN_MULTIPLE_LEVELS
     ] + [
-        CanReachLocation(course(pokemon_name, level))
-        for pokemon_name, level in product(POKEMON_IN_MULTIPLE_LEVELS, ALL_LEVELS)
-        if course(pokemon_name, level) in LOCATION_RULES
+        Or(*[
+            CanReachLocation(course(pokemon_name, level))
+            for level in ALL_LEVELS
+            if course(pokemon_name, level) in LOCATION_RULES
+        ])
+        for pokemon_name in POKEMON_IN_MULTIPLE_LEVELS
     ]
 
     set_location_rule(world, POKEMON_TOTAL_6,  Category.PHOTO_COUNT, AtLeast(6,  *can_reach_all_pokemon))
