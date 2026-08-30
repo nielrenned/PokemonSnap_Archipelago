@@ -19,15 +19,17 @@ _HAS_APPLE_OR_PESTER = HasAny(POKEMON_FOOD, PESTER_BALL)
 
 REPORT_EXCLUSIONS = RNG_LOCATIONS + HARD_LOCATIONS
 
+_identity = lambda s: s
+
 location_name_functions = {
-    Category.NORMAL_PHOTO:   (lambda s: s),
+    Category.NORMAL_PHOTO:    _identity,
     Category.WONDERFUL_PHOTO: wonderful,
     Category.MULTIPLE_PHOTO:  multiple,
-    Category.SPECIAL_POSE:   (lambda s: s),
-    Category.POKEMON_SIGN:   (lambda s: s),
+    Category.SPECIAL_POSE:    _identity,
+    Category.POKEMON_SIGN:    _identity,
     Category.SECRET_EXIT:     secret_exit,
-    Category.PHOTO_COUNT:    (lambda s: s),
-    Category.REPORT_SCORE:   (lambda s: s),
+    Category.PHOTO_COUNT:     _identity,
+    Category.REPORT_SCORE:    _identity,
 }
 
 def location_name(name: str, category: Category):
