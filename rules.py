@@ -175,10 +175,9 @@ _CAN_REACH_ALL_POKEMON = [
 ] + [
     Or(*[
         CanReachLocation(course(pokemon_name, level))
-        for level in ALL_LEVELS
-        if course(pokemon_name, level) in LOCATION_RULES
+        for level in levels
     ])
-    for pokemon_name in POKEMON_IN_MULTIPLE_LEVELS
+    for pokemon_name, levels in POKEMON_IN_MULTIPLE_LEVELS.items()
 ]
 
 
