@@ -1,5 +1,6 @@
 import typing
 from enum import StrEnum
+from math import ceil
 from typing import NamedTuple
 from .constants import *
 from .options import ScoringBonus
@@ -132,8 +133,13 @@ def build_item_pool(world: "PokemonSnapWorld") -> list[PokemonSnapItemData]:
     item_pool.extend(item for item in _all_items if item.category is PokemonSnapItemCategory.TOOL)
     item_pool.extend(item for item in _all_items if item.category is PokemonSnapItemCategory.AREA and item.name != world.start_area.name)
     item_pool.extend(item for item in _all_items if item.category is PokemonSnapItemCategory.SIGN_PIC)
-    item_pool.extend(item_dictionary[FILM_UPGRADE] for _ in range(9)) # Nine +5 film upgrades take the cap from 15 up to the max of 60.
     item_pool.extend(pokemon_pics)
+
+    film_upgrade_count = (
+        ceil((world.options.maximum_film - world.options.starting_film) / world.options.film_upgrade_amount) +
+        world.options.extra_film_upgrades
+    )
+    item_pool.extend([item_dictionary[FILM_UPGRADE]] * film_upgrade_count)
 
     # Remove items depending on options
     if world.options.start_with_dash_engine: item_pool.remove(item_dictionary[DASH_ENGINE])

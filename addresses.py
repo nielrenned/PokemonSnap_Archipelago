@@ -81,7 +81,3 @@ COURSE_IDS = {
     LVL_VALLEY:  5,
     LVL_CLOUD:   6,
 }
-
-FILM_BASE = 15
-FILM_STEP = 5
-FILM_CAP = 60

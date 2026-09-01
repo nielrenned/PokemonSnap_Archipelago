@@ -180,9 +180,10 @@ class HasFilm(Rule["PokemonSnapWorld"], game="Pokemon Snap"):
     @override
     def _instantiate(self, world: "PokemonSnapWorld") -> Rule.Resolved:
         return self.Resolved(self.film_requirement,
-                             world.options.starting_film,
-                             world.options.film_upgrade_amount,
-                             world.options.maximum_film)
+                             world.options.starting_film.value,
+                             world.options.film_upgrade_amount.value,
+                             world.options.maximum_film.value,
+                             player=world.player)
 
     class Resolved(Rule.Resolved):
         film_requirement: int
@@ -193,7 +194,7 @@ class HasFilm(Rule["PokemonSnapWorld"], game="Pokemon Snap"):
         @override
         def _evaluate(self, state: CollectionState) -> bool:
             upgrade_count = state.count(FILM_UPGRADE, self.player)
-            total_film = min(self.film_cap, self.starting_film + upgrade_count * self.film_step)
+            total_film = min(self.film_cap, self.film_start + upgrade_count * self.film_step)
             return total_film >= self.film_requirement
 
 
