@@ -245,8 +245,8 @@ LOCATION_RULES = {
     },
     LAPRAS: {
         Category.NORMAL_PHOTO:    _NO_ITEMS,
-        Category.WONDERFUL_PHOTO: _NO_ITEMS,
-        Category.MULTIPLE_PHOTO:  _NO_ITEMS, # TODO: validate
+        Category.WONDERFUL_PHOTO: _NO_ITEMS & HasFilm(5), # TODO: validate
+        Category.MULTIPLE_PHOTO:  _NO_ITEMS & HasFilm(5), # TODO: validate
     },
     EEVEE: {
         Category.NORMAL_PHOTO:    _NO_ITEMS,
@@ -283,9 +283,9 @@ LOCATION_RULES = {
         Category.WONDERFUL_PHOTO: _NO_ITEMS,
     },
     DUGTRIO: {
-        Category.NORMAL_PHOTO:    _NO_ITEMS,
-        Category.WONDERFUL_PHOTO: _NO_ITEMS,
-        Category.MULTIPLE_PHOTO:  _NO_ITEMS, # TODO: validate
+        Category.NORMAL_PHOTO:    _NO_ITEMS & HasFilm(5),
+        Category.WONDERFUL_PHOTO: _NO_ITEMS & HasFilm(5), # TODO: validate
+        Category.MULTIPLE_PHOTO:  _NO_ITEMS & HasFilm(7), # TODO: validate
     },
     MAGNEMITE: {
         Category.NORMAL_PHOTO:    _HAS_APPLE,
@@ -327,7 +327,7 @@ LOCATION_RULES = {
         Category.NORMAL_PHOTO:    _NO_ITEMS,
         Category.WONDERFUL_PHOTO: _NO_ITEMS,
     },
-    PIKACHU_ON_A_BALL: { Category.SPECIAL_POSE: _NO_ITEMS },
+    PIKACHU_ON_A_BALL: { Category.SPECIAL_POSE: _NO_ITEMS & HasFilm(5) }, # TODO: validate
     TUNNEL_SIGN:       { Category.POKEMON_SIGN: HasAll(SIGN_DETECTOR, POKEMON_FOOD, POKEFLUTE) },
     LVL_TUNNEL:        { Category.SECRET_EXIT: _HAS_APPLE_OR_PESTER },
 
@@ -443,7 +443,7 @@ LOCATION_RULES = {
         Category.NORMAL_PHOTO:    _NO_ITEMS,
         Category.WONDERFUL_PHOTO: _NO_ITEMS,
     },
-    SPEED_PIKACHU: { Category.SPECIAL_POSE: _NO_ITEMS },
+    SPEED_PIKACHU: { Category.SPECIAL_POSE: HasFilm(5) | _HAS_APPLE_OR_PESTER },
     RIVER_SIGN:    { Category.POKEMON_SIGN: HasAll(SIGN_DETECTOR, POKEFLUTE) },
     LVL_RIVER:     { Category.SECRET_EXIT: _HAS_PESTER },
 
@@ -464,11 +464,11 @@ LOCATION_RULES = {
     },
     GRIMER: {
         Category.NORMAL_PHOTO:    _NO_ITEMS,
-        Category.WONDERFUL_PHOTO: _NO_ITEMS,
+        Category.WONDERFUL_PHOTO: _NO_ITEMS & HasFilm(3),
     },
     MUK: {
-        Category.NORMAL_PHOTO:    _HAS_PESTER,
-        Category.WONDERFUL_PHOTO: _HAS_PESTER,
+        Category.NORMAL_PHOTO:    _HAS_PESTER & HasFilm(3),
+        Category.WONDERFUL_PHOTO: _HAS_PESTER & HasFilm(3),
     },
     JYNX: {
         Category.NORMAL_PHOTO:    _NO_ITEMS,
@@ -555,9 +555,9 @@ LOCATION_RULES = {
         Category.MULTIPLE_PHOTO:  _NO_ITEMS, # TODO: validate
     },
     STARMIE: {
-        Category.NORMAL_PHOTO:    _NO_ITEMS,
-        Category.WONDERFUL_PHOTO: _NO_ITEMS,
-        Category.MULTIPLE_PHOTO:  _NO_ITEMS, # TODO: validate
+        Category.NORMAL_PHOTO:    _NO_ITEMS & HasFilm(5),
+        Category.WONDERFUL_PHOTO: _NO_ITEMS & HasFilm(5),
+        Category.MULTIPLE_PHOTO:  _NO_ITEMS & HasFilm(7), # TODO: validate
     },
     GYARADOS: {
         Category.NORMAL_PHOTO:    _HAS_PESTER,
