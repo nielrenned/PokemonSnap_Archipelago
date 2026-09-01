@@ -173,6 +173,30 @@ class ReportScoreAchievable(Rule["PokemonSnapWorld"], game="Pokemon Snap"):
             return score
 
 
+@dataclass()
+class HasFilm(Rule["PokemonSnapWorld"], game="Pokemon Snap"):
+    film_requirement: int
+
+    @override
+    def _instantiate(self, world: "PokemonSnapWorld") -> Rule.Resolved:
+        return self.Resolved(self.film_requirement,
+                             world.options.starting_film,
+                             world.options.film_upgrade_amount,
+                             world.options.maximum_film)
+
+    class Resolved(Rule.Resolved):
+        film_requirement: int
+        film_start: int
+        film_step: int
+        film_cap: int
+
+        @override
+        def _evaluate(self, state: CollectionState) -> bool:
+            upgrade_count = state.count(FILM_UPGRADE, self.player)
+            total_film = min(self.film_cap, self.starting_film + upgrade_count * self.film_step)
+            return total_film >= self.film_requirement
+
+
 _CAN_REACH_ALL_POKEMON = [
     CanReachLocation(pokemon_name)
     for pokemon_name in ALL_INGAME_POKEMON

@@ -48,6 +48,34 @@ class ScoringBonus(Choice):
     option_separate         = 2
 
 
+class FilmCapacityStart(Range):
+    display_name = "Starting Film"
+    range_start = 1
+    range_end = 60
+    default = 15
+
+
+class FilmCapacityStep(Range):
+    display_name = "Film Upgrade Amount"
+    range_start = 1
+    range_end = 60
+    default = 5
+
+
+class FilmCapacityCap(Range):
+    display_name = "Maximum Film"
+    range_start = 5
+    range_end = 60
+    default = 60
+
+
+class ExtraFilmUpgrades(Range):
+    display_name = "% Extra Film Upgrades"
+    range_start = 0
+    range_end = 60
+    default = 1
+
+
 class PhotoBonusChecks(Choice):
     """
     Determines which photo bonuses to include as checks.
@@ -160,6 +188,10 @@ class PokemonSnapOption(PerGameCommonOptions):
     pokemon_required: PokemonRequired
 
     scoring_bonuses: ScoringBonus
+    starting_film: FilmCapacityStart
+    maximum_film:  FilmCapacityCap
+    film_upgrade_amount: FilmCapacityStep
+    extra_film_upgrades: ExtraFilmUpgrades
 
     photo_bonuses: PhotoBonusChecks
     special_poses: SpecialPoses
@@ -184,6 +216,10 @@ pokemon_snap_option_groups = [
     ]),
     OptionGroup("Items", [
         ScoringBonus,
+        FilmCapacityStart,
+        FilmCapacityCap,
+        FilmCapacityStep,
+        ExtraFilmUpgrades,
     ]),
     OptionGroup("Checks - Categories", [
         PhotoBonusChecks,
