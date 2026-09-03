@@ -243,6 +243,7 @@ LOCATION_RULES = {
         Category.NORMAL_PHOTO:    _HAS_PESTER,
         Category.WONDERFUL_PHOTO: _HAS_PESTER,
     },
+    # TODO: [SOFT] wdfl/mult: only requires 3 film
     LAPRAS: {
         Category.NORMAL_PHOTO:    _NO_ITEMS,
         Category.WONDERFUL_PHOTO: _NO_ITEMS & HasFilm(5), # TODO: validate
@@ -282,6 +283,8 @@ LOCATION_RULES = {
         Category.NORMAL_PHOTO:    _NO_ITEMS,
         Category.WONDERFUL_PHOTO: _NO_ITEMS,
     },
+    # TODO: [SOFT] base/wdfl: only requires 4 film
+    # TODO: [SOFT] mult: only requires 5 film
     DUGTRIO: {
         Category.NORMAL_PHOTO:    _NO_ITEMS & HasFilm(5),
         Category.WONDERFUL_PHOTO: _NO_ITEMS & HasFilm(5), # TODO: validate
@@ -327,6 +330,7 @@ LOCATION_RULES = {
         Category.NORMAL_PHOTO:    _NO_ITEMS,
         Category.WONDERFUL_PHOTO: _NO_ITEMS,
     },
+    # TODO: [SOFT]: only requires 3 film
     PIKACHU_ON_A_BALL: { Category.SPECIAL_POSE: _NO_ITEMS & HasFilm(5) }, # TODO: validate
     TUNNEL_SIGN:       { Category.POKEMON_SIGN: HasAll(SIGN_DETECTOR, POKEMON_FOOD, POKEFLUTE) },
     LVL_TUNNEL:        { Category.SECRET_EXIT: _HAS_APPLE_OR_PESTER },
@@ -443,6 +447,7 @@ LOCATION_RULES = {
         Category.NORMAL_PHOTO:    _NO_ITEMS,
         Category.WONDERFUL_PHOTO: _NO_ITEMS,
     },
+    # TODO: [SOFT]: only requires 2 film
     SPEED_PIKACHU: { Category.SPECIAL_POSE: HasFilm(5) | _HAS_APPLE_OR_PESTER },
     RIVER_SIGN:    { Category.POKEMON_SIGN: HasAll(SIGN_DETECTOR, POKEFLUTE) },
     LVL_RIVER:     { Category.SECRET_EXIT: _HAS_PESTER },
@@ -462,13 +467,15 @@ LOCATION_RULES = {
         Category.NORMAL_PHOTO:    _HAS_APPLE_OR_PESTER,
         Category.WONDERFUL_PHOTO: _HAS_APPLE_OR_PESTER,
     },
+    # TODO: [SOFT] wdfl: only requires 2 film
     GRIMER: {
         Category.NORMAL_PHOTO:    _NO_ITEMS,
-        Category.WONDERFUL_PHOTO: _NO_ITEMS & HasFilm(3),
+        Category.WONDERFUL_PHOTO: _NO_ITEMS & HasFilm(4),
     },
+    # TODO: [SOFT] wdfl: only requires 2 film
     MUK: {
-        Category.NORMAL_PHOTO:    _HAS_PESTER & HasFilm(3),
-        Category.WONDERFUL_PHOTO: _HAS_PESTER & HasFilm(3),
+        Category.NORMAL_PHOTO:    _HAS_PESTER & HasFilm(4),
+        Category.WONDERFUL_PHOTO: _HAS_PESTER & HasFilm(4),
     },
     JYNX: {
         Category.NORMAL_PHOTO:    _NO_ITEMS,
@@ -554,10 +561,12 @@ LOCATION_RULES = {
         Category.WONDERFUL_PHOTO: _NO_ITEMS,
         Category.MULTIPLE_PHOTO:  _NO_ITEMS, # TODO: validate
     },
+    # TODO: [SOFT] base/wdfl: only requires 2 film
+    # TODO: [SOFT] mult: only requires 3 film
     STARMIE: {
         Category.NORMAL_PHOTO:    _NO_ITEMS & HasFilm(5),
-        Category.WONDERFUL_PHOTO: _NO_ITEMS & HasFilm(5),
-        Category.MULTIPLE_PHOTO:  _NO_ITEMS & HasFilm(7), # TODO: validate
+        Category.WONDERFUL_PHOTO: _NO_ITEMS & HasFilm(7),
+        Category.MULTIPLE_PHOTO:  _NO_ITEMS & HasFilm(9), # TODO: validate
     },
     GYARADOS: {
         Category.NORMAL_PHOTO:    _HAS_PESTER,
