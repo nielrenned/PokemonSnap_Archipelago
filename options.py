@@ -39,6 +39,33 @@ class PokemonRequired(Range):
     default = DEFAULT_POKEMON_REQUIREMENT
 
 
+class ScoringBonus(Choice):
+    """
+    Determines how the photo score bonuses, "Good Technique" and "Multiple PKMN", are unlocked.
+    - always_available (default): Photo score bonuses are avaiable from the start, like normal gameplay.
+    - progressive: Adds "Progressive Scoring" items that unlock "Good Technique" then "Multiple PKMN".
+    - separate: "Good Technique" and "Multiple PKMN" are separate unlocks, meaning you can get the bonus
+                for multiple pokemon *without* getting a "Good Technique" photo.
+    """
+    display_name = "Photo Score Bonuses"
+    option_always_available = 0
+    option_progressive      = 1
+    option_separate         = 2
+
+
+class ExtraScoringBonusItems(Range):
+    """
+    Adds the specified number of extra scoring bonus items to the pool, making it more likely
+    to unlock "Good Technique" and "Multiple PKMN" bonuses earlier.
+    
+    If `scoring_bonuses` is set to `always_available`, this does nothing. If `scoring_bonuses` is 
+    set to `separate`, extra items will be added for "Good Technique" and "Multiple PKMN."
+    """
+    display_name = "Extra 'Photo Score Bonus' Items"
+    range_start = 0
+    range_end = 2
+    default = 0
+
 class PhotoBonusChecks(Choice):
     """
     Determines which photo bonuses to include as checks.
@@ -150,6 +177,8 @@ class PokemonSnapOption(PerGameCommonOptions):
     signs_required: SignsRequired
     pokemon_required: PokemonRequired
 
+    scoring_bonuses: ScoringBonus
+    extra_scoring_bonus_items: ExtraScoringBonusItems
 
     photo_bonuses: PhotoBonusChecks
     special_poses: SpecialPoses
@@ -167,38 +196,30 @@ class PokemonSnapOption(PerGameCommonOptions):
     start_inventory_from_pool: StartInventoryPool
 
 pokemon_snap_option_groups = [
-    OptionGroup(
-        "Goal Settings",
-    [
-            GoalType,
-            SignsRequired,
-            PokemonRequired,
-    ],
-    ),
-    OptionGroup(
-        "Checks - Categories",
-    [
+    OptionGroup("Goal Settings", [
+        GoalType,
+        SignsRequired,
+        PokemonRequired,
+    ]),
+    OptionGroup("Items", [
+        ScoringBonus,
+        ExtraScoringBonusItems
+    ]),
+    OptionGroup("Checks - Categories", [
         PhotoBonusChecks,
         SpecialPoses,
         PokemonSigns,
         SecretExits,
         PokemonReportPhotoCount,
         PokemonReportTotalScore,
-    ],
-    ),
-    OptionGroup(
-        "Checks - Pokemon",
-	[
+    ]),
+    OptionGroup("Checks - Pokemon", [
 		IncludeRNGChecks,
-		IncludeHardChecks
-	],
-	),
-    OptionGroup(
-        "Quality Of Life",
-	[
+		IncludeHardChecks,
+	]),
+    OptionGroup("Quality Of Life", [
 		StartWithDashEngine,
         PressLeftBumperToToggleZeroOne,
         CameraInversion,
-	],
-	),
+	]),
 ]

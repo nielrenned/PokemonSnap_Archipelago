@@ -33,7 +33,7 @@
       "addr": "0x8040000C",
       "type": "u32",
       "access": "rw",
-      "desc": "bit0=apple, 1=pester, 2=flute, 3=dash, 4=sign detector, 5=press L to stop (used when gCanUseOverride==0)"
+      "desc": "bit0=apple, 1=pester, 2=flute, 3=dash, 4=sign detector, 5=L to stop, 6=technique scoring, 7=multiple scoring (used when gCanUseOverride==0)"
     },
     "gCourseOverride": {
       "addr": "0x80400010",
@@ -99,7 +99,7 @@
   "idents": {
     "auth": {
       "addr": "0x804004A8",
-      "rom_offset": "0x010004A8",
+      "rom_offset": "0x010004B8",
       "len": 16,
       "type": "u8[16]",
       "access": "rw",
