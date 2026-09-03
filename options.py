@@ -41,6 +41,11 @@ class PokemonRequired(Range):
 
 class ScoringBonus(Choice):
     """
+    Determines how the photo score bonuses, "Good Technique" and "Multiple PKMN", are unlocked.
+    - always_available (default): Photo score bonuses are avaiable from the start, like normal gameplay.
+    - progressive: Adds "Progressive Scoring" items that unlock "Good Technique" then "Multiple PKMN".
+    - separate: "Good Technique" and "Multiple PKMN" are separate unlocks, meaning you can get the bonus
+                for multiple pokemon *without* getting a "Good Technique" photo.
     """
     display_name = "Photo Score Bonuses"
     option_always_available = 0
