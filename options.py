@@ -76,6 +76,20 @@ class ExtraFilmUpgrades(Range):
     default = 1
 
 
+class MapFragments(Range):
+    """
+    Determines the number of items required to unlock a course.
+    
+    Examples:
+    - If set to 1, finding the "Beach" item will unlock the Beach course.
+    - If set to 2+, you will need that many "Beach: Map Fragment" items to unlock the Beach course.
+    """
+    display_name = "Map Fragments"
+    range_start = 1
+    range_end = 6
+    default = 1
+
+
 class PhotoBonusChecks(Choice):
     """
     Determines which photo bonuses to include as checks.
@@ -192,6 +206,7 @@ class PokemonSnapOption(PerGameCommonOptions):
     maximum_film:  FilmCapacityCap
     film_upgrade_amount: FilmCapacityStep
     extra_film_upgrades: ExtraFilmUpgrades
+    map_fragments: MapFragments
 
     photo_bonuses: PhotoBonusChecks
     special_poses: SpecialPoses
@@ -220,6 +235,7 @@ pokemon_snap_option_groups = [
         FilmCapacityCap,
         FilmCapacityStep,
         ExtraFilmUpgrades,
+        MapFragments,
     ]),
     OptionGroup("Checks - Categories", [
         PhotoBonusChecks,

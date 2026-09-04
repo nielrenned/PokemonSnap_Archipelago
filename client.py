@@ -1,5 +1,6 @@
 from typing import Optional, NamedTuple
 import base64, os, re, time, asyncio, sys
+from collections import defaultdict
 
 import Utils
 from CommonClient import logger, server_loop, get_base_parser, gui_enabled
@@ -9,7 +10,7 @@ from .pj64_connector import PJ64Context, pj64connect, pj64disconnect, pj64_read_
 from .constants import *
 from .locations import wonderful_id as wdfl_id, multiple_id as mult_id, special_pose_id, secret_exit_id, sign_id, bonus_id, oak_reward_id, OAK_REWARDS, POKEMON_TO_SLOTS
 from .update_pj64_config import safe_load_pj64_config
-from .items import item_dictionary, SIGN_PIC_NAMES, POKEMON_PIC_NAMES
+from .items import item_dictionary, SIGN_PIC_NAMES, POKEMON_PIC_NAMES, fragment, unfragment
 from .options import ScoringBonus
 from . import addresses as addr
 
@@ -321,6 +322,7 @@ class PokemonSnapContext(CommonContext, PJ64Context):
         sign_pic_count = 0
         pokemon_pic_count = 0
         prog_scoring_count = 0
+        map_fragments = defaultdict(int)
         for net_item in self.items_received:
             if not self.finished_game and net_item.item == VICTORY_ITEM_ID:
                 await self.send_msgs([{"cmd": "StatusUpdate", "status": ClientStatus.CLIENT_GOAL}])
@@ -334,6 +336,10 @@ class PokemonSnapContext(CommonContext, PJ64Context):
                 can_use_mask |= 1 << addr.CAN_USE_BITS[name]
             elif name in addr.COURSE_IDS:
                 course_mask |= 1 << addr.COURSE_IDS[name]
+            elif name in map(fragment, ALL_LEVELS):
+                map_fragments[name] += 1
+                if map_fragments[name] >= self.slot_data['map_fragments']:
+                    course_mask |= 1 << addr.COURSE_IDS[unfragment(name)]
             elif name == FILM_UPGRADE:
                 film = min(film + self.slot_data['film_upgrade_amount'], self.slot_data['maximum_film'])
             elif name in SIGN_PIC_NAMES:

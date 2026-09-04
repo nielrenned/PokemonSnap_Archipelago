@@ -6,7 +6,7 @@ from .future_rules import AtLeast
 from .locations import wonderful, multiple, secret_exit, course, bonus, species_data_tables, \
     PokemonSnapLocationCategory as Category, RNG_LOCATIONS, HARD_LOCATIONS, POKEMON_IN_MULTIPLE_LEVELS
 from .constants import *
-from .items import PokemonSnapItemCategory as ItemCategory
+from .items import PokemonSnapItemCategory as ItemCategory, fragment
 from .options import GoalType, ScoringBonus
 if TYPE_CHECKING:
     from . import PokemonSnapWorld
@@ -68,7 +68,7 @@ def set_rules(world: "PokemonSnapWorld"):
     world.set_completion_rule(Has(VICTORY_ITEM_NAME))
 
     for level in [LVL_BEACH, LVL_TUNNEL, LVL_VOLCANO, LVL_RIVER, LVL_CAVE, LVL_VALLEY]:
-        world.set_rule(world.get_entrance(f'{START_GAME} -> {level}'), Has(level))
+        world.set_rule(world.get_entrance(f'{START_GAME} -> {level}'), Has(level) | Has(fragment(level), world.options.map_fragments.value))
 
     if world.options.goal_type == GoalType.option_signs:
         world.set_rule(world.get_entrance(f'{START_GAME} -> {LVL_CLOUD}'),

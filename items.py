@@ -16,6 +16,7 @@ class PokemonSnapItemCategory(StrEnum):
     TOOL = "Tools"
     SCORING_BONUS = "Score"
     AREA = "Courses"
+    MAP_FRAGMENT = "Fragments"
     MISC = "Miscellaneous"
     POKEMON_PIC = "Pokemon Pictures"
     SIGN_PIC = "Sign Pictures"
@@ -36,10 +37,13 @@ class PokemonSnapItem(Item):
     def get_name_to_id() -> dict:
         return {item_data.name: item_data.ps_code for item_data in _all_items}
 
+fragment   = lambda s: f'{s}: Map Fragment'
+unfragment = lambda s: s[:-len(': Map Fragment')]
 
 base_key_item_names = {
     VICTORY_ITEM_NAME,
     LVL_BEACH, LVL_TUNNEL, LVL_VOLCANO, LVL_RIVER, LVL_CAVE, LVL_VALLEY, LVL_CLOUD,
+    *map(fragment, [LVL_BEACH, LVL_TUNNEL, LVL_VOLCANO, LVL_RIVER, LVL_CAVE, LVL_VALLEY, LVL_CLOUD]),
     POKEMON_FOOD, PESTER_BALL, POKEFLUTE, DASH_ENGINE, SIGN_DETECTOR,
     PROG_SCORING, WDFL_SCORING, MULT_SCORING
 }
@@ -105,6 +109,13 @@ _all_items = [PokemonSnapItemData(row[0], row[1], row[2]) for row in [
     (LVL_CAVE,    2004, PokemonSnapItemCategory.AREA),
     (LVL_VALLEY,  2005, PokemonSnapItemCategory.AREA),
 
+    (fragment(LVL_BEACH),   2100, PokemonSnapItemCategory.MAP_FRAGMENT),
+    (fragment(LVL_TUNNEL),  2101, PokemonSnapItemCategory.MAP_FRAGMENT),
+    (fragment(LVL_VOLCANO), 2102, PokemonSnapItemCategory.MAP_FRAGMENT),
+    (fragment(LVL_RIVER),   2103, PokemonSnapItemCategory.MAP_FRAGMENT),
+    (fragment(LVL_CAVE),    2104, PokemonSnapItemCategory.MAP_FRAGMENT),
+    (fragment(LVL_VALLEY),  2105, PokemonSnapItemCategory.MAP_FRAGMENT),
+
     (FILM_UPGRADE, 3000, PokemonSnapItemCategory.MISC),
 
     ("ArsonAssassin's pokemon card collection", 4000, PokemonSnapItemCategory.TRASH_CUSTOM),
@@ -131,9 +142,15 @@ def build_item_pool(world: "PokemonSnapWorld") -> list[PokemonSnapItemData]:
 
     ## Add all the required items
     item_pool.extend(item for item in _all_items if item.category is PokemonSnapItemCategory.TOOL)
-    item_pool.extend(item for item in _all_items if item.category is PokemonSnapItemCategory.AREA and item.name != world.start_area.name)
     item_pool.extend(item for item in _all_items if item.category is PokemonSnapItemCategory.SIGN_PIC)
     item_pool.extend(pokemon_pics)
+
+    if world.options.map_fragments.value == 1:
+        item_pool.extend(item for item in _all_items if item.category is PokemonSnapItemCategory.AREA and item.name != world.start_area.name)
+    else:
+        for item in _all_items:
+            if item.category is PokemonSnapItemCategory.MAP_FRAGMENT and item.name != fragment(world.start_area.name):
+                item_pool.extend([item] * world.options.map_fragments.value)
 
     film_upgrade_count = (
         ceil((world.options.maximum_film - world.options.starting_film) / world.options.film_upgrade_amount) +
