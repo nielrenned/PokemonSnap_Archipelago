@@ -64,7 +64,7 @@ class FilmCapacityStep(Range):
 
 class FilmCapacityCap(Range):
     display_name = "Maximum Film"
-    range_start = 5
+    range_start = 10
     range_end = 60
     default = 60
 
