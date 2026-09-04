@@ -49,6 +49,9 @@ class ScoringBonus(Choice):
 
 
 class FilmCapacityStart(Range):
+    """
+    Sets the amount of film available at the start of the game.
+    """
     display_name = "Starting Film"
     range_start = 1
     range_end = 60
@@ -56,6 +59,9 @@ class FilmCapacityStart(Range):
 
 
 class FilmCapacityStep(Range):
+    """
+    Sets the amount of film granted by each "Film Capacity Upgrade" item.
+    """
     display_name = "Film Upgrade Amount"
     range_start = 1
     range_end = 60
@@ -63,6 +69,10 @@ class FilmCapacityStep(Range):
 
 
 class FilmCapacityCap(Range):
+    """
+    Sets the maximum amount of film available.
+    Making this number very small will increase the length of your playthrough.
+    """
     display_name = "Maximum Film"
     range_start = 10
     range_end = 60
@@ -70,7 +80,10 @@ class FilmCapacityCap(Range):
 
 
 class ExtraFilmUpgrades(Range):
-    display_name = "% Extra Film Upgrades"
+    """
+    Adds the specified number of extra "Film Capacity Upgrade" items to the item pool.
+    """
+    display_name = "Extra Film Capacity Upgrades"
     range_start = 0
     range_end = 60
     default = 1
