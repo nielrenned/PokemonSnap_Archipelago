@@ -214,9 +214,16 @@ POKEMON_TO_SLOTS = {
     for species_data in species_data_tables.values() for pokemon in species_data if pokemon.name in ALL_INGAME_POKEMON
 } | {
     BULBASAUR: [1, 64],
-    MAGIKARP: [51, 65, 66, 67, 68, 69],
-    PIKACHU: [10, 70, 71, 72],
-    ZUBAT: [15, 73]
+    MAGIKARP:  [51, 65, 66, 67, 68, 69],
+    PIKACHU:   [10, 70, 71, 72],
+    ZUBAT:     [15, 73]
+}
+
+POKEMON_IN_MULTIPLE_LEVELS = {
+    BULBASAUR: [LVL_RIVER, LVL_CAVE],
+    MAGIKARP:  [LVL_BEACH, LVL_TUNNEL, LVL_VOLCANO, LVL_RIVER, LVL_CAVE, LVL_VALLEY],
+    PIKACHU:   [LVL_BEACH, LVL_TUNNEL, LVL_RIVER, LVL_CAVE],
+    ZUBAT:     [LVL_TUNNEL, LVL_CAVE]
 }
 
 

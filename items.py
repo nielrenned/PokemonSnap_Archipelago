@@ -2,6 +2,7 @@ import typing
 from enum import StrEnum
 from typing import NamedTuple
 from .constants import *
+from .options import ScoringBonus
 
 from BaseClasses import Item
 
@@ -12,6 +13,7 @@ if typing.TYPE_CHECKING:
 class PokemonSnapItemCategory(StrEnum):
     VICTORY = "Victory"
     TOOL = "Tools"
+    SCORING_BONUS = "Score"
     AREA = "Courses"
     MISC = "Miscellaneous"
     POKEMON_PIC = "Pokemon Pictures"
@@ -37,7 +39,8 @@ class PokemonSnapItem(Item):
 base_key_item_names = {
     VICTORY_ITEM_NAME,
     LVL_BEACH, LVL_TUNNEL, LVL_VOLCANO, LVL_RIVER, LVL_CAVE, LVL_VALLEY, LVL_CLOUD,
-    POKEMON_FOOD, PESTER_BALL, POKEFLUTE, DASH_ENGINE, SIGN_DETECTOR
+    POKEMON_FOOD, PESTER_BALL, POKEFLUTE, DASH_ENGINE, SIGN_DETECTOR,
+    PROG_SCORING, WDFL_SCORING, MULT_SCORING
 }
 
 useful_item_names = {
@@ -90,6 +93,10 @@ _all_items = [PokemonSnapItemData(row[0], row[1], row[2]) for row in [
     (DASH_ENGINE,   1003, PokemonSnapItemCategory.TOOL),
     (SIGN_DETECTOR, 1004, PokemonSnapItemCategory.TOOL),
 
+    (WDFL_SCORING,  1500, PokemonSnapItemCategory.SCORING_BONUS),
+    (MULT_SCORING,  1501, PokemonSnapItemCategory.SCORING_BONUS),
+    (PROG_SCORING,  1502, PokemonSnapItemCategory.SCORING_BONUS),
+
     (LVL_BEACH,   2000, PokemonSnapItemCategory.AREA),
     (LVL_TUNNEL,  2001, PokemonSnapItemCategory.AREA),
     (LVL_VOLCANO, 2002, PokemonSnapItemCategory.AREA),
@@ -131,6 +138,13 @@ def build_item_pool(world: "PokemonSnapWorld") -> list[PokemonSnapItemData]:
     # Remove items depending on options
     if world.options.start_with_dash_engine: item_pool.remove(item_dictionary[DASH_ENGINE])
     if not world.options.pokemon_signs:      item_pool.remove(item_dictionary[SIGN_DETECTOR])
+
+    if world.options.scoring_bonuses == ScoringBonus.option_separate:
+        count = world.options.extra_scoring_bonus_items.value + 1
+        item_pool.extend([item_dictionary[WDFL_SCORING], item_dictionary[MULT_SCORING]] * count)
+    elif world.options.scoring_bonuses == ScoringBonus.option_progressive:
+        count = world.options.extra_scoring_bonus_items.value + 2
+        item_pool.extend([item_dictionary[PROG_SCORING]]*count)
     
     ## Fill with one of each custom trash item, then one of each trash pokemon pic, then random pokemon pics
     trash_items = [item for item in _all_items if item.category is PokemonSnapItemCategory.TRASH_CUSTOM]

@@ -67,6 +67,8 @@ CAN_USE_BITS = {
     DASH_ENGINE:   3,
     SIGN_DETECTOR: 4,
     "L_TO_STOP":   5,
+    WDFL_SCORING:  6,
+    MULT_SCORING:  7,
 }
 
 # Item name -> bit in gCourseUnlockMask.

@@ -10,8 +10,8 @@ from .constants import *
 from .locations import wonderful_id as wdfl_id, multiple_id as mult_id, special_pose_id, secret_exit_id, sign_id, bonus_id, oak_reward_id, OAK_REWARDS, POKEMON_TO_SLOTS
 from .update_pj64_config import safe_load_pj64_config
 from .items import item_dictionary, SIGN_PIC_NAMES, POKEMON_PIC_NAMES
+from .options import ScoringBonus
 from . import addresses as addr
-from . import PokemonSnapWorld
 
 _code_to_name = {data.ps_code: name for name, data in item_dictionary.items()}
 
@@ -320,6 +320,7 @@ class PokemonSnapContext(CommonContext, PJ64Context):
         film = addr.FILM_BASE
         sign_pic_count = 0
         pokemon_pic_count = 0
+        prog_scoring_count = 0
         for net_item in self.items_received:
             if not self.finished_game and net_item.item == VICTORY_ITEM_ID:
                 await self.send_msgs([{"cmd": "StatusUpdate", "status": ClientStatus.CLIENT_GOAL}])
@@ -339,6 +340,8 @@ class PokemonSnapContext(CommonContext, PJ64Context):
                 sign_pic_count += 1
             elif name in POKEMON_PIC_NAMES:
                 pokemon_pic_count += 1
+            elif name == PROG_SCORING:
+                prog_scoring_count += 1
 
         met_sign_goal = self.goal_type == GOAL_SIGN_PICS and sign_pic_count >= self.signs_required
         met_pokemon_goal = self.goal_type == GOAL_POKEMON_PICS and pokemon_pic_count >= self.pokemon_required
@@ -352,6 +355,16 @@ class PokemonSnapContext(CommonContext, PJ64Context):
 
         if self.slot_data['enable_left_bumper_to_start_stop']:
             can_use_mask |= (1 << addr.CAN_USE_BITS['L_TO_STOP'])
+        
+        # Check wonderful/multiple scoring unlocks
+        if self.slot_data['scoring_bonuses'] == ScoringBonus.option_always_available:
+            can_use_mask |= (1 << addr.CAN_USE_BITS[WDFL_SCORING]) | (1 << addr.CAN_USE_BITS[MULT_SCORING])
+        elif self.slot_data['scoring_bonuses'] == ScoringBonus.option_progressive:
+            if prog_scoring_count >= 1: can_use_mask |= (1 << addr.CAN_USE_BITS[WDFL_SCORING])
+            if prog_scoring_count >= 2: can_use_mask |= (1 << addr.CAN_USE_BITS[MULT_SCORING])
+        elif self.slot_data['scoring_bonuses'] == ScoringBonus.option_separate:
+            if WDFL_SCORING in self.items_received: can_use_mask |= (1 << addr.CAN_USE_BITS[WDFL_SCORING])
+            if MULT_SCORING in self.items_received: can_use_mask |= (1 << addr.CAN_USE_BITS[MULT_SCORING])
 
         await pj64_write_memory(self, "u32", addr.CAN_USE_MASK, [can_use_mask])
         await pj64_write_memory(self, "u32", addr.COURSE_UNLOCK_MASK, [course_mask])
