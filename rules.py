@@ -294,7 +294,7 @@ LOCATION_RULES = {
     MAGNEMITE: {
         Category.NORMAL_PHOTO:    _HAS_APPLE,
         Category.WONDERFUL_PHOTO: _HAS_APPLE,
-        Category.MULTIPLE_PHOTO:  _HAS_APPLE, # TODO: validate
+        Category.MULTIPLE_PHOTO:  _HAS_APPLE,
     },
     MAGNETON: {
         Category.NORMAL_PHOTO:    _HAS_APPLE,
@@ -411,7 +411,7 @@ LOCATION_RULES = {
     POLIWAG: {
         Category.NORMAL_PHOTO:    _HAS_APPLE_OR_PESTER,
         Category.WONDERFUL_PHOTO: _HAS_APPLE_OR_PESTER,
-        Category.MULTIPLE_PHOTO:  _HAS_APPLE_OR_PESTER, # TODO: validate
+        Category.MULTIPLE_PHOTO:  _HAS_APPLE_OR_PESTER,
     },
     SLOWPOKE: {
         Category.NORMAL_PHOTO:    _NO_ITEMS,
@@ -488,7 +488,7 @@ LOCATION_RULES = {
     DITTO: {
         Category.NORMAL_PHOTO:    _HAS_PESTER,
         Category.WONDERFUL_PHOTO: _HAS_PESTER,
-        Category.MULTIPLE_PHOTO:  _HAS_PESTER, # TODO: validate
+        Category.MULTIPLE_PHOTO:  _HAS_PESTER,
     },
     ARTICUNO: {
         Category.NORMAL_PHOTO:    _HAS_FLUTE,
@@ -529,7 +529,7 @@ LOCATION_RULES = {
     SQUIRTLE: {
         Category.NORMAL_PHOTO:    _NO_ITEMS,
         Category.WONDERFUL_PHOTO: _HAS_PESTER,
-        Category.MULTIPLE_PHOTO:  _HAS_PESTER | _SEPARATE_SCORING, # TODO: validate
+        Category.MULTIPLE_PHOTO:  _HAS_PESTER,
     },
     SANDSHREW: {
         Category.NORMAL_PHOTO:    _HAS_PESTER,
@@ -553,7 +553,7 @@ LOCATION_RULES = {
     GRAVELER: {
         Category.NORMAL_PHOTO:    _NO_ITEMS,
         Category.WONDERFUL_PHOTO: HasAny(PESTER_BALL, POKEFLUTE),
-        Category.MULTIPLE_PHOTO:  _HAS_FLUTE | _SEPARATE_SCORING, # TODO: validate
+        Category.MULTIPLE_PHOTO:  _HAS_FLUTE,
     },
     GOLDEEN: {
         Category.NORMAL_PHOTO:    _HAS_APPLE_OR_PESTER,
@@ -587,7 +587,7 @@ LOCATION_RULES = {
     course(MAGIKARP, LVL_VALLEY): {
         Category.NORMAL_PHOTO:    HasAny(POKEMON_FOOD, DASH_ENGINE, PESTER_BALL),
         Category.WONDERFUL_PHOTO: _HAS_APPLE_OR_PESTER,
-        Category.MULTIPLE_PHOTO:  _HAS_APPLE_OR_PESTER, # TODO: validate
+        Category.MULTIPLE_PHOTO:  _HAS_APPLE_OR_PESTER,
     },
     GRAVELERS_GROUP_DANCE: { Category.SPECIAL_POSE: _HAS_FLUTE },
     VALLEY_SIGN:           { Category.POKEMON_SIGN: Has(SIGN_DETECTOR) },
