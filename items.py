@@ -167,7 +167,7 @@ def build_item_pool(world: "PokemonSnapWorld") -> list[PokemonSnapItemData]:
         item_pool.extend([item_dictionary[WDFL_SCORING], item_dictionary[MULT_SCORING]] * count)
     elif world.options.scoring_bonuses == ScoringBonus.option_progressive:
         count = world.options.extra_scoring_bonus_items.value + 2
-        item_pool.extend([item_dictionary[PROG_SCORING]]*count)
+        item_pool.extend([item_dictionary[PROG_SCORING]] * count)
     
     ## Fill with one of each custom trash item, then one of each trash pokemon pic, then random pokemon pics
     trash_items = [item for item in _all_items if item.category is PokemonSnapItemCategory.TRASH_CUSTOM]
