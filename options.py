@@ -114,8 +114,8 @@ class MapFragments(Range):
     Determines the number of items required to unlock a course.
     
     Examples:
-    - If set to 2+, you will need that many "Beach: Map Fragment" items to unlock the Beach course.
     - If set to 1, finding the "Beach" item will unlock the Beach course.
+    - If set to 2+, you will need that many "Beach: Map Fragment" items to unlock the Beach course.
     """
     display_name = "Map Fragments"
     range_end = 6
