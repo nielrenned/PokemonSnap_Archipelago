@@ -244,11 +244,11 @@ LOCATION_RULES = {
         Category.NORMAL_PHOTO:    _HAS_PESTER,
         Category.WONDERFUL_PHOTO: _HAS_PESTER,
     },
-    # TODO: [SOFT] wdfl/mult: only requires 3 film
+    # TODO: [SOFT] wdfl/mult: only requires 2 film
     LAPRAS: {
         Category.NORMAL_PHOTO:    _NO_ITEMS,
-        Category.WONDERFUL_PHOTO: _NO_ITEMS & HasFilm(5), # TODO: validate
-        Category.MULTIPLE_PHOTO:  _NO_ITEMS & HasFilm(5), # TODO: validate
+        Category.WONDERFUL_PHOTO: _NO_ITEMS & HasFilm(5),
+        Category.MULTIPLE_PHOTO:  _NO_ITEMS & HasFilm(5),
     },
     EEVEE: {
         Category.NORMAL_PHOTO:    _NO_ITEMS,
@@ -288,8 +288,8 @@ LOCATION_RULES = {
     # TODO: [SOFT] mult: only requires 5 film
     DUGTRIO: {
         Category.NORMAL_PHOTO:    _NO_ITEMS & HasFilm(5),
-        Category.WONDERFUL_PHOTO: _NO_ITEMS & HasFilm(5), # TODO: validate
-        Category.MULTIPLE_PHOTO:  _NO_ITEMS & HasFilm(7), # TODO: validate
+        Category.WONDERFUL_PHOTO: _NO_ITEMS & HasFilm(5),
+        Category.MULTIPLE_PHOTO:  _NO_ITEMS & HasFilm(7),
     },
     MAGNEMITE: {
         Category.NORMAL_PHOTO:    _HAS_APPLE,
@@ -332,7 +332,7 @@ LOCATION_RULES = {
         Category.WONDERFUL_PHOTO: _NO_ITEMS,
     },
     # TODO: [SOFT]: only requires 3 film
-    PIKACHU_ON_A_BALL: { Category.SPECIAL_POSE: _NO_ITEMS & HasFilm(5) }, # TODO: validate
+    PIKACHU_ON_A_BALL: { Category.SPECIAL_POSE: _NO_ITEMS & HasFilm(5) },
     TUNNEL_SIGN:       { Category.POKEMON_SIGN: HasAll(SIGN_DETECTOR, POKEMON_FOOD, POKEFLUTE) },
     LVL_TUNNEL:        { Category.SECRET_EXIT: _HAS_APPLE_OR_PESTER },
 
@@ -569,7 +569,7 @@ LOCATION_RULES = {
     STARMIE: {
         Category.NORMAL_PHOTO:    _NO_ITEMS & HasFilm(5),
         Category.WONDERFUL_PHOTO: _NO_ITEMS & HasFilm(7),
-        Category.MULTIPLE_PHOTO:  _NO_ITEMS & HasFilm(9), # TODO: validate
+        Category.MULTIPLE_PHOTO:  _NO_ITEMS & HasFilm(9),
     },
     GYARADOS: {
         Category.NORMAL_PHOTO:    _HAS_PESTER,
