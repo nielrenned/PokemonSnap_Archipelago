@@ -30,16 +30,18 @@ See [Setup Instructions](docs/setup_en.md) for set up and [FAQ](docs/faq_en.md) 
 
 ### Unlocks
 * The six courses: Beach, Tunnel, Volcano, River, Cave, and Valley (start with a random one)
-* Apple
+  * Each course unlock can be split into up to six "map fragments"
+* Apple (a.k.a. Pokemon Food)
 * Pester Balls
 * Pokéflute
 * Dash Engine
 * Pokémon Sign Detector (custom AP item)
-* Film Capacity Upgrades (Start with 15 photos, each upgrade is +5)
+* Film Capacity Upgrades (Start, Upgrade Amount, and Max Film are all customizable)
+* "Good Technique" and "Multiple Pokemon" Scoring are optional unlocks
 
 ### Win Condition
-* Unlock the Rainbow Cloud course by finding Pokemon Sign Pictures or Pokemon Pictures (may be in others' worlds!)
-* Submit a picture of Mew (also requires the Pester Ball or Apple)
+* Unlock the Rainbow Cloud course by finding the required amount of Pokemon Sign Pictures or Pokemon Pictures (may be in others' worlds!)
+* Submit a picture of Mew (requires the Pester Ball or Apple)
 
 ## Guide
 
@@ -47,8 +49,9 @@ A decent guide to all the photos, poses, and signs can be [found here](https://s
 
 Need a hint? Categories have been set up to help:
  - `!hint Pokemon Pictures` and `!hint Sign Pictures` will give you hints specific to your goal condition (Default goal is Sign Pictures)
- - `!hint Courses` will tell you about your current courses and the next progression course
+ - `!hint Courses` or `!hint Fragments` will tell you about your current courses and the next progression course
  - `!hint Tools` will tell you about your current tools and your next progression tool
+ - `!hint Scoring` will tell you where your score upgrades can be found
 
 Stuck? Check out the [FAQ](docs/faq_en.md).
 
