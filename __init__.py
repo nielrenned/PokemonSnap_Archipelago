@@ -194,6 +194,9 @@ class PokemonSnapWorld(World):
         else:
             item_classification = ItemClassification.filler
 
+        if name == FILM_UPGRADE:
+            item_classification = ItemClassification.progression_skip_balancing
+
         return PokemonSnapItem(name, item_classification, data, self.player)
 
     def get_filler_item_name(self) -> str:
@@ -227,4 +230,5 @@ class PokemonSnapWorld(World):
             "goal_type", "signs_required", "pokemon_required", "scoring_bonuses",
             "photo_bonuses", "pokemon_signs", "secret_exits", "report_photo_count",
             "report_score_total", "rng_checks", "hard_checks",
-            "enable_left_bumper_to_start_stop", "camera_inversion")
+            "enable_left_bumper_to_start_stop", "camera_inversion",
+            "starting_film", "film_upgrade_amount", "maximum_film")

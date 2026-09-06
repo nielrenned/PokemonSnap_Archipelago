@@ -174,6 +174,31 @@ class ReportScoreAchievable(Rule["PokemonSnapWorld"], game="Pokemon Snap"):
             return score
 
 
+@dataclass()
+class HasFilm(Rule["PokemonSnapWorld"], game="Pokemon Snap"):
+    film_requirement: int
+
+    @override
+    def _instantiate(self, world: "PokemonSnapWorld") -> Rule.Resolved:
+        return self.Resolved(self.film_requirement,
+                             world.options.starting_film.value,
+                             world.options.film_upgrade_amount.value,
+                             world.options.maximum_film.value,
+                             player=world.player)
+
+    class Resolved(Rule.Resolved):
+        film_requirement: int
+        film_start: int
+        film_step: int
+        film_cap: int
+
+        @override
+        def _evaluate(self, state: CollectionState) -> bool:
+            upgrade_count = state.count(FILM_UPGRADE, self.player)
+            total_film = min(self.film_cap, self.film_start + upgrade_count * self.film_step)
+            return total_film >= self.film_requirement
+
+
 _CAN_REACH_ALL_POKEMON = [
     CanReachLocation(pokemon_name)
     for pokemon_name in ALL_INGAME_POKEMON
@@ -219,10 +244,11 @@ LOCATION_RULES = {
         Category.NORMAL_PHOTO:    _HAS_PESTER,
         Category.WONDERFUL_PHOTO: _HAS_PESTER,
     },
+    # TODO: [SOFT] wdfl/mult: only requires 2 film
     LAPRAS: {
         Category.NORMAL_PHOTO:    _NO_ITEMS,
-        Category.WONDERFUL_PHOTO: _NO_ITEMS,
-        Category.MULTIPLE_PHOTO:  _NO_ITEMS,
+        Category.WONDERFUL_PHOTO: _NO_ITEMS & HasFilm(5),
+        Category.MULTIPLE_PHOTO:  _NO_ITEMS & HasFilm(5),
     },
     EEVEE: {
         Category.NORMAL_PHOTO:    _NO_ITEMS,
@@ -258,10 +284,12 @@ LOCATION_RULES = {
         Category.NORMAL_PHOTO:    _NO_ITEMS,
         Category.WONDERFUL_PHOTO: _NO_ITEMS,
     },
+    # TODO: [SOFT] base/wdfl: only requires 4 film
+    # TODO: [SOFT] mult: only requires 5 film
     DUGTRIO: {
-        Category.NORMAL_PHOTO:    _NO_ITEMS,
-        Category.WONDERFUL_PHOTO: _NO_ITEMS,
-        Category.MULTIPLE_PHOTO:  _NO_ITEMS,
+        Category.NORMAL_PHOTO:    _NO_ITEMS & HasFilm(5),
+        Category.WONDERFUL_PHOTO: _NO_ITEMS & HasFilm(5),
+        Category.MULTIPLE_PHOTO:  _NO_ITEMS & HasFilm(7),
     },
     MAGNEMITE: {
         Category.NORMAL_PHOTO:    _HAS_APPLE,
@@ -303,7 +331,8 @@ LOCATION_RULES = {
         Category.NORMAL_PHOTO:    _NO_ITEMS,
         Category.WONDERFUL_PHOTO: _NO_ITEMS,
     },
-    PIKACHU_ON_A_BALL: { Category.SPECIAL_POSE: _NO_ITEMS },
+    # TODO: [SOFT]: only requires 3 film
+    PIKACHU_ON_A_BALL: { Category.SPECIAL_POSE: _NO_ITEMS & HasFilm(5) },
     TUNNEL_SIGN:       { Category.POKEMON_SIGN: HasAll(SIGN_DETECTOR, POKEMON_FOOD, POKEFLUTE) },
     LVL_TUNNEL:        { Category.SECRET_EXIT: _HAS_APPLE_OR_PESTER },
 
@@ -421,7 +450,8 @@ LOCATION_RULES = {
         Category.NORMAL_PHOTO:    _NO_ITEMS,
         Category.WONDERFUL_PHOTO: _NO_ITEMS,
     },
-    SPEED_PIKACHU: { Category.SPECIAL_POSE: _NO_ITEMS },
+    # TODO: [SOFT]: only requires 2 film
+    SPEED_PIKACHU: { Category.SPECIAL_POSE: HasFilm(5) | _HAS_APPLE_OR_PESTER },
     RIVER_SIGN:    { Category.POKEMON_SIGN: HasAll(SIGN_DETECTOR, POKEFLUTE) },
     LVL_RIVER:     { Category.SECRET_EXIT: _HAS_PESTER },
 
@@ -440,13 +470,15 @@ LOCATION_RULES = {
         Category.NORMAL_PHOTO:    _HAS_APPLE_OR_PESTER,
         Category.WONDERFUL_PHOTO: _HAS_APPLE_OR_PESTER,
     },
+    # TODO: [SOFT] wdfl: only requires 2 film
     GRIMER: {
         Category.NORMAL_PHOTO:    _NO_ITEMS,
-        Category.WONDERFUL_PHOTO: _NO_ITEMS,
+        Category.WONDERFUL_PHOTO: _NO_ITEMS & HasFilm(4),
     },
+    # TODO: [SOFT] wdfl: only requires 2 film
     MUK: {
-        Category.NORMAL_PHOTO:    _HAS_PESTER,
-        Category.WONDERFUL_PHOTO: _HAS_PESTER,
+        Category.NORMAL_PHOTO:    _HAS_PESTER & HasFilm(4),
+        Category.WONDERFUL_PHOTO: _HAS_PESTER & HasFilm(4),
     },
     JYNX: {
         Category.NORMAL_PHOTO:    _NO_ITEMS,
@@ -532,10 +564,12 @@ LOCATION_RULES = {
         Category.WONDERFUL_PHOTO: _NO_ITEMS,
         Category.MULTIPLE_PHOTO:  _NO_ITEMS,
     },
+    # TODO: [SOFT] base/wdfl: only requires 2 film
+    # TODO: [SOFT] mult: only requires 3 film
     STARMIE: {
-        Category.NORMAL_PHOTO:    _NO_ITEMS,
-        Category.WONDERFUL_PHOTO: _NO_ITEMS,
-        Category.MULTIPLE_PHOTO:  _NO_ITEMS,
+        Category.NORMAL_PHOTO:    _NO_ITEMS & HasFilm(5),
+        Category.WONDERFUL_PHOTO: _NO_ITEMS & HasFilm(7),
+        Category.MULTIPLE_PHOTO:  _NO_ITEMS & HasFilm(9),
     },
     GYARADOS: {
         Category.NORMAL_PHOTO:    _HAS_PESTER,

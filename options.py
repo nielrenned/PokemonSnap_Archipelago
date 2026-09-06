@@ -39,6 +39,48 @@ class PokemonRequired(Range):
     default = DEFAULT_POKEMON_REQUIREMENT
 
 
+
+class FilmCapacityStart(Range):
+    """
+    Sets the amount of film available at the start of the game.
+    """
+    display_name = "Starting Film"
+    range_start = 1
+    range_end = 60
+    default = 15
+
+
+class FilmCapacityStep(Range):
+    """
+    Sets the amount of film granted by each "Film Capacity Upgrade" item.
+    """
+    display_name = "Film Upgrade Amount"
+    range_start = 1
+    range_end = 60
+    default = 5
+
+
+class FilmCapacityCap(Range):
+    """
+    Sets the maximum amount of film available.
+    Making this number very small will increase the length of your playthrough.
+    """
+    display_name = "Maximum Film"
+    range_start = 10
+    range_end = 60
+    default = 60
+
+
+class ExtraFilmUpgrades(Range):
+    """
+    Adds the specified number of extra "Film Capacity Upgrade" items to the item pool.
+    """
+    display_name = "Extra Film Capacity Upgrades"
+    range_start = 0
+    range_end = 60
+    default = 1
+
+
 class ScoringBonus(Choice):
     """
     Determines how the photo score bonuses, "Good Technique" and "Multiple PKMN", are unlocked.
@@ -65,6 +107,7 @@ class ExtraScoringBonusItems(Range):
     range_start = 0
     range_end = 2
     default = 0
+
 
 class PhotoBonusChecks(Choice):
     """
@@ -179,6 +222,10 @@ class PokemonSnapOption(PerGameCommonOptions):
 
     scoring_bonuses: ScoringBonus
     extra_scoring_bonus_items: ExtraScoringBonusItems
+    starting_film: FilmCapacityStart
+    maximum_film:  FilmCapacityCap
+    film_upgrade_amount: FilmCapacityStep
+    extra_film_upgrades: ExtraFilmUpgrades
 
     photo_bonuses: PhotoBonusChecks
     special_poses: SpecialPoses
@@ -203,7 +250,11 @@ pokemon_snap_option_groups = [
     ]),
     OptionGroup("Items", [
         ScoringBonus,
-        ExtraScoringBonusItems
+        ExtraScoringBonusItems,
+        FilmCapacityStart,
+        FilmCapacityCap,
+        FilmCapacityStep,
+        ExtraFilmUpgrades,
     ]),
     OptionGroup("Checks - Categories", [
         PhotoBonusChecks,
