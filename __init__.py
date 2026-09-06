@@ -6,9 +6,10 @@ from BaseClasses import MultiWorld, Region, Entrance, Tutorial, ItemClassificati
 from NetUtils import MultiData
 from worlds.AutoWorld import World, WebWorld
 from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess, icon_paths
+from math import ceil
 from .constants import *
 from .items import PokemonSnapItem, PokemonSnapItemCategory, key_item_names, useful_item_names, \
-    _all_items, build_item_pool, PokemonSnapItemData
+    _all_items, build_item_pool, PokemonSnapItemData, item_dictionary
 from .locations import PokemonSnapLocation, PokemonSnapLocationCategory, location_tables, bonus, \
     RNG_LOCATIONS, HARD_LOCATIONS
 from .options import PokemonSnapOption, PhotoBonusChecks, pokemon_snap_option_groups
@@ -181,7 +182,18 @@ class PokemonSnapWorld(World):
 
     def create_items(self):
         item_pool = build_item_pool(self)
-        self.multiworld.itempool.extend(self.create_item(item.name) for item in item_pool)
+        self.multiworld.itempool.extend(self.create_item(item.name) for item in item_pool if item.name != FILM_UPGRADE)
+
+        # Separate step for film upgrades
+        # TODO: [SOFT]: change 15 to 10 for hard logic
+        film_upgrade_count = item_pool.count(item_dictionary[FILM_UPGRADE])
+        required_progressive = max(0, ceil((15 - self.options.starting_film) / self.options.film_upgrade_amount))
+        self.multiworld.itempool.extend(
+            PokemonSnapItem(FILM_UPGRADE, ItemClassification.progression_skip_balancing, self.item_name_to_id[FILM_UPGRADE], self.player)
+            for _ in range(required_progressive))
+        self.multiworld.itempool.extend(
+                    PokemonSnapItem(FILM_UPGRADE, ItemClassification.useful, self.item_name_to_id[FILM_UPGRADE], self.player)
+                    for _ in range(film_upgrade_count - required_progressive))
 
     def create_item(self, name: str) -> PokemonSnapItem:
         data = self.item_name_to_id[name]
@@ -193,9 +205,6 @@ class PokemonSnapWorld(World):
             item_classification = ItemClassification.useful
         else:
             item_classification = ItemClassification.filler
-
-        if name == FILM_UPGRADE:
-            item_classification = ItemClassification.progression_skip_balancing
 
         return PokemonSnapItem(name, item_classification, data, self.player)
 
