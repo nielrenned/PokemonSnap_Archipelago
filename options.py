@@ -81,27 +81,27 @@ class ExtraFilmUpgrades(Range):
     default = 1
 
 
-class ScoringBonus(Choice):
+class PhotoScoring(Choice):
     """
     Determines how the photo score bonuses, "Good Technique" and "Multiple PKMN", are unlocked.
-    - always_available (default): Photo score bonuses are avaiable from the start, like normal gameplay.
-    - progressive: Adds "Progressive Scoring" items that unlock "Good Technique" then "Multiple PKMN".
-    - separate: "Good Technique" and "Multiple PKMN" are separate unlocks, meaning you can get the bonus
-                for multiple pokemon *without* getting a "Good Technique" photo.
+    - vanilla: Photo score bonuses are available from the start. "Multiple PKMN" score requires "Good Technique."
+    - separate: Photo score bonuses are available from the start. "Multiple PKMN" can be scored *without* "Good Technique."
+    - progressive_unlocks: Adds "Progressive Scoring" items that unlock "Good Technique" then "Multiple PKMN."
+    - separate_unlocks: Adds items that unlock "Good Technique" and "Multiple PKMN" scoring separately.
     """
-    display_name = "Photo Score Bonuses"
-    option_always_available = 0
-    option_progressive      = 1
-    option_separate         = 2
+    display_name = "Photo Scoring"
+    option_vanilla             = 0
+    option_separate            = 1
+    option_progressive_unlocks = 2
+    option_separate_unlocks    = 3
 
 
-class ExtraScoringBonusItems(Range):
+class ExtraPhotoScoringItems(Range):
     """
     Adds the specified number of extra scoring bonus items to the pool, making it more likely
     to unlock "Good Technique" and "Multiple PKMN" bonuses earlier.
     
-    If `scoring_bonuses` is set to `always_available`, this does nothing. If `scoring_bonuses` is 
-    set to `separate`, extra items will be added for both "Good Technique" and "Multiple PKMN."
+    If `photo_scoring` is set to `vanilla` or `separate`, this does nothing.
     """
     display_name = "Extra 'Photo Score Bonus' Items"
     range_start = 0
@@ -234,8 +234,8 @@ class PokemonSnapOption(PerGameCommonOptions):
     signs_required: SignsRequired
     pokemon_required: PokemonRequired
 
-    scoring_bonuses: ScoringBonus
-    extra_scoring_bonus_items: ExtraScoringBonusItems
+    photo_scoring: PhotoScoring
+    extra_photo_scoring_items: ExtraPhotoScoringItems
     starting_film: FilmCapacityStart
     maximum_film:  FilmCapacityCap
     film_upgrade_amount: FilmCapacityStep
@@ -264,8 +264,8 @@ pokemon_snap_option_groups = [
         PokemonRequired,
     ]),
     OptionGroup("Items", [
-        ScoringBonus,
-        ExtraScoringBonusItems,
+        PhotoScoring,
+        ExtraPhotoScoringItems,
         FilmCapacityStart,
         FilmCapacityCap,
         FilmCapacityStep,

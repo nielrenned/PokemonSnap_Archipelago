@@ -11,7 +11,7 @@ from .constants import *
 from .locations import wonderful_id as wdfl_id, multiple_id as mult_id, special_pose_id, secret_exit_id, sign_id, bonus_id, oak_reward_id, OAK_REWARDS, POKEMON_TO_SLOTS
 from .update_pj64_config import safe_load_pj64_config
 from .items import item_dictionary, SIGN_PIC_NAMES, POKEMON_PIC_NAMES, fragment, unfragment
-from .options import ScoringBonus
+from .options import PhotoScoring
 from . import addresses as addr
 
 _code_to_name = {data.ps_code: name for name, data in item_dictionary.items()}
@@ -332,14 +332,14 @@ class PokemonSnapContext(CommonContext, PJ64Context):
             name = _code_to_name.get(net_item.item)
             if name is None:
                 continue
-            if name in addr.CAN_USE_BITS:
-                can_use_mask |= 1 << addr.CAN_USE_BITS[name]
+            if name in addr.CAN_USE_FLAGS:
+                can_use_mask |= addr.CAN_USE_FLAGS[name]
             elif name in addr.COURSE_IDS:
                 course_mask |= 1 << addr.COURSE_IDS[name]
             elif name in map(fragment, ALL_LEVELS):
                 map_fragments[name] += 1
                 if map_fragments[name] >= self.slot_data['map_fragments']:
-                    course_mask |= 1 << addr.COURSE_IDS[unfragment(name)]
+                    course_mask |= (1 << addr.COURSE_IDS[unfragment(name)])
             elif name == FILM_UPGRADE:
                 film = min(film + self.slot_data['film_upgrade_amount'], self.slot_data['maximum_film'])
             elif name in SIGN_PIC_NAMES:
@@ -360,17 +360,21 @@ class PokemonSnapContext(CommonContext, PJ64Context):
                 await pj64_write_memory(self, "u32", addr.DIALOG_REQUEST_FLAGS, [stored_request_flags | 1])
 
         if self.slot_data['enable_left_bumper_to_start_stop']:
-            can_use_mask |= (1 << addr.CAN_USE_BITS['L_TO_STOP'])
+            can_use_mask |= addr.CAN_USE_FLAGS[L_TO_STOP]
         
         # Check wonderful/multiple scoring unlocks
-        if self.slot_data['scoring_bonuses'] == ScoringBonus.option_always_available:
-            can_use_mask |= (1 << addr.CAN_USE_BITS[WDFL_SCORING]) | (1 << addr.CAN_USE_BITS[MULT_SCORING])
-        elif self.slot_data['scoring_bonuses'] == ScoringBonus.option_progressive:
-            if prog_scoring_count >= 1: can_use_mask |= (1 << addr.CAN_USE_BITS[WDFL_SCORING])
-            if prog_scoring_count >= 2: can_use_mask |= (1 << addr.CAN_USE_BITS[MULT_SCORING])
-        elif self.slot_data['scoring_bonuses'] == ScoringBonus.option_separate:
-            if WDFL_SCORING in self.items_received: can_use_mask |= (1 << addr.CAN_USE_BITS[WDFL_SCORING])
-            if MULT_SCORING in self.items_received: can_use_mask |= (1 << addr.CAN_USE_BITS[MULT_SCORING])
+        scoring_type = self.slot_data['photo_scoring']
+        if scoring_type == PhotoScoring.option_vanilla:
+            can_use_mask |= addr.CAN_USE_FLAGS[WDFL_SCORING] | addr.CAN_USE_FLAGS[MULT_SCORING]
+        elif scoring_type == PhotoScoring.option_separate:
+            can_use_mask |= addr.CAN_USE_FLAGS[WDFL_SCORING] | addr.CAN_USE_FLAGS[MULT_SCORING] | addr.CAN_USE_FLAGS[MULT_WO_WDFL]
+        elif self.slot_data['photo_scoring'] == PhotoScoring.option_progressive_unlocks:
+            if prog_scoring_count >= 1: can_use_mask |= addr.CAN_USE_FLAGS[WDFL_SCORING]
+            if prog_scoring_count >= 2: can_use_mask |= addr.CAN_USE_FLAGS[MULT_SCORING]
+        elif self.slot_data['photo_scoring'] == PhotoScoring.option_separate_unlocks:
+            can_use_mask |= addr.CAN_USE_FLAGS[MULT_WO_WDFL]
+            if WDFL_SCORING in self.items_received: can_use_mask |= addr.CAN_USE_FLAGS[WDFL_SCORING]
+            if MULT_SCORING in self.items_received: can_use_mask |= addr.CAN_USE_FLAGS[MULT_SCORING]
 
         await pj64_write_memory(self, "u32", addr.CAN_USE_MASK, [can_use_mask])
         await pj64_write_memory(self, "u32", addr.COURSE_UNLOCK_MASK, [course_mask])
