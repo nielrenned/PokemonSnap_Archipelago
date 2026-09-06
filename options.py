@@ -39,16 +39,11 @@ class PokemonRequired(Range):
     default = DEFAULT_POKEMON_REQUIREMENT
 
 
-class ScoringBonus(Choice):
-    """
-    """
-    display_name = "Photo Score Bonuses"
-    option_always_available = 0
-    option_progressive      = 1
-    option_separate         = 2
-
 
 class FilmCapacityStart(Range):
+    """
+    Sets the amount of film available at the start of the game.
+    """
     display_name = "Starting Film"
     range_start = 1
     range_end = 60
@@ -56,6 +51,9 @@ class FilmCapacityStart(Range):
 
 
 class FilmCapacityStep(Range):
+    """
+    Sets the amount of film granted by each "Film Capacity Upgrade" item.
+    """
     display_name = "Film Upgrade Amount"
     range_start = 1
     range_end = 60
@@ -63,17 +61,52 @@ class FilmCapacityStep(Range):
 
 
 class FilmCapacityCap(Range):
+    """
+    Sets the maximum amount of film available.
+    Making this number very small will increase the length of your playthrough.
+    """
     display_name = "Maximum Film"
-    range_start = 5
+    range_start = 10
     range_end = 60
     default = 60
 
 
 class ExtraFilmUpgrades(Range):
-    display_name = "% Extra Film Upgrades"
+    """
+    Adds the specified number of extra "Film Capacity Upgrade" items to the item pool.
+    """
+    display_name = "Extra Film Capacity Upgrades"
     range_start = 0
     range_end = 60
     default = 1
+
+
+class ScoringBonus(Choice):
+    """
+    Determines how the photo score bonuses, "Good Technique" and "Multiple PKMN", are unlocked.
+    - always_available (default): Photo score bonuses are avaiable from the start, like normal gameplay.
+    - progressive: Adds "Progressive Scoring" items that unlock "Good Technique" then "Multiple PKMN".
+    - separate: "Good Technique" and "Multiple PKMN" are separate unlocks, meaning you can get the bonus
+                for multiple pokemon *without* getting a "Good Technique" photo.
+    """
+    display_name = "Photo Score Bonuses"
+    option_always_available = 0
+    option_progressive      = 1
+    option_separate         = 2
+
+
+class ExtraScoringBonusItems(Range):
+    """
+    Adds the specified number of extra scoring bonus items to the pool, making it more likely
+    to unlock "Good Technique" and "Multiple PKMN" bonuses earlier.
+    
+    If `scoring_bonuses` is set to `always_available`, this does nothing. If `scoring_bonuses` is 
+    set to `separate`, extra items will be added for both "Good Technique" and "Multiple PKMN."
+    """
+    display_name = "Extra 'Photo Score Bonus' Items"
+    range_start = 0
+    range_end = 2
+    default = 0
 
 
 class MapFragments(Range):
@@ -81,12 +114,12 @@ class MapFragments(Range):
     Determines the number of items required to unlock a course.
     
     Examples:
-    - If set to 1, finding the "Beach" item will unlock the Beach course.
     - If set to 2+, you will need that many "Beach: Map Fragment" items to unlock the Beach course.
+    - If set to 1, finding the "Beach" item will unlock the Beach course.
     """
     display_name = "Map Fragments"
-    range_start = 1
     range_end = 6
+    range_start = 1
     default = 1
 
 
@@ -202,6 +235,7 @@ class PokemonSnapOption(PerGameCommonOptions):
     pokemon_required: PokemonRequired
 
     scoring_bonuses: ScoringBonus
+    extra_scoring_bonus_items: ExtraScoringBonusItems
     starting_film: FilmCapacityStart
     maximum_film:  FilmCapacityCap
     film_upgrade_amount: FilmCapacityStep
@@ -231,6 +265,7 @@ pokemon_snap_option_groups = [
     ]),
     OptionGroup("Items", [
         ScoringBonus,
+        ExtraScoringBonusItems,
         FilmCapacityStart,
         FilmCapacityCap,
         FilmCapacityStep,

@@ -32,7 +32,7 @@ POKEFLUTE     = "PokeFlute"
 DASH_ENGINE   = "Dash Engine"
 SIGN_DETECTOR = "Pokemon Sign Detector"
 WDFL_SCORING  = "Good Technique Scoring"
-MULT_SCORING  = "Multiple PKMN Scoring"
+MULT_SCORING  = "Multiple Pokemon Scoring"
 PROG_SCORING  = "Progressive Scoring"
 
 VICTORY_ITEM_NAME = "A Picture of the Rare Pokémon Mew"
