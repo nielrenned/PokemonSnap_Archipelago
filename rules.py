@@ -7,7 +7,7 @@ from .locations import wonderful, multiple, secret_exit, course, bonus, species_
     PokemonSnapLocationCategory as Category, RNG_LOCATIONS, HARD_LOCATIONS, POKEMON_IN_MULTIPLE_LEVELS
 from .constants import *
 from .items import PokemonSnapItemCategory as ItemCategory, fragment
-from .options import GoalType, ScoringBonus, IncludeRNGChecks
+from .options import GoalType, PhotoScoring, IncludeRNGChecks
 if TYPE_CHECKING:
     from . import PokemonSnapWorld
 
@@ -17,7 +17,7 @@ _HAS_APPLE  = Has(POKEMON_FOOD)
 _HAS_FLUTE  = Has(POKEFLUTE)
 _HAS_APPLE_OR_PESTER = HasAny(POKEMON_FOOD, PESTER_BALL)
 
-_SEPARATE_SCORING = OptionFilter(ScoringBonus, ScoringBonus.option_separate)
+_SEPARATE_SCORING = OptionFilter(PhotoScoring, [PhotoScoring.option_separate, PhotoScoring.option_separate_unlocks], operator="in")
 _RNG_LOCATIONS_ON = OptionFilter(IncludeRNGChecks, IncludeRNGChecks.option_true)
 
 REPORT_EXCLUSIONS = RNG_LOCATIONS + HARD_LOCATIONS
@@ -50,17 +50,17 @@ def set_location_rule(world: "PokemonSnapWorld", name: str, category: Category, 
         pass
 
 def wonderful_requirement(world: "PokemonSnapWorld"):
-    if world.options.scoring_bonuses == ScoringBonus.option_progressive:
+    if world.options.photo_scoring == PhotoScoring.option_progressive_unlocks:
         return Has(PROG_SCORING, 1)
-    elif world.options.scoring_bonuses == ScoringBonus.option_separate:
+    elif world.options.photo_scoring == PhotoScoring.option_separate_unlocks:
         return Has(WDFL_SCORING)
     
     return _NO_ITEMS
 
 def multiple_requirement(world: "PokemonSnapWorld"):
-    if world.options.scoring_bonuses == ScoringBonus.option_progressive:
+    if world.options.photo_scoring == PhotoScoring.option_progressive_unlocks:
         return Has(PROG_SCORING, 2)
-    elif world.options.scoring_bonuses == ScoringBonus.option_separate:
+    elif world.options.photo_scoring == PhotoScoring.option_separate_unlocks:
         return Has(MULT_SCORING)
 
     return _NO_ITEMS

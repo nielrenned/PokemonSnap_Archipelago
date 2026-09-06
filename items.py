@@ -3,7 +3,7 @@ from enum import StrEnum
 from math import ceil
 from typing import NamedTuple
 from .constants import *
-from .options import ScoringBonus
+from .options import PhotoScoring
 
 from BaseClasses import Item
 
@@ -14,7 +14,7 @@ if typing.TYPE_CHECKING:
 class PokemonSnapItemCategory(StrEnum):
     VICTORY = "Victory"
     TOOL = "Tools"
-    SCORING_BONUS = "Score"
+    PHOTO_SCORING = "Scoring"
     AREA = "Courses"
     MAP_FRAGMENT = "Fragments"
     MISC = "Miscellaneous"
@@ -98,9 +98,9 @@ _all_items = [PokemonSnapItemData(row[0], row[1], row[2]) for row in [
     (DASH_ENGINE,   1003, PokemonSnapItemCategory.TOOL),
     (SIGN_DETECTOR, 1004, PokemonSnapItemCategory.TOOL),
 
-    (WDFL_SCORING,  1500, PokemonSnapItemCategory.SCORING_BONUS),
-    (MULT_SCORING,  1501, PokemonSnapItemCategory.SCORING_BONUS),
-    (PROG_SCORING,  1502, PokemonSnapItemCategory.SCORING_BONUS),
+    (WDFL_SCORING,  1500, PokemonSnapItemCategory.PHOTO_SCORING),
+    (MULT_SCORING,  1501, PokemonSnapItemCategory.PHOTO_SCORING),
+    (PROG_SCORING,  1502, PokemonSnapItemCategory.PHOTO_SCORING),
 
     (LVL_BEACH,   2000, PokemonSnapItemCategory.AREA),
     (LVL_TUNNEL,  2001, PokemonSnapItemCategory.AREA),
@@ -162,11 +162,11 @@ def build_item_pool(world: "PokemonSnapWorld") -> list[PokemonSnapItemData]:
     if world.options.start_with_dash_engine: item_pool.remove(item_dictionary[DASH_ENGINE])
     if not world.options.pokemon_signs:      item_pool.remove(item_dictionary[SIGN_DETECTOR])
 
-    if world.options.scoring_bonuses == ScoringBonus.option_separate:
-        count = world.options.extra_scoring_bonus_items.value + 1
+    if world.options.photo_scoring == PhotoScoring.option_separate_unlocks:
+        count = world.options.extra_photo_scoring_items.value + 1
         item_pool.extend([item_dictionary[WDFL_SCORING], item_dictionary[MULT_SCORING]] * count)
-    elif world.options.scoring_bonuses == ScoringBonus.option_progressive:
-        count = world.options.extra_scoring_bonus_items.value + 2
+    elif world.options.photo_scoring == PhotoScoring.option_progressive_unlocks:
+        count = world.options.extra_photo_scoring_items.value + 2
         item_pool.extend([item_dictionary[PROG_SCORING]] * count)
     
     ## Fill with one of each custom trash item, then one of each trash pokemon pic, then random pokemon pics

@@ -66,10 +66,13 @@ CAN_USE_BITS = {
     POKEFLUTE:     2,
     DASH_ENGINE:   3,
     SIGN_DETECTOR: 4,
-    "L_TO_STOP":   5,
+    L_TO_STOP:     5,
     WDFL_SCORING:  6,
     MULT_SCORING:  7,
+    MULT_WO_WDFL:  8,
 }
+
+CAN_USE_FLAGS = {name: (1 << CAN_USE_BITS[name]) for name in CAN_USE_BITS}
 
 # Item name -> bit in gCourseUnlockMask.
 COURSE_IDS = {

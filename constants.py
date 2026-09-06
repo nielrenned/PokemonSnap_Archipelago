@@ -35,6 +35,9 @@ WDFL_SCORING  = "Good Technique Scoring"
 MULT_SCORING  = "Multiple Pokemon Scoring"
 PROG_SCORING  = "Progressive Scoring"
 
+L_TO_STOP     = "Press L to Stop"
+MULT_WO_WDFL  = "Multiple without Wonderful"
+
 VICTORY_ITEM_NAME = "A Picture of the Rare Pokémon Mew"
 VICTORY_ITEM_ID = 10000
 
