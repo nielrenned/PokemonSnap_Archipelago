@@ -59,7 +59,7 @@ class ExtraScoringBonusItems(Range):
     to unlock "Good Technique" and "Multiple PKMN" bonuses earlier.
     
     If `scoring_bonuses` is set to `always_available`, this does nothing. If `scoring_bonuses` is 
-    set to `separate`, extra items will be added for "Good Technique" and "Multiple PKMN."
+    set to `separate`, extra items will be added for both "Good Technique" and "Multiple PKMN."
     """
     display_name = "Extra 'Photo Score Bonus' Items"
     range_start = 0
