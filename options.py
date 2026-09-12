@@ -123,6 +123,13 @@ class MapFragments(Range):
     default = 1
 
 
+class UnlockItemsPerCourse(Toggle):
+    """
+    Unlock the Apple, Pester Ball, and PokeFlute for each level separately, rather than every level at once.
+    """
+    display_name = "Per-Course Item Unlocks"
+
+
 class PhotoBonusChecks(Choice):
     """
     Determines which photo bonuses to include as checks.
@@ -209,11 +216,17 @@ class StartWithDashEngine(Toggle):
     display_name = "Start with Dash Engine"
 
 
-class PressLeftBumperToToggleZeroOne(Toggle):
+class PressLToStop(Choice):
     """
     Adds the ability to start/stop the Zero-One by pressing L.
     """
     display_name = "Press L to start/stop"
+
+    option_start_with   = 0
+    option_in_item_pool = 1
+    option_disabled     = 2
+
+    default = 2
 
 
 class CameraInversion(Choice):
@@ -241,6 +254,7 @@ class PokemonSnapOption(PerGameCommonOptions):
     film_upgrade_amount: FilmCapacityStep
     extra_film_upgrades: ExtraFilmUpgrades
     map_fragments: MapFragments
+    per_course_items: UnlockItemsPerCourse
 
     photo_bonuses: PhotoBonusChecks
     special_poses: SpecialPoses
@@ -253,7 +267,7 @@ class PokemonSnapOption(PerGameCommonOptions):
     hard_checks: IncludeHardChecks
 
     start_with_dash_engine: StartWithDashEngine
-    enable_left_bumper_to_start_stop: PressLeftBumperToToggleZeroOne
+    left_bumper_to_start_stop: PressLToStop
     camera_inversion: CameraInversion
     start_inventory_from_pool: StartInventoryPool
 
@@ -271,6 +285,7 @@ pokemon_snap_option_groups = [
         FilmCapacityStep,
         ExtraFilmUpgrades,
         MapFragments,
+        UnlockItemsPerCourse,
     ]),
     OptionGroup("Checks - Categories", [
         PhotoBonusChecks,
@@ -286,7 +301,7 @@ pokemon_snap_option_groups = [
 	]),
     OptionGroup("Quality Of Life", [
 		StartWithDashEngine,
-        PressLeftBumperToToggleZeroOne,
+        PressLToStop,
         CameraInversion,
 	]),
 ]

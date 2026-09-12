@@ -11,7 +11,7 @@ from .constants import *
 from .locations import wonderful_id as wdfl_id, multiple_id as mult_id, special_pose_id, secret_exit_id, sign_id, bonus_id, oak_reward_id, OAK_REWARDS, POKEMON_TO_SLOTS
 from .update_pj64_config import safe_load_pj64_config
 from .items import item_dictionary, SIGN_PIC_NAMES, POKEMON_PIC_NAMES, fragment, unfragment
-from .options import PhotoScoring
+from .options import PhotoScoring, PressLToStop
 from . import addresses as addr
 
 _code_to_name = {data.ps_code: name for name, data in item_dictionary.items()}
@@ -317,6 +317,7 @@ class PokemonSnapContext(CommonContext, PJ64Context):
         await pj64_write_memory(self, "u32", addr.COURSE_OVERRIDE, [0])
 
         can_use_mask = 0
+        can_use_per_course_mask = [0] * 7
         course_mask = 0
         film = self.slot_data['starting_film']
         sign_pic_count = 0
@@ -334,9 +335,12 @@ class PokemonSnapContext(CommonContext, PJ64Context):
                 continue
             if name in addr.CAN_USE_FLAGS:
                 can_use_mask |= addr.CAN_USE_FLAGS[name]
+            elif name in addr.CAN_USE_PER_COURSE_FLAGS:
+                i, flag = addr.CAN_USE_PER_COURSE_FLAGS[name]
+                can_use_per_course_mask[i] |= flag
             elif name in addr.COURSE_IDS:
                 course_mask |= 1 << addr.COURSE_IDS[name]
-            elif name in map(fragment, ALL_LEVELS):
+            elif name in map(fragment, ALL_MAIN_LEVELS):
                 map_fragments[name] += 1
                 if map_fragments[name] >= self.slot_data['map_fragments']:
                     course_mask |= (1 << addr.COURSE_IDS[unfragment(name)])
@@ -359,7 +363,7 @@ class PokemonSnapContext(CommonContext, PJ64Context):
                 stored_request_flags = (await pj64_read_memory(self, "u32", addr.DIALOG_REQUEST_FLAGS, 4))[0]
                 await pj64_write_memory(self, "u32", addr.DIALOG_REQUEST_FLAGS, [stored_request_flags | 1])
 
-        if self.slot_data['enable_left_bumper_to_start_stop']:
+        if self.slot_data['left_bumper_to_start_stop'] == PressLToStop.option_start_with or L_TO_STOP in self.items_received:
             can_use_mask |= addr.CAN_USE_FLAGS[L_TO_STOP]
         
         # Check wonderful/multiple scoring unlocks
@@ -377,6 +381,7 @@ class PokemonSnapContext(CommonContext, PJ64Context):
             if MULT_SCORING in self.items_received: can_use_mask |= addr.CAN_USE_FLAGS[MULT_SCORING]
 
         await pj64_write_memory(self, "u32", addr.CAN_USE_MASK, [can_use_mask])
+        await pj64_write_memory(self, "u32", addr.CAN_USE_PER_COURSE_MASK, can_use_per_course_mask)
         await pj64_write_memory(self, "u32", addr.COURSE_UNLOCK_MASK, [course_mask])
         await pj64_write_memory(self, "u32", addr.MAX_FILM, [film])
         await pj64_write_memory(self, "u32", addr.CAMERA_INVERSION, [self.slot_data['camera_inversion'] | 0x02]) # 0x02 is the "performed write" flag

@@ -1,9 +1,10 @@
 import typing
 from enum import StrEnum
 from math import ceil
+from itertools import product
 from typing import NamedTuple
 from .constants import *
-from .options import PhotoScoring
+from .options import PhotoScoring, PressLToStop
 
 from BaseClasses import Item
 
@@ -42,14 +43,20 @@ unfragment = lambda s: s[:-len(': Map Fragment')]
 
 base_key_item_names = {
     VICTORY_ITEM_NAME,
+
     LVL_BEACH, LVL_TUNNEL, LVL_VOLCANO, LVL_RIVER, LVL_CAVE, LVL_VALLEY, LVL_CLOUD,
     *map(fragment, [LVL_BEACH, LVL_TUNNEL, LVL_VOLCANO, LVL_RIVER, LVL_CAVE, LVL_VALLEY, LVL_CLOUD]),
+
     POKEMON_FOOD, PESTER_BALL, POKEFLUTE, DASH_ENGINE, SIGN_DETECTOR,
+    *(course(POKEMON_FOOD, c) for c in ALL_LEVELS),
+    *(course(PESTER_BALL, c)  for c in ALL_LEVELS),
+    *(course(POKEFLUTE, c)    for c in ALL_LEVELS),
+
     PROG_SCORING, WDFL_SCORING, MULT_SCORING
 }
 
 useful_item_names = {
-    FILM_UPGRADE
+    FILM_UPGRADE, L_TO_STOP
 }
 
 pokemon_pics = [
@@ -97,6 +104,11 @@ _all_items = [PokemonSnapItemData(row[0], row[1], row[2]) for row in [
     (POKEFLUTE,     1002, PokemonSnapItemCategory.TOOL),
     (DASH_ENGINE,   1003, PokemonSnapItemCategory.TOOL),
     (SIGN_DETECTOR, 1004, PokemonSnapItemCategory.TOOL),
+    (L_TO_STOP,     1005, PokemonSnapItemCategory.TOOL),
+
+    *((course(POKEMON_FOOD, c), 1000 + 10*(i+1), PokemonSnapItemCategory.TOOL) for i, c in enumerate(ALL_LEVELS)),
+    *((course(PESTER_BALL,  c), 1001 + 10*(i+1), PokemonSnapItemCategory.TOOL) for i, c in enumerate(ALL_LEVELS)),
+    *((course(POKEFLUTE,    c), 1002 + 10*(i+1), PokemonSnapItemCategory.TOOL) for i, c in enumerate(ALL_LEVELS)),
 
     (WDFL_SCORING,  1500, PokemonSnapItemCategory.PHOTO_SCORING),
     (MULT_SCORING,  1501, PokemonSnapItemCategory.PHOTO_SCORING),
@@ -141,9 +153,14 @@ def build_item_pool(world: "PokemonSnapWorld") -> list[PokemonSnapItemData]:
         return len(world.multiworld.get_unfilled_locations(world.player)) - len(item_pool)
 
     ## Add all the required items
-    item_pool.extend(item for item in _all_items if item.category is PokemonSnapItemCategory.TOOL)
+    item_pool.extend(item for item in _all_items if item.name in [DASH_ENGINE, SIGN_DETECTOR, L_TO_STOP])
     item_pool.extend(item for item in _all_items if item.category is PokemonSnapItemCategory.SIGN_PIC)
     item_pool.extend(pokemon_pics)
+
+    if world.options.per_course_items:
+        item_pool.extend(item_dictionary[course(name, c)] for name, c in product([POKEMON_FOOD, PESTER_BALL, POKEFLUTE], ALL_LEVELS))
+    else:
+        item_pool.extend(item for item in _all_items if item.name in [POKEMON_FOOD, PESTER_BALL, POKEFLUTE])
 
     if world.options.map_fragments.value == 1:
         item_pool.extend(item for item in _all_items if item.category is PokemonSnapItemCategory.AREA and item.name != world.start_area.name)
@@ -161,6 +178,8 @@ def build_item_pool(world: "PokemonSnapWorld") -> list[PokemonSnapItemData]:
     # Remove items depending on options
     if world.options.start_with_dash_engine: item_pool.remove(item_dictionary[DASH_ENGINE])
     if not world.options.pokemon_signs:      item_pool.remove(item_dictionary[SIGN_DETECTOR])
+    if world.options.left_bumper_to_start_stop != PressLToStop.option_in_item_pool:
+        item_pool.remove(item_dictionary[L_TO_STOP])
 
     if world.options.photo_scoring == PhotoScoring.option_separate_unlocks:
         count = world.options.extra_photo_scoring_items.value + 1
