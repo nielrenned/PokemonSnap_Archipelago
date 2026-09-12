@@ -325,7 +325,7 @@ class PokemonSnapContext(CommonContext, PJ64Context):
         prog_scoring_count = 0
         map_fragments = defaultdict(int)
         for net_item in self.items_received:
-            if not self.finished_game and net_item.item == VICTORY_ITEM_ID:
+            if not self.finished_game and net_item.item == VI6CTORY_ITEM_ID:
                 await self.send_msgs([{"cmd": "StatusUpdate", "status": ClientStatus.CLIENT_GOAL}])
                 self.finished_game = True
                 logger.info("Mew photographed - goal complete!")
