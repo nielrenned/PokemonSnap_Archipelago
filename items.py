@@ -4,7 +4,7 @@ from math import ceil
 from itertools import product
 from typing import NamedTuple
 from .constants import *
-from .options import PhotoScoring, PressLToStop, GoalItemNamingScheme, FillerItemNamingScheme, AppleNamingScheme
+from .options import GoalType, PhotoScoring, PressLToStop, GoalItemNamingScheme, FillerItemNamingScheme, AppleNamingScheme
 
 from BaseClasses import Item
 
@@ -64,14 +64,14 @@ useful_item_names = {
 pokemon_pics = [
     PokemonSnapItemData(f"{POKEMON_PIC_NAME}: {name}", 5000 + i, PokemonSnapItemCategory.POKEMON_PIC)
     for i, name in enumerate(ALL_INGAME_POKEMON)
-] + [PokemonSnapItemData(POKEMON_PIC_NAME, 5500, PokemonSnapItemCategory.POKEMON_PIC)]
-POKEMON_PIC_NAMES = {item.name for item in pokemon_pics}
+]
+POKEMON_PIC_NAMES = {item.name for item in pokemon_pics} | {POKEMON_PIC_NAME}
 
 sign_pics = [
     PokemonSnapItemData(f"{SIGN_PIC_NAME}: {name}", 6000 + i, PokemonSnapItemCategory.SIGN_PIC)
     for i, name in enumerate(ALL_SIGNS)
-] + [PokemonSnapItemData(SIGN_PIC_NAME, 6500, PokemonSnapItemCategory.SIGN_PIC)]
-SIGN_PIC_NAMES = {item.name for item in sign_pics}
+]
+SIGN_PIC_NAMES = {item.name for item in sign_pics} | {SIGN_PIC_NAME}
 
 def key_item_names(world: "PokemonSnapWorld") -> set:
     key_item_names_list = set(base_key_item_names) # Make a copy so we don't break other worlds
@@ -100,6 +100,9 @@ trash_pokemon_pics = {
 
 _all_items = [PokemonSnapItemData(row[0], row[1], row[2]) for row in [
     (VICTORY_ITEM_NAME, VICTORY_ITEM_ID, PokemonSnapItemCategory.VICTORY),
+
+    (POKEMON_PIC_NAME, 5500, PokemonSnapItemCategory.POKEMON_PIC),
+    (SIGN_PIC_NAME,    6500, PokemonSnapItemCategory.SIGN_PIC),
 
     (POKEMON_FOOD,  1000, PokemonSnapItemCategory.TOOL),
     (PESTER_BALL,   1001, PokemonSnapItemCategory.TOOL),
@@ -160,12 +163,24 @@ def build_item_pool(world: "PokemonSnapWorld") -> list[PokemonSnapItemData]:
 
     ## Add all the required items
     item_pool.extend(item for item in _all_items if item.name in [DASH_ENGINE, SIGN_DETECTOR, L_TO_STOP])
+
+    pokemon_pic_count = len(ALL_INGAME_POKEMON)
+    sign_pic_count = len(ALL_SIGNS)
+    if world.options.goal_type == GoalType.option_pokemon_pictures:
+        pokemon_pic_count += world.options.extra_pokemon_pictures.value
+    elif world.options.goal_type == GoalType.option_signs:
+        sign_pic_count += world.options.extra_sign_pictures.value
+
     if world.options.goal_item_names == GoalItemNamingScheme.option_specific:
-        item_pool.extend(item for item in pokemon_pics if item.name != POKEMON_PIC_NAME)
-        item_pool.extend(item for item in sign_pics    if item.name != SIGN_PIC_NAME)
+        extra_pokemon_pics = pokemon_pics[:]
+        extra_sign_pics = sign_pics[:]
+        world.random.shuffle(extra_pokemon_pics)
+        world.random.shuffle(extra_sign_pics)
+        item_pool.extend((pokemon_pics + extra_pokemon_pics)[:pokemon_pic_count])
+        item_pool.extend((sign_pics + extra_sign_pics)[:sign_pic_count])
     else:
-        item_pool.extend([item_dictionary[POKEMON_PIC_NAME]] * len(ALL_INGAME_POKEMON))
-        item_pool.extend([item_dictionary[SIGN_PIC_NAME]]    * len(ALL_SIGNS))
+        item_pool.extend([item_dictionary[POKEMON_PIC_NAME]] * pokemon_pic_count)
+        item_pool.extend([item_dictionary[SIGN_PIC_NAME]]    * sign_pic_count)
 
     pokemon_food_choice = APPLE if (world.options.pokemon_food_name == AppleNamingScheme.option_apples) else POKEMON_FOOD
     if world.options.per_course_items:
