@@ -66,7 +66,7 @@ class ExtraPokemonPictures(Range):
     display_name = "Extra Pokemon Pictures"
     default     = 0
     range_start = 0
-    range_end   = 63
+    range_end   = 21
 
 
 class GoalItemNamingScheme(Choice):
@@ -119,7 +119,7 @@ class ExtraFilmUpgrades(Range):
     """
     display_name = "Extra Film Capacity Upgrades"
     range_start = 0
-    range_end = 60
+    range_end = 20
     default = 1
 
 
