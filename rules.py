@@ -2,19 +2,24 @@ from typing import TYPE_CHECKING, override
 from dataclasses import dataclass
 
 from rule_builder.rules import Rule, True_, False_, And, Or, Has, HasGroup, CanReachLocation, CollectionState, OptionFilter
-from .future_rules import AtLeast
 from .locations import wonderful, multiple, secret_exit, course, bonus, species_data_tables, \
     PokemonSnapLocationCategory as Category, RNG_LOCATIONS, HARD_LOCATIONS, POKEMON_IN_MULTIPLE_LEVELS
 from .constants import *
 from .items import PokemonSnapItemCategory as ItemCategory, fragment, course as course_item
-from .options import GoalType, PhotoScoring, IncludeRNGChecks
+from .options import GoalType, PhotoScoring, IncludeRNGChecks, UseHardLogic
 if TYPE_CHECKING:
     from . import PokemonSnapWorld
+
+try:
+    from rule_builder.rules import AtLeast # Added in 0.6.8
+except ImportError:
+    from .future_rules import AtLeast
 
 _NO_ITEMS   = True_()
 
 _SEPARATE_SCORING = OptionFilter(PhotoScoring, [PhotoScoring.option_separate, PhotoScoring.option_separate_unlocks], operator="in")
 _RNG_LOCATIONS_ON = OptionFilter(IncludeRNGChecks, IncludeRNGChecks.option_true)
+_HARD_LOGIC_ON    = OptionFilter(UseHardLogic, UseHardLogic.option_true)
 
 REPORT_EXCLUSIONS = RNG_LOCATIONS + HARD_LOCATIONS
 
@@ -249,11 +254,10 @@ LOCATION_RULES = {
         Category.NORMAL_PHOTO:    has(PESTER_BALL, LVL_BEACH),
         Category.WONDERFUL_PHOTO: has(PESTER_BALL, LVL_BEACH),
     },
-    # TODO: [SOFT] wdfl/mult: only requires 2 film
     LAPRAS: {
         Category.NORMAL_PHOTO:    _NO_ITEMS,
-        Category.WONDERFUL_PHOTO: _NO_ITEMS & HasFilm(5),
-        Category.MULTIPLE_PHOTO:  _NO_ITEMS & HasFilm(5),
+        Category.WONDERFUL_PHOTO: HasFilm(5) | (HasFilm(2) & _HARD_LOGIC_ON),
+        Category.MULTIPLE_PHOTO:  HasFilm(5) | (HasFilm(2) & _HARD_LOGIC_ON),
     },
     EEVEE: {
         Category.NORMAL_PHOTO:    _NO_ITEMS,
@@ -279,22 +283,19 @@ LOCATION_RULES = {
 
 
     # Tunnel
-    # TODO: [SOFT] mult: Technically possible without anything (difficult)
     KAKUNA: {
         Category.NORMAL_PHOTO:    _NO_ITEMS,
         Category.WONDERFUL_PHOTO: _NO_ITEMS,
-        Category.MULTIPLE_PHOTO:  (has(POKEMON_FOOD, LVL_TUNNEL) | has(PESTER_BALL, LVL_TUNNEL) | Has(DASH_ENGINE)) | _SEPARATE_SCORING,
+        Category.MULTIPLE_PHOTO:  (has(POKEMON_FOOD, LVL_TUNNEL) | has(PESTER_BALL, LVL_TUNNEL) | Has(DASH_ENGINE)) | _SEPARATE_SCORING | _HARD_LOGIC_ON,
     },
     DIGLETT: {
         Category.NORMAL_PHOTO:    _NO_ITEMS,
         Category.WONDERFUL_PHOTO: _NO_ITEMS,
     },
-    # TODO: [SOFT] base/wdfl: only requires 4 film
-    # TODO: [SOFT] mult: only requires 5 film
     DUGTRIO: {
-        Category.NORMAL_PHOTO:    _NO_ITEMS & HasFilm(5),
-        Category.WONDERFUL_PHOTO: _NO_ITEMS & HasFilm(5),
-        Category.MULTIPLE_PHOTO:  _NO_ITEMS & HasFilm(7),
+        Category.NORMAL_PHOTO:    HasFilm(5) | (HasFilm(4) & _HARD_LOGIC_ON),
+        Category.WONDERFUL_PHOTO: HasFilm(5) | (HasFilm(4) & _HARD_LOGIC_ON),
+        Category.MULTIPLE_PHOTO:  HasFilm(7) | (HasFilm(5) & _HARD_LOGIC_ON),
     },
     MAGNEMITE: {
         Category.NORMAL_PHOTO:    has(POKEMON_FOOD, LVL_TUNNEL),
@@ -336,18 +337,16 @@ LOCATION_RULES = {
         Category.NORMAL_PHOTO:    _NO_ITEMS,
         Category.WONDERFUL_PHOTO: _NO_ITEMS,
     },
-    # TODO: [SOFT]: only requires 3 film
-    PIKACHU_ON_A_BALL: { Category.SPECIAL_POSE: _NO_ITEMS & HasFilm(5) },
+    PIKACHU_ON_A_BALL: { Category.SPECIAL_POSE: HasFilm(5) | (HasFilm(3) & _HARD_LOGIC_ON) },
     TUNNEL_SIGN:       { Category.POKEMON_SIGN: Has(SIGN_DETECTOR) & has(POKEMON_FOOD, LVL_TUNNEL) & has(POKEFLUTE, LVL_TUNNEL) },
     LVL_TUNNEL:        { Category.SECRET_EXIT: has(POKEMON_FOOD, LVL_TUNNEL) | has(PESTER_BALL, LVL_TUNNEL) },
 
 
     # Volcano
-    # TODO: [SOFT] mult: Possible without Apple, but it is RNG due to where the Charmander spawn
     CHARMANDER: {
         Category.NORMAL_PHOTO:    _NO_ITEMS,
         Category.WONDERFUL_PHOTO: _NO_ITEMS,
-        Category.MULTIPLE_PHOTO:  has(POKEMON_FOOD, LVL_VOLCANO) | [_SEPARATE_SCORING, _RNG_LOCATIONS_ON],
+        Category.MULTIPLE_PHOTO:  has(POKEMON_FOOD, LVL_VOLCANO) | [_SEPARATE_SCORING, _RNG_LOCATIONS_ON] | _HARD_LOGIC_ON,
     },
     CHARMELEON: {
         Category.NORMAL_PHOTO:    has(POKEMON_FOOD, LVL_VOLCANO) | has(PESTER_BALL, LVL_VOLCANO),
@@ -357,11 +356,10 @@ LOCATION_RULES = {
         Category.NORMAL_PHOTO:    has(POKEMON_FOOD, LVL_VOLCANO) | has(PESTER_BALL, LVL_VOLCANO),
         Category.WONDERFUL_PHOTO: has(POKEMON_FOOD, LVL_VOLCANO) | has(PESTER_BALL, LVL_VOLCANO),
     },
-    # TODO: [SOFT] mult: Technically possible with dash (rng)
     VULPIX: {
         Category.NORMAL_PHOTO:    _NO_ITEMS,
         Category.WONDERFUL_PHOTO: _NO_ITEMS,
-        Category.MULTIPLE_PHOTO:  has(POKEMON_FOOD, LVL_VOLCANO) | _SEPARATE_SCORING,
+        Category.MULTIPLE_PHOTO:  has(POKEMON_FOOD, LVL_VOLCANO) | _SEPARATE_SCORING | (Has(DASH_ENGINE) & _HARD_LOGIC_ON),
     },
     GROWLITHE: {
         Category.NORMAL_PHOTO:    has(PESTER_BALL, LVL_VOLCANO),
@@ -397,11 +395,10 @@ LOCATION_RULES = {
 
 
     # River
-    # TODO: [SOFT] wdfl&mult: Technically possible without anything (difficult)
     METAPOD: {
         Category.NORMAL_PHOTO:    _NO_ITEMS,
-        Category.WONDERFUL_PHOTO: has(PESTER_BALL, LVL_RIVER),
-        Category.MULTIPLE_PHOTO:  has(PESTER_BALL, LVL_RIVER) | _SEPARATE_SCORING,
+        Category.WONDERFUL_PHOTO: has(PESTER_BALL, LVL_RIVER) | _HARD_LOGIC_ON,
+        Category.MULTIPLE_PHOTO:  has(PESTER_BALL, LVL_RIVER) | _SEPARATE_SCORING | _HARD_LOGIC_ON,
     },
     VILEPLUME: {
         Category.NORMAL_PHOTO:    has(POKEFLUTE, LVL_RIVER),
@@ -412,9 +409,8 @@ LOCATION_RULES = {
         Category.WONDERFUL_PHOTO: _NO_ITEMS,
         Category.MULTIPLE_PHOTO:  has(POKEMON_FOOD, LVL_RIVER) | has(PESTER_BALL, LVL_RIVER),
     },
-    # TODO: [SOFT] base: Technically possible without anything (difficult)
     POLIWAG: {
-        Category.NORMAL_PHOTO:    has(POKEMON_FOOD, LVL_RIVER) | has(PESTER_BALL, LVL_RIVER),
+        Category.NORMAL_PHOTO:    has(POKEMON_FOOD, LVL_RIVER) | has(PESTER_BALL, LVL_RIVER) | _HARD_LOGIC_ON,
         Category.WONDERFUL_PHOTO: has(POKEMON_FOOD, LVL_RIVER) | has(PESTER_BALL, LVL_RIVER),
         Category.MULTIPLE_PHOTO:  has(POKEMON_FOOD, LVL_RIVER) | has(PESTER_BALL, LVL_RIVER),
     },
@@ -426,11 +422,10 @@ LOCATION_RULES = {
         Category.NORMAL_PHOTO:    has(POKEMON_FOOD, LVL_RIVER),
         Category.WONDERFUL_PHOTO: has(POKEMON_FOOD, LVL_RIVER),
     },
-    # TODO: [SOFT] wdfl&mult: Technically possible without anything (rng)
     SHELLDER: {
         Category.NORMAL_PHOTO:    _NO_ITEMS,
-        Category.WONDERFUL_PHOTO: Has(DASH_ENGINE),
-        Category.MULTIPLE_PHOTO:  Has(DASH_ENGINE),
+        Category.WONDERFUL_PHOTO: Has(DASH_ENGINE) | _HARD_LOGIC_ON,
+        Category.MULTIPLE_PHOTO:  Has(DASH_ENGINE) | _HARD_LOGIC_ON,
     },
     CLOYSTER: {
         Category.NORMAL_PHOTO:    _NO_ITEMS,
@@ -455,8 +450,7 @@ LOCATION_RULES = {
         Category.NORMAL_PHOTO:    _NO_ITEMS,
         Category.WONDERFUL_PHOTO: _NO_ITEMS,
     },
-    # TODO: [SOFT]: only requires 2 film
-    SPEED_PIKACHU: { Category.SPECIAL_POSE: HasFilm(5) | has(POKEMON_FOOD, LVL_RIVER) | has(PESTER_BALL, LVL_RIVER) },
+    SPEED_PIKACHU: { Category.SPECIAL_POSE: HasFilm(5) | (HasFilm(2) & _HARD_LOGIC_ON) | has(POKEMON_FOOD, LVL_RIVER) | has(PESTER_BALL, LVL_RIVER) },
     RIVER_SIGN:    { Category.POKEMON_SIGN: Has(SIGN_DETECTOR) & has(POKEFLUTE, LVL_RIVER) },
     LVL_RIVER:     { Category.SECRET_EXIT: has(PESTER_BALL, LVL_RIVER) },
 
@@ -475,15 +469,13 @@ LOCATION_RULES = {
         Category.NORMAL_PHOTO:    has(POKEMON_FOOD, LVL_CAVE) | has(PESTER_BALL, LVL_CAVE),
         Category.WONDERFUL_PHOTO: has(POKEMON_FOOD, LVL_CAVE) | has(PESTER_BALL, LVL_CAVE),
     },
-    # TODO: [SOFT] wdfl: only requires 2 film
     GRIMER: {
         Category.NORMAL_PHOTO:    _NO_ITEMS,
-        Category.WONDERFUL_PHOTO: _NO_ITEMS & HasFilm(4),
+        Category.WONDERFUL_PHOTO: HasFilm(4) | (HasFilm(2) & _HARD_LOGIC_ON),
     },
-    # TODO: [SOFT] wdfl: only requires 2 film
     MUK: {
-        Category.NORMAL_PHOTO:    has(PESTER_BALL, LVL_CAVE) & HasFilm(4),
-        Category.WONDERFUL_PHOTO: has(PESTER_BALL, LVL_CAVE) & HasFilm(4),
+        Category.NORMAL_PHOTO:    has(PESTER_BALL, LVL_CAVE) & (HasFilm(4) | (HasFilm(2) & _HARD_LOGIC_ON)),
+        Category.WONDERFUL_PHOTO: has(PESTER_BALL, LVL_CAVE) & (HasFilm(4) | (HasFilm(2) & _HARD_LOGIC_ON)),
     },
     JYNX: {
         Category.NORMAL_PHOTO:    _NO_ITEMS,
@@ -512,10 +504,9 @@ LOCATION_RULES = {
         Category.NORMAL_PHOTO:    has(POKEMON_FOOD, LVL_CAVE) | has(PESTER_BALL, LVL_CAVE),
         Category.WONDERFUL_PHOTO: has(POKEMON_FOOD, LVL_CAVE) | has(PESTER_BALL, LVL_CAVE),
     },
-    # TODO: [SOFT] base: Technically possible without anything (difficult)
     course(PIKACHU, LVL_CAVE): {
-        Category.NORMAL_PHOTO:    has(POKEMON_FOOD, LVL_CAVE) | has(PESTER_BALL, LVL_CAVE),
-        Category.WONDERFUL_PHOTO: has(POKEMON_FOOD, LVL_CAVE) | has(PESTER_BALL, LVL_CAVE),
+        Category.NORMAL_PHOTO:    has(POKEMON_FOOD, LVL_CAVE) | has(PESTER_BALL, LVL_CAVE) | _HARD_LOGIC_ON,
+        Category.WONDERFUL_PHOTO: has(POKEMON_FOOD, LVL_CAVE) | has(PESTER_BALL, LVL_CAVE) | _HARD_LOGIC_ON,
     },
     course(ZUBAT, LVL_CAVE): {
         Category.NORMAL_PHOTO:    _NO_ITEMS,
@@ -530,11 +521,10 @@ LOCATION_RULES = {
 
 
     # Valley
-    # TODO: [SOFT] wdfl: Technically possible without anything. mult: Technically possible with just dash (difficult)
     SQUIRTLE: {
         Category.NORMAL_PHOTO:    _NO_ITEMS,
-        Category.WONDERFUL_PHOTO: has(PESTER_BALL, LVL_VALLEY),
-        Category.MULTIPLE_PHOTO:  has(PESTER_BALL, LVL_VALLEY),
+        Category.WONDERFUL_PHOTO: has(PESTER_BALL, LVL_VALLEY) | _HARD_LOGIC_ON,
+        Category.MULTIPLE_PHOTO:  has(PESTER_BALL, LVL_VALLEY) | (Has(DASH_ENGINE) & _HARD_LOGIC_ON),
     },
     SANDSHREW: {
         Category.NORMAL_PHOTO:    has(PESTER_BALL, LVL_VALLEY),
@@ -554,11 +544,10 @@ LOCATION_RULES = {
         Category.WONDERFUL_PHOTO: _NO_ITEMS,
         Category.MULTIPLE_PHOTO:  _NO_ITEMS,
     },
-    # TODO: [SOFT] wdfl&mult: Technically possible without anything (difficult)
     GRAVELER: {
         Category.NORMAL_PHOTO:    _NO_ITEMS,
-        Category.WONDERFUL_PHOTO: has(PESTER_BALL, LVL_VALLEY) | has(POKEFLUTE, LVL_VALLEY),
-        Category.MULTIPLE_PHOTO:  has(POKEFLUTE, LVL_VALLEY),
+        Category.WONDERFUL_PHOTO: has(PESTER_BALL, LVL_VALLEY) | has(POKEFLUTE, LVL_VALLEY) | _HARD_LOGIC_ON,
+        Category.MULTIPLE_PHOTO:  has(POKEFLUTE, LVL_VALLEY) | _HARD_LOGIC_ON,
     },
     GOLDEEN: {
         Category.NORMAL_PHOTO:    has(POKEMON_FOOD, LVL_VALLEY) | has(PESTER_BALL, LVL_VALLEY),
@@ -569,12 +558,10 @@ LOCATION_RULES = {
         Category.WONDERFUL_PHOTO: _NO_ITEMS,
         Category.MULTIPLE_PHOTO:  _NO_ITEMS,
     },
-    # TODO: [SOFT] base/wdfl: only requires 2 film
-    # TODO: [SOFT] mult: only requires 3 film
     STARMIE: {
-        Category.NORMAL_PHOTO:    _NO_ITEMS & HasFilm(5),
-        Category.WONDERFUL_PHOTO: _NO_ITEMS & HasFilm(7),
-        Category.MULTIPLE_PHOTO:  _NO_ITEMS & HasFilm(9),
+        Category.NORMAL_PHOTO:    HasFilm(5) | (HasFilm(2) & _HARD_LOGIC_ON),
+        Category.WONDERFUL_PHOTO: HasFilm(7) | (HasFilm(2) & _HARD_LOGIC_ON),
+        Category.MULTIPLE_PHOTO:  HasFilm(9) | (HasFilm(3) & _HARD_LOGIC_ON),
     },
     GYARADOS: {
         Category.NORMAL_PHOTO:    has(PESTER_BALL, LVL_VALLEY),
