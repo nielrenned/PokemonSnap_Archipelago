@@ -12,7 +12,7 @@ from .items import PokemonSnapItem, PokemonSnapItemCategory, key_item_names, use
     _all_items, build_item_pool, PokemonSnapItemData, item_dictionary
 from .locations import PokemonSnapLocation, PokemonSnapLocationCategory, location_tables, bonus, \
     RNG_LOCATIONS, HARD_LOCATIONS
-from .options import PokemonSnapOption, PhotoBonusChecks, pokemon_snap_option_groups
+from .options import PokemonSnapOption, PhotoBonusChecks, FillerItemNamingScheme, pokemon_snap_option_groups
 from .psnap_settings import PokemonSnapSettings
 from .rom import PokemonSnapProcedurePatch
 from .rules import set_rules
@@ -209,7 +209,10 @@ class PokemonSnapWorld(World):
         return PokemonSnapItem(name, item_classification, data, self.player)
 
     def get_filler_item_name(self) -> str:
-        return self.random.choice(items.filler_item_names)
+        if self.options.filler_item_names == FillerItemNamingScheme.option_flavorful: 
+            return self.random.choice(items.filler_item_names)
+        else:
+            return SIMPLE_TRASH_ITEM_NAME
 
     def set_rules(self) -> None:
         set_rules(self)

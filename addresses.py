@@ -63,6 +63,7 @@ MEW_LOCATION = 63
 # Item name -> bit in gCanUseMask.
 CAN_USE_BITS = {
     POKEMON_FOOD:  0,
+    APPLE:         0,
     PESTER_BALL:   1,
     POKEFLUTE:     2,
     DASH_ENGINE:   3,

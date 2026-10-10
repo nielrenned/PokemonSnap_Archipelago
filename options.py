@@ -39,6 +39,18 @@ class PokemonRequired(Range):
     default = DEFAULT_POKEMON_REQUIREMENT
 
 
+class GoalItemNamingScheme(Choice):
+    """
+    Determines how the goal items are named.
+
+    Generic: All goal items will be called "Pokemon Picture"/"Sign Picture"
+    Specific: Items will be labeled to specific locations, e.g. "Pokemon Picture: Charmander"/"Sign Picture: Kingler Rock"
+    """
+    display_name = "Picture Names"
+    default = 1
+    option_generic = 0
+    option_specific = 1
+
 
 class FilmCapacityStart(Range):
     """
@@ -128,6 +140,29 @@ class UnlockItemsPerCourse(Toggle):
     Unlock the Apple, Pester Ball, and PokeFlute for each level separately, rather than every level at once.
     """
     display_name = "Per-Course Item Unlocks"
+
+
+class FillerItemNamingScheme(Choice):
+    """
+    Determines how filler items are named. 
+
+    Simple: all filler items will be called "Bad Picture"
+    Flavorful: filler items will have flavorful names, e.g. "Faded Photo of Charmander"
+    """
+    display_name = "Filler Item Names"
+    default = 1
+    option_simple = 0
+    option_flavorful = 1
+
+
+class AppleNamingScheme(Choice):
+    """
+    Determines what the "Apple-Shaped Pokemon Food" unlock is called in the AP world. Has no impact on gameplay.
+    """
+    display_name = "'Apple-shaped Pokemon Food' Item Name"
+    default = 0
+    option_apples = 0
+    option_pokemon_food = 1
 
 
 class PhotoBonusChecks(Choice):
@@ -256,6 +291,7 @@ class PokemonSnapOption(PerGameCommonOptions):
     goal_type: GoalType
     signs_required: SignsRequired
     pokemon_required: PokemonRequired
+    goal_item_names: GoalItemNamingScheme
 
     photo_scoring: PhotoScoring
     extra_photo_scoring_items: ExtraPhotoScoringItems
@@ -265,6 +301,8 @@ class PokemonSnapOption(PerGameCommonOptions):
     extra_film_upgrades: ExtraFilmUpgrades
     map_fragments: MapFragments
     per_course_items: UnlockItemsPerCourse
+    filler_item_names: FillerItemNamingScheme
+    pokemon_food_name: AppleNamingScheme
 
     photo_bonuses: PhotoBonusChecks
     special_poses: SpecialPoses
@@ -287,6 +325,7 @@ pokemon_snap_option_groups = [
         GoalType,
         SignsRequired,
         PokemonRequired,
+        GoalItemNamingScheme,
     ]),
     OptionGroup("Items", [
         PhotoScoring,
@@ -297,6 +336,8 @@ pokemon_snap_option_groups = [
         ExtraFilmUpgrades,
         MapFragments,
         UnlockItemsPerCourse,
+        FillerItemNamingScheme,
+        AppleNamingScheme,
     ]),
     OptionGroup("Checks - Categories", [
         PhotoBonusChecks,

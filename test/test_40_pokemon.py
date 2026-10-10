@@ -1,6 +1,6 @@
 from BaseClasses import CollectionState
 from .bases import PokemonSnapTestBase
-from ..constants import POKEMON_TOTAL_40, ALL_MAIN_LEVELS
+from ..constants import POKEMON_TOTAL_40, ALL_MAIN_LEVELS, LVL_BEACH, LVL_RIVER, LVL_CAVE, LVL_VOLCANO, APPLE, DASH_ENGINE
 
 class Test40PokemonNotAvailable(PokemonSnapTestBase):
 
@@ -9,7 +9,7 @@ class Test40PokemonNotAvailable(PokemonSnapTestBase):
         state = CollectionState(self.multiworld, self.player)
         for item in self.get_items_by_name(ALL_MAIN_LEVELS):
             state.remove_item(item, self.player)
-        for item in self.get_items_by_name(["Beach", "River", "Cave", "Volcano", "Pester Ball", "Dash Engine"]):
+        for item in self.get_items_by_name([LVL_BEACH, LVL_RIVER, LVL_CAVE, LVL_VOLCANO, APPLE, DASH_ENGINE]):
             state.add_item(item, self.player)
 
         if rule_40_pokemon(state):

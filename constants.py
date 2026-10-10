@@ -29,8 +29,9 @@ ALL_LEVELS      = ALL_MAIN_LEVELS + [LVL_CLOUD]
 
 # Items
 FILM_UPGRADE  = "Film Capacity Upgrade"
-PESTER_BALL   = "Pester Ball"
-POKEMON_FOOD  = "Apple"
+PESTER_BALL   = "Pester Balls"
+POKEMON_FOOD  = "Pokemon Food"
+APPLE         = "Apples"
 POKEFLUTE     = "PokeFlute"
 DASH_ENGINE   = "Dash Engine"
 SIGN_DETECTOR = "Pokemon Sign Detector"
@@ -188,6 +189,11 @@ TRASH_PIC_ADJECTIVES = [
 GOAL_SIGN_PICS = 0
 GOAL_POKEMON_PICS = 1
 
+SIGN_PIC_NAME    = "Sign Picture"
+POKEMON_PIC_NAME = "Pokemon Picture"
+
 DEFAULT_GOAL_TYPE = GOAL_SIGN_PICS
 DEFAULT_SIGN_REQUIREMENT = 6
 DEFAULT_POKEMON_REQUIREMENT = 50
+
+SIMPLE_TRASH_ITEM_NAME = "Bad Picture"
