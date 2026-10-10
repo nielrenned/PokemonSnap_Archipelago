@@ -328,7 +328,11 @@ class PokemonSnapContext(CommonContext, PJ64Context):
             if not self.finished_game and net_item.item == VICTORY_ITEM_ID:
                 await self.send_msgs([{"cmd": "StatusUpdate", "status": ClientStatus.CLIENT_GOAL}])
                 self.finished_game = True
-                logger.info("Mew photographed - goal complete!")
+                await pj64_write_memory(self, "u32", addr.DIALOG_REQUEST_FLAGS, [0x80])
+                if self.slot_data['good_technique_mew_photo']:
+                    logger.info("Mew photographed with good technique - goal complete!")
+                else:
+                    logger.info("Mew photographed - goal complete!")
 
             name = _code_to_name.get(net_item.item)
             if name is None:

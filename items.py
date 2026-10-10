@@ -50,7 +50,7 @@ base_key_item_names = {
 
     POKEMON_FOOD, APPLE, PESTER_BALL, POKEFLUTE, DASH_ENGINE, SIGN_DETECTOR,
     *(course(POKEMON_FOOD, c) for c in ALL_LEVELS),
-    *(course(APPLE, c) for c in ALL_LEVELS),
+    *(course(APPLE, c)        for c in ALL_LEVELS),
     *(course(PESTER_BALL, c)  for c in ALL_LEVELS),
     *(course(POKEFLUTE, c)    for c in ALL_MAIN_LEVELS),
 

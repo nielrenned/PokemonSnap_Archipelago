@@ -57,13 +57,13 @@
       "addr": "0x80400034",
       "type": "u32",
       "access": "rw",
-      "desc": "Dialog flags: bit0=Cloud, 1=Apple, 2=Pester, 3=Flute, 4=6 Pokemon, 5=22 Pokemon, 6=40 Pokemon"
+      "desc": "Dialog flags: bit0=Cloud, 1=Apple, 2=Pester, 3=Flute, 4=6 Pokemon, 5=22 Pokemon, 6=40 Pokemon, 7=Credits"
     },
     "gDialogPlayedFlags": {
       "addr": "0x80400038",
       "type": "u32",
       "access": "rw",
-      "desc": "Dialog flags: bit0=Cloud, 1=Apple, 2=Pester, 3=Flute, 4=6 Pokemon, 5=22 Pokemon, 6=40 Pokemon"
+      "desc": "Dialog flags: bit0=Cloud, 1=Apple, 2=Pester, 3=Flute, 4=6 Pokemon, 5=22 Pokemon, 6=40 Pokemon, 7=Credits"
     },
     "gCameraInversionYAMLOption": {
       "addr": "0x8040003C",
