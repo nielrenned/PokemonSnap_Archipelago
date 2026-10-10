@@ -204,7 +204,7 @@ species_data_tables = {
         PokemonSnapSpeciesData(id=69, name=course(MAGIKARP, LVL_VALLEY), multiple=True),
     ],
     LVL_CLOUD: [
-        PokemonSnapSpeciesData(id=63, name=MEW, wonderful=False, multiple=False),
+        PokemonSnapSpeciesData(id=63, name=MEW, wonderful=True, multiple=False),
     ],
 }
 

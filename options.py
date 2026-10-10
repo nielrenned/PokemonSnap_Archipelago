@@ -17,6 +17,14 @@ class GoalType(Choice):
     option_pokemon_pictures = GOAL_POKEMON_PICS
 
 
+class WonderfulMewRequired(DefaultOnToggle):
+    """
+    Determines if submitting a "Good Technique" photo of Mew is required to win.
+    Does nothing if "Good Technique" photos are disabled
+    """
+    display_name = "'Good Technique' Mew Required"
+
+
 class SignsRequired(Range):
     """
     Determines the number of Sign Pictures required to unlock the Rainbow Cloud.
@@ -311,6 +319,7 @@ class CameraInversion(Choice):
 @dataclass
 class PokemonSnapOption(PerGameCommonOptions):
     goal_type: GoalType
+    good_technique_mew_photo: WonderfulMewRequired
     signs_required: SignsRequired
     extra_sign_pictures: ExtraSignPictures
     pokemon_required: PokemonRequired
@@ -347,6 +356,7 @@ class PokemonSnapOption(PerGameCommonOptions):
 pokemon_snap_option_groups = [
     OptionGroup("Goal Settings", [
         GoalType,
+        WonderfulMewRequired,
         SignsRequired,
         ExtraSignPictures,
         PokemonRequired,

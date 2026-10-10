@@ -10,7 +10,7 @@ from math import ceil
 from .constants import *
 from .items import PokemonSnapItem, PokemonSnapItemCategory, key_item_names, useful_item_names, \
     _all_items, build_item_pool, PokemonSnapItemData, item_dictionary
-from .locations import PokemonSnapLocation, PokemonSnapLocationCategory, location_tables, bonus, \
+from .locations import PokemonSnapLocation, PokemonSnapLocationCategory, location_tables, bonus, wonderful, \
     RNG_LOCATIONS, HARD_LOCATIONS
 from .options import PokemonSnapOption, PhotoBonusChecks, FillerItemNamingScheme, pokemon_snap_option_groups
 from .psnap_settings import PokemonSnapSettings
@@ -155,10 +155,11 @@ class PokemonSnapWorld(World):
                 self.location_name_to_id[location.name],
                 new_region
             )
-            
-            # Eventually this will need to change depending on chosen victory condition.
-            # But we have no options right now, so :chrisShrug:.
-            if location.name == "Mew":
+
+            # Place victory item
+            if location.name == MEW and (not self.options.good_technique_mew_photo or self.options.photo_bonuses == PhotoBonusChecks.option_none):
+                new_location.place_locked_item(self.create_item(VICTORY_ITEM_NAME))
+            if location.name == wonderful(MEW) and self.options.good_technique_mew_photo:
                 new_location.place_locked_item(self.create_item(VICTORY_ITEM_NAME))
             
             new_region.locations.append(new_location)
@@ -239,7 +240,7 @@ class PokemonSnapWorld(World):
 
     def fill_slot_data(self) -> dict[str, Any]:
         return self.options.as_dict(
-            "goal_type", "signs_required", "pokemon_required", "photo_scoring",
+            "goal_type", "good_technique_mew_photo", "signs_required", "pokemon_required", "photo_scoring",
             "photo_bonuses", "pokemon_signs", "secret_exits", "report_photo_count",
             "report_score_total", "rng_checks", "hard_checks", "hard_logic",
             "left_bumper_to_start_stop", "camera_inversion",
