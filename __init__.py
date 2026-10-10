@@ -12,7 +12,7 @@ from .items import PokemonSnapItem, PokemonSnapItemCategory, key_item_names, use
     _all_items, build_item_pool, PokemonSnapItemData, item_dictionary
 from .locations import PokemonSnapLocation, PokemonSnapLocationCategory, location_tables, bonus, wonderful, \
     RNG_LOCATIONS, HARD_LOCATIONS
-from .options import PokemonSnapOption, PhotoBonusChecks, FillerItemNamingScheme, pokemon_snap_option_groups
+from .options import PokemonSnapOption, PhotoBonusChecks, FillerItemNamingScheme, PressLToStop, pokemon_snap_option_groups
 from .psnap_settings import PokemonSnapSettings
 from .rom import PokemonSnapProcedurePatch
 from .rules import set_rules
@@ -106,6 +106,9 @@ class PokemonSnapWorld(World):
 
         if self.options.start_with_dash_engine:
             self.multiworld.push_precollected(self.create_item(DASH_ENGINE))
+
+        if self.options.enable_left_bumper_to_start_stop:
+            self.options.left_bumper_to_start_stop.value = PressLToStop.option_start_with
 
     def create_regions(self):
         # Create Regions

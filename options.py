@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from .constants import DEFAULT_GOAL_TYPE, DEFAULT_SIGN_REQUIREMENT, DEFAULT_POKEMON_REQUIREMENT, GOAL_SIGN_PICS, GOAL_POKEMON_PICS
-from Options import Choice, DefaultOnToggle, PerGameCommonOptions, Toggle, OptionGroup, StartInventoryPool, Range
+from Options import Choice, DefaultOnToggle, PerGameCommonOptions, Toggle, OptionGroup, StartInventoryPool, Range, Visibility
 from .addresses import CAMERA_INVERSION_OPTION_INVERTED, CAMERA_INVERSION_OPTION_NORMAL
 
 
@@ -294,6 +294,9 @@ class StartWithDashEngine(Toggle):
 class PressLToStop(Choice):
     """
     Adds the ability to start/stop the Zero-One by pressing L.
+    - start_with: start the game with this ability
+    - in_item_pool: add the ability to the item pool
+    - disabled: default
     """
     display_name = "Press L to start/stop"
 
@@ -302,6 +305,14 @@ class PressLToStop(Choice):
     option_disabled     = 2
 
     default = 2
+
+
+class DeprecatedPressLToStop(Toggle):
+    """
+    Deprecated. Use the new option `left_bumper_to_start_stop` instead.
+    """
+    display_name = "Press L to start/stop (deprecated)"
+    visibility = Visibility.none
 
 
 class CameraInversion(Choice):
@@ -350,6 +361,7 @@ class PokemonSnapOption(PerGameCommonOptions):
 
     start_with_dash_engine: StartWithDashEngine
     left_bumper_to_start_stop: PressLToStop
+    enable_left_bumper_to_start_stop: DeprecatedPressLToStop
     camera_inversion: CameraInversion
     start_inventory_from_pool: StartInventoryPool
 
