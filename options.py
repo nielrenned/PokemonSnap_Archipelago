@@ -17,7 +17,7 @@ class GoalType(Choice):
     option_pokemon_pictures = GOAL_POKEMON_PICS
 
 
-class WonderfulMewRequired(DefaultOnToggle):
+class WonderfulMewRequired(Toggle):
     """
     Determines if submitting a "Good Technique" photo of Mew is required to win.
     Does nothing if "Good Technique" photos are disabled
