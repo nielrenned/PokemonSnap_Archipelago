@@ -26,6 +26,7 @@ EXPANSION_MAGIC = _addr("symbols", "gExpansionMagic")
 MAX_FILM = _addr("symbols", "gMaxFilm")
 CAN_USE_OVERRIDE = _addr("symbols", "gCanUseOverride")
 CAN_USE_MASK = _addr("symbols", "gCanUseMask")
+CAN_USE_PER_COURSE_MASK = _addr("symbols", "gCanUsePerLevelMask")
 COURSE_OVERRIDE = _addr("symbols", "gCourseOverride")
 COURSE_UNLOCK_MASK = _addr("symbols", "gCourseUnlockMask")
 DIALOG_REQUEST_FLAGS = _addr("symbols", "gDialogRequestFlags")
@@ -73,6 +74,7 @@ CAN_USE_BITS = {
 }
 
 CAN_USE_FLAGS = {name: (1 << CAN_USE_BITS[name]) for name in CAN_USE_BITS}
+CAN_USE_PER_COURSE_FLAGS = {course(name, level): (i, 1 << CAN_USE_BITS[name]) for name in CAN_USE_BITS for i, level in enumerate(ALL_LEVELS)}
 
 # Item name -> bit in gCourseUnlockMask.
 COURSE_IDS = {

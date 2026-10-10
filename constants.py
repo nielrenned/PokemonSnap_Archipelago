@@ -12,6 +12,8 @@ WRONG_GAME: str = "Wrong game was detected, please load a North American version
 CONNECTING_STATUS: str = "Connected to Project64."
 CONNECTED_STATUS: str = "Connected to Project64 and Archipelago, ready to play!"
 
+course = lambda name, course: f'{name} ({course})'
+
 # Courses
 START_GAME  = "Start Game"
 LVL_BEACH   = "Beach"
@@ -22,7 +24,8 @@ LVL_CAVE    = "Cave"
 LVL_VALLEY  = "Valley"
 LVL_CLOUD   = "Rainbow Cloud"
 
-ALL_LEVELS = [LVL_BEACH, LVL_TUNNEL, LVL_VOLCANO, LVL_RIVER, LVL_CAVE, LVL_VALLEY]
+ALL_MAIN_LEVELS = [LVL_BEACH, LVL_TUNNEL, LVL_VOLCANO, LVL_RIVER, LVL_CAVE, LVL_VALLEY]
+ALL_LEVELS      = ALL_MAIN_LEVELS + [LVL_CLOUD]
 
 # Items
 FILM_UPGRADE  = "Film Capacity Upgrade"

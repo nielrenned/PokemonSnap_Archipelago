@@ -239,5 +239,6 @@ class PokemonSnapWorld(World):
             "goal_type", "signs_required", "pokemon_required", "photo_scoring",
             "photo_bonuses", "pokemon_signs", "secret_exits", "report_photo_count",
             "report_score_total", "rng_checks", "hard_checks",
-            "enable_left_bumper_to_start_stop", "camera_inversion",
-            "starting_film", "film_upgrade_amount", "maximum_film", "map_fragments")
+            "left_bumper_to_start_stop", "camera_inversion",
+            "starting_film", "film_upgrade_amount", "maximum_film", 
+            "map_fragments", "per_course_items")

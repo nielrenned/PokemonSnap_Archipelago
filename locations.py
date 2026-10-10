@@ -73,7 +73,6 @@ class PokemonSnapLocation(Location):
 # Location naming functions
 wonderful   = lambda name:         f'{name}: Good Technique'
 multiple    = lambda name:         f'{name}: Multiple'
-course      = lambda name, course: f'{name} ({course})'
 secret_exit = lambda level_name:   f'{level_name}: Secret Exit'
 bonus       = lambda loc_name:     f'{loc_name} 2'
 
