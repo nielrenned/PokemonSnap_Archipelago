@@ -28,6 +28,17 @@ class SignsRequired(Range):
     default = DEFAULT_SIGN_REQUIREMENT
 
 
+class ExtraSignPictures(Range):
+    """
+    Determines how many extra Sign Pictures to add to the pool.
+    Only matters if Goal Type is set to "Signs"
+    """
+    display_name = "Extra Sign Pictures"
+    default     = 0
+    range_start = 0
+    range_end   = 6
+
+
 class PokemonRequired(Range):
     """
     Determines the number of Pokemon Pictures required to unlock the Rainbow Cloud.
@@ -39,6 +50,17 @@ class PokemonRequired(Range):
     default = DEFAULT_POKEMON_REQUIREMENT
 
 
+class ExtraPokemonPictures(Range):
+    """
+    Determines how many extra Pokemon Pictures to add to the pool.
+    Only matters if Goal Type is set to "Pokemon"
+    """
+    display_name = "Extra Pokemon Pictures"
+    default     = 0
+    range_start = 0
+    range_end   = 63
+
+
 class GoalItemNamingScheme(Choice):
     """
     Determines how the goal items are named.
@@ -47,7 +69,7 @@ class GoalItemNamingScheme(Choice):
     Specific: Items will be labeled to specific locations, e.g. "Pokemon Picture: Charmander"/"Sign Picture: Kingler Rock"
     """
     display_name = "Picture Names"
-    default = 1
+    default = 0
     option_generic = 0
     option_specific = 1
 
@@ -147,7 +169,7 @@ class FillerItemNamingScheme(Choice):
     Determines how filler items are named. 
 
     Simple: all filler items will be called "Bad Picture"
-    Flavorful: filler items will have flavorful names, e.g. "Faded Photo of Charmander"
+    Flavorful: filler items will have flavorful names, e.g. "Faded Photo of Blastoise"
     """
     display_name = "Filler Item Names"
     default = 1
@@ -290,7 +312,9 @@ class CameraInversion(Choice):
 class PokemonSnapOption(PerGameCommonOptions):
     goal_type: GoalType
     signs_required: SignsRequired
+    extra_sign_pictures: ExtraSignPictures
     pokemon_required: PokemonRequired
+    extra_pokemon_pictures: ExtraPokemonPictures
     goal_item_names: GoalItemNamingScheme
 
     photo_scoring: PhotoScoring
@@ -324,7 +348,9 @@ pokemon_snap_option_groups = [
     OptionGroup("Goal Settings", [
         GoalType,
         SignsRequired,
+        ExtraSignPictures,
         PokemonRequired,
+        ExtraPokemonPictures,
         GoalItemNamingScheme,
     ]),
     OptionGroup("Items", [
