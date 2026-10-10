@@ -4,7 +4,7 @@ from math import ceil
 from itertools import product
 from typing import NamedTuple
 from .constants import *
-from .options import PhotoScoring, PressLToStop
+from .options import PhotoScoring, PressLToStop, GoalItemNamingScheme, FillerItemNamingScheme, AppleNamingScheme
 
 from BaseClasses import Item
 
@@ -21,8 +21,9 @@ class PokemonSnapItemCategory(StrEnum):
     MISC = "Miscellaneous"
     POKEMON_PIC = "Pokemon Pictures"
     SIGN_PIC = "Sign Pictures"
-    TRASH_CUSTOM = "Special Garbage"
+    TRASH_CUSTOM  = "Special Garbage"
     TRASH_PICTURE = "Garbage Photos"
+    TRASH_SIMPLE  = "Simple Garbage"
 
 
 class PokemonSnapItemData(NamedTuple):
@@ -47,8 +48,9 @@ base_key_item_names = {
     LVL_BEACH, LVL_TUNNEL, LVL_VOLCANO, LVL_RIVER, LVL_CAVE, LVL_VALLEY, LVL_CLOUD,
     *map(fragment, [LVL_BEACH, LVL_TUNNEL, LVL_VOLCANO, LVL_RIVER, LVL_CAVE, LVL_VALLEY, LVL_CLOUD]),
 
-    POKEMON_FOOD, PESTER_BALL, POKEFLUTE, DASH_ENGINE, SIGN_DETECTOR,
+    POKEMON_FOOD, APPLE, PESTER_BALL, POKEFLUTE, DASH_ENGINE, SIGN_DETECTOR,
     *(course(POKEMON_FOOD, c) for c in ALL_LEVELS),
+    *(course(APPLE, c) for c in ALL_LEVELS),
     *(course(PESTER_BALL, c)  for c in ALL_LEVELS),
     *(course(POKEFLUTE, c)    for c in ALL_MAIN_LEVELS),
 
@@ -60,18 +62,18 @@ useful_item_names = {
 }
 
 pokemon_pics = [
-    PokemonSnapItemData(f"Pokemon Picture: {name}", 5000 + i, PokemonSnapItemCategory.POKEMON_PIC)
+    PokemonSnapItemData(f"{POKEMON_PIC_NAME}: {name}", 5000 + i, PokemonSnapItemCategory.POKEMON_PIC)
     for i, name in enumerate(ALL_INGAME_POKEMON)
-]
+] + [PokemonSnapItemData(POKEMON_PIC_NAME, 5500, PokemonSnapItemCategory.POKEMON_PIC)]
 POKEMON_PIC_NAMES = {item.name for item in pokemon_pics}
 
 sign_pics = [
-    PokemonSnapItemData(f"Sign Picture: {name}", 6000 + i, PokemonSnapItemCategory.SIGN_PIC)
+    PokemonSnapItemData(f"{SIGN_PIC_NAME}: {name}", 6000 + i, PokemonSnapItemCategory.SIGN_PIC)
     for i, name in enumerate(ALL_SIGNS)
-]
+] + [PokemonSnapItemData(SIGN_PIC_NAME, 6500, PokemonSnapItemCategory.SIGN_PIC)]
 SIGN_PIC_NAMES = {item.name for item in sign_pics}
 
-def key_item_names(world: "PokemonSnapWorld") -> list:
+def key_item_names(world: "PokemonSnapWorld") -> set:
     key_item_names_list = set(base_key_item_names) # Make a copy so we don't break other worlds
     if world.options.goal_type == GOAL_SIGN_PICS:
         key_item_names_list |= SIGN_PIC_NAMES
@@ -86,7 +88,7 @@ def key_item_names(world: "PokemonSnapWorld") -> list:
 trash_pokemon_pics = {
     pokemon_name: [
         PokemonSnapItemData(
-            f"A {adjective} Photo of {pokemon_name}",
+            f"{adjective} Photo of {pokemon_name}",
             10000 + i*len(TRASH_PIC_ADJECTIVES) + j, 
             PokemonSnapItemCategory.TRASH_PICTURE
         )
@@ -101,12 +103,14 @@ _all_items = [PokemonSnapItemData(row[0], row[1], row[2]) for row in [
 
     (POKEMON_FOOD,  1000, PokemonSnapItemCategory.TOOL),
     (PESTER_BALL,   1001, PokemonSnapItemCategory.TOOL),
+    (APPLE,         1101, PokemonSnapItemCategory.TOOL),
     (POKEFLUTE,     1002, PokemonSnapItemCategory.TOOL),
     (DASH_ENGINE,   1003, PokemonSnapItemCategory.TOOL),
     (SIGN_DETECTOR, 1004, PokemonSnapItemCategory.TOOL),
     (L_TO_STOP,     1005, PokemonSnapItemCategory.TOOL),
 
     *((course(POKEMON_FOOD, c), 1000 + 10*(i+1), PokemonSnapItemCategory.TOOL) for i, c in enumerate(ALL_LEVELS)),
+    *((course(APPLE,        c), 1100 + 10*(i+1), PokemonSnapItemCategory.TOOL) for i, c in enumerate(ALL_LEVELS)),
     *((course(PESTER_BALL,  c), 1001 + 10*(i+1), PokemonSnapItemCategory.TOOL) for i, c in enumerate(ALL_LEVELS)),
     *((course(POKEFLUTE,    c), 1002 + 10*(i+1), PokemonSnapItemCategory.TOOL) for i, c in enumerate(ALL_LEVELS)),
 
@@ -131,14 +135,16 @@ _all_items = [PokemonSnapItemData(row[0], row[1], row[2]) for row in [
     (FILM_UPGRADE, 3000, PokemonSnapItemCategory.MISC),
 
     ("ArsonAssassin's pokemon card collection", 4000, PokemonSnapItemCategory.TRASH_CUSTOM),
-    ("A used reel of film", 4001, PokemonSnapItemCategory.TRASH_CUSTOM),
-    ("A reminder to remove the lens cap", 4002, PokemonSnapItemCategory.TRASH_CUSTOM),
+    ("Used reel of film", 4001, PokemonSnapItemCategory.TRASH_CUSTOM),
+    ("Reminder to remove the lens cap", 4002, PokemonSnapItemCategory.TRASH_CUSTOM),
     ("Nothing, literally nothing at all", 4003, PokemonSnapItemCategory.TRASH_CUSTOM),
     ("Several decades worth of nostalgia", 4004, PokemonSnapItemCategory.TRASH_CUSTOM),
-    ("A burger king voucher", 4005, PokemonSnapItemCategory.TRASH_CUSTOM),
-    ("A super close-up of a thumb", 4006, PokemonSnapItemCategory.TRASH_CUSTOM),
-    ("A Futuristic Photo of Mareep", 4007, PokemonSnapItemCategory.TRASH_CUSTOM),
-    ("A Full Art Swinub Card", 4008, PokemonSnapItemCategory.TRASH_CUSTOM),
+    ("Burger King voucher", 4005, PokemonSnapItemCategory.TRASH_CUSTOM),
+    ("Super close-up of a thumb", 4006, PokemonSnapItemCategory.TRASH_CUSTOM),
+    ("Futuristic Photo of Mareep", 4007, PokemonSnapItemCategory.TRASH_CUSTOM),
+    ("Full Art Swinub Card", 4008, PokemonSnapItemCategory.TRASH_CUSTOM),
+
+    (SIMPLE_TRASH_ITEM_NAME, 4100, PokemonSnapItemCategory.TRASH_SIMPLE),
 
 ]] + pokemon_pics + sign_pics + [pic for pics in trash_pokemon_pics.values() for pic in pics]
 
@@ -154,13 +160,18 @@ def build_item_pool(world: "PokemonSnapWorld") -> list[PokemonSnapItemData]:
 
     ## Add all the required items
     item_pool.extend(item for item in _all_items if item.name in [DASH_ENGINE, SIGN_DETECTOR, L_TO_STOP])
-    item_pool.extend(item for item in _all_items if item.category is PokemonSnapItemCategory.SIGN_PIC)
-    item_pool.extend(pokemon_pics)
-
-    if world.options.per_course_items:
-        item_pool.extend(item_dictionary[course(name, c)] for name, c in product([POKEMON_FOOD, PESTER_BALL, POKEFLUTE], ALL_LEVELS))
+    if world.options.goal_item_names == GoalItemNamingScheme.option_specific:
+        item_pool.extend(item for item in pokemon_pics if item.name != POKEMON_PIC_NAME)
+        item_pool.extend(item for item in sign_pics    if item.name != SIGN_PIC_NAME)
     else:
-        item_pool.extend(item for item in _all_items if item.name in [POKEMON_FOOD, PESTER_BALL, POKEFLUTE])
+        item_pool.extend([item_dictionary[POKEMON_PIC_NAME]] * len(ALL_INGAME_POKEMON))
+        item_pool.extend([item_dictionary[SIGN_PIC_NAME]]    * len(ALL_SIGNS))
+
+    pokemon_food_choice = APPLE if (world.options.pokemon_food_name == AppleNamingScheme.option_apples) else POKEMON_FOOD
+    if world.options.per_course_items:
+        item_pool.extend(item_dictionary[course(name, c)] for name, c in product([pokemon_food_choice, PESTER_BALL, POKEFLUTE], ALL_LEVELS))
+    else:
+        item_pool.extend(item for item in _all_items if item.name in [pokemon_food_choice, PESTER_BALL, POKEFLUTE])
 
     if world.options.map_fragments.value == 1:
         item_pool.extend(item for item in _all_items if item.category is PokemonSnapItemCategory.AREA and item.name != world.start_area.name)
@@ -187,16 +198,19 @@ def build_item_pool(world: "PokemonSnapWorld") -> list[PokemonSnapItemData]:
     elif world.options.photo_scoring == PhotoScoring.option_progressive_unlocks:
         count = world.options.extra_photo_scoring_items.value + 2
         item_pool.extend([item_dictionary[PROG_SCORING]] * count)
-    
-    ## Fill with one of each custom trash item, then one of each trash pokemon pic, then random pokemon pics
-    trash_items = [item for item in _all_items if item.category is PokemonSnapItemCategory.TRASH_CUSTOM]
 
-    trash_pics = list(trash_pokemon_pics.values())
-    while len(trash_items) < unfilled_count():
-        for pictures in trash_pics:
-            trash_items.append(world.random.choice(pictures))
-        world.random.shuffle(trash_pics)
-    item_pool.extend(trash_items[:unfilled_count()])
+    if world.options.filler_item_names == FillerItemNamingScheme.option_flavorful:
+        ## Fill with one of each custom trash item, then one of each trash pokemon pic, then random pokemon pics
+        trash_items = [item for item in _all_items if item.category is PokemonSnapItemCategory.TRASH_CUSTOM]
+
+        trash_pics = list(trash_pokemon_pics.values())
+        while len(trash_items) < unfilled_count():
+            for pictures in trash_pics:
+                trash_items.append(world.random.choice(pictures))
+            world.random.shuffle(trash_pics)
+        item_pool.extend(trash_items[:unfilled_count()])
+    else:
+        item_pool.extend([item_dictionary[SIMPLE_TRASH_ITEM_NAME]] * unfilled_count())
 
     world.random.shuffle(item_pool)
     return item_pool

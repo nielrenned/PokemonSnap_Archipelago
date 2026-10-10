@@ -1,9 +1,8 @@
-
 from BaseClasses import CollectionState
 from .bases import PokemonSnapTestBase
 from ..locations import species_data_tables, wonderful, multiple
 from ..items import item_dictionary
-from ..constants import POKEMON_FOOD, PESTER_BALL, POKEFLUTE, DASH_ENGINE
+from ..constants import APPLE, PESTER_BALL, POKEFLUTE, DASH_ENGINE
 from itertools import chain, combinations
 
 def powerset(iterable):
@@ -34,7 +33,7 @@ class TestRuleInheritance(PokemonSnapTestBase):
 
         tools = [self.get_item_by_name(name)
                  for name, item in item_dictionary.items() 
-                 if item.name in [POKEMON_FOOD, PESTER_BALL, POKEFLUTE, DASH_ENGINE]]
+                 if item.name in [APPLE, PESTER_BALL, POKEFLUTE, DASH_ENGINE]]
 
         for combo in powerset(tools):
             state = CollectionState(self.multiworld)

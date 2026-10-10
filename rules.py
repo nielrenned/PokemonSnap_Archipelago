@@ -72,6 +72,8 @@ def multiple_requirement(world: "PokemonSnapWorld"):
 
 
 def has(item_name: str, course_name: str):
+    if item_name == POKEMON_FOOD:
+        return Has(POKEMON_FOOD) | Has(course_item(POKEMON_FOOD, course_name)) | Has(APPLE) | Has(course_item(APPLE, course_name))
     return Has(item_name) | Has(course_item(item_name, course_name))
 
 
