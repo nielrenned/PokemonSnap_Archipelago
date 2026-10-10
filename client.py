@@ -317,7 +317,7 @@ class PokemonSnapContext(CommonContext, PJ64Context):
         await pj64_write_memory(self, "u32", addr.COURSE_OVERRIDE, [0])
 
         can_use_mask = 0
-        can_use_per_course_mask = [0] * 7
+        can_use_per_course_mask = [0] * len(ALL_LEVELS)
         course_mask = 0
         film = self.slot_data['starting_film']
         sign_pic_count = 0
@@ -363,7 +363,7 @@ class PokemonSnapContext(CommonContext, PJ64Context):
                 stored_request_flags = (await pj64_read_memory(self, "u32", addr.DIALOG_REQUEST_FLAGS, 4))[0]
                 await pj64_write_memory(self, "u32", addr.DIALOG_REQUEST_FLAGS, [stored_request_flags | 1])
 
-        if self.slot_data['left_bumper_to_start_stop'] == PressLToStop.option_start_with or L_TO_STOP in self.items_received:
+        if self.slot_data['left_bumper_to_start_stop'] == PressLToStop.option_start_with:
             can_use_mask |= addr.CAN_USE_FLAGS[L_TO_STOP]
         
         # Check wonderful/multiple scoring unlocks
@@ -377,8 +377,6 @@ class PokemonSnapContext(CommonContext, PJ64Context):
             if prog_scoring_count >= 2: can_use_mask |= addr.CAN_USE_FLAGS[MULT_SCORING]
         elif self.slot_data['photo_scoring'] == PhotoScoring.option_separate_unlocks:
             can_use_mask |= addr.CAN_USE_FLAGS[MULT_WO_WDFL]
-            if WDFL_SCORING in self.items_received: can_use_mask |= addr.CAN_USE_FLAGS[WDFL_SCORING]
-            if MULT_SCORING in self.items_received: can_use_mask |= addr.CAN_USE_FLAGS[MULT_SCORING]
 
         await pj64_write_memory(self, "u32", addr.CAN_USE_MASK, [can_use_mask])
         await pj64_write_memory(self, "u32", addr.CAN_USE_PER_COURSE_MASK, can_use_per_course_mask)

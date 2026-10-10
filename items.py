@@ -50,7 +50,7 @@ base_key_item_names = {
     POKEMON_FOOD, PESTER_BALL, POKEFLUTE, DASH_ENGINE, SIGN_DETECTOR,
     *(course(POKEMON_FOOD, c) for c in ALL_LEVELS),
     *(course(PESTER_BALL, c)  for c in ALL_LEVELS),
-    *(course(POKEFLUTE, c)    for c in ALL_LEVELS),
+    *(course(POKEFLUTE, c)    for c in ALL_MAIN_LEVELS),
 
     PROG_SCORING, WDFL_SCORING, MULT_SCORING
 }
@@ -72,7 +72,7 @@ sign_pics = [
 SIGN_PIC_NAMES = {item.name for item in sign_pics}
 
 def key_item_names(world: "PokemonSnapWorld") -> list:
-    key_item_names_list = base_key_item_names
+    key_item_names_list = set(base_key_item_names) # Make a copy so we don't break other worlds
     if world.options.goal_type == GOAL_SIGN_PICS:
         key_item_names_list |= SIGN_PIC_NAMES
     elif world.options.goal_type == GOAL_POKEMON_PICS:
