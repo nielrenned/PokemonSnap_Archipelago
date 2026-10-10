@@ -185,9 +185,9 @@ class PokemonSnapWorld(World):
         self.multiworld.itempool.extend(self.create_item(item.name) for item in item_pool if item.name != FILM_UPGRADE)
 
         # Separate step for film upgrades
-        # TODO: [SOFT]: change 15 to 10 for hard logic
         film_upgrade_count = item_pool.count(item_dictionary[FILM_UPGRADE])
-        required_progressive = max(0, ceil((15 - self.options.starting_film) / self.options.film_upgrade_amount))
+        min_film = min(10 if self.options.hard_logic else 15, self.options.maximum_film)
+        required_progressive = max(0, ceil((min_film - self.options.starting_film) / self.options.film_upgrade_amount))
         self.multiworld.itempool.extend(
             PokemonSnapItem(FILM_UPGRADE, ItemClassification.progression_skip_balancing, self.item_name_to_id[FILM_UPGRADE], self.player)
             for _ in range(required_progressive))
@@ -238,7 +238,7 @@ class PokemonSnapWorld(World):
         return self.options.as_dict(
             "goal_type", "signs_required", "pokemon_required", "photo_scoring",
             "photo_bonuses", "pokemon_signs", "secret_exits", "report_photo_count",
-            "report_score_total", "rng_checks", "hard_checks",
+            "report_score_total", "rng_checks", "hard_checks", "hard_logic",
             "left_bumper_to_start_stop", "camera_inversion",
             "starting_film", "film_upgrade_amount", "maximum_film", 
             "map_fragments", "per_course_items")

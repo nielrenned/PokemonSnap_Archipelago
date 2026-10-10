@@ -207,6 +207,16 @@ class IncludeHardChecks(Toggle):
     display_name = "Include hard checks"
 
 
+class UseHardLogic(Toggle):
+    """
+    Enable hard logic.
+    
+    This puts more checks in-logic earlier, with potentially much more difficult requirements. 
+    Only enable this option if you are experienced and want a challenge.
+    """
+    display_name = "Hard logic"
+
+
 class StartWithDashEngine(Toggle):
     """
     Start with the Dash Engine.
@@ -265,6 +275,7 @@ class PokemonSnapOption(PerGameCommonOptions):
 
     rng_checks:  IncludeRNGChecks
     hard_checks: IncludeHardChecks
+    hard_logic:  UseHardLogic
 
     start_with_dash_engine: StartWithDashEngine
     left_bumper_to_start_stop: PressLToStop
@@ -295,9 +306,10 @@ pokemon_snap_option_groups = [
         PokemonReportPhotoCount,
         PokemonReportTotalScore,
     ]),
-    OptionGroup("Checks - Pokemon", [
+    OptionGroup("Checks - Difficulty Settings", [
 		IncludeRNGChecks,
 		IncludeHardChecks,
+        UseHardLogic
 	]),
     OptionGroup("Quality Of Life", [
 		StartWithDashEngine,
