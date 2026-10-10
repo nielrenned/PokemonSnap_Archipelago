@@ -39,7 +39,7 @@
       "addr": "0x80400010",
       "type": "u32[7]",
       "access": "rw",
-      "desc": "[0]=Beach, [1]=Tunnel, [2]=Volcano, [3]=Cave, [4]=River, [5]=Valley, [6]=Rainbow. Bits within each u32 are the same as gCanUseMask. gCanUseMask takes priority"
+      "desc": "[0]=Beach, [1]=Tunnel, [2]=Volcano, [3]=River, [4]=Cave, [5]=Valley, [6]=Rainbow. Bits within each u32 are the same as gCanUseMask. gCanUseMask takes priority."
     },
     "gCourseOverride": {
       "addr": "0x8040002C",
@@ -51,7 +51,7 @@
       "addr": "0x80400030",
       "type": "u32",
       "access": "rw",
-      "desc": "bit0=Beach, 1=Tunnel, 2=Volcano, 3=Cave, 4=River, 5=Valley, 6=Rainbow (used when gCourseOverride==0)"
+      "desc": "bit0=Beach, 1=Tunnel, 2=Volcano, 3=River, 4=Cave, 5=Valley, 6=Rainbow (used when gCourseOverride==0)"
     },
     "gDialogRequestFlags": {
       "addr": "0x80400034",
