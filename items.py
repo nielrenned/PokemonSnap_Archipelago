@@ -42,7 +42,7 @@ class PokemonSnapItem(Item):
 fragment   = lambda s: f'{s}: Map Fragment'
 unfragment = lambda s: s[:-len(': Map Fragment')]
 
-base_key_item_names = {
+key_item_names = {
     VICTORY_ITEM_NAME,
 
     LVL_BEACH, LVL_TUNNEL, LVL_VOLCANO, LVL_RIVER, LVL_CAVE, LVL_VALLEY, LVL_CLOUD,
@@ -57,10 +57,6 @@ base_key_item_names = {
     PROG_SCORING, WDFL_SCORING, MULT_SCORING
 }
 
-useful_item_names = {
-    FILM_UPGRADE, L_TO_STOP
-}
-
 pokemon_pics = [
     PokemonSnapItemData(f"{POKEMON_PIC_NAME}: {name}", 5000 + i, PokemonSnapItemCategory.POKEMON_PIC)
     for i, name in enumerate(ALL_INGAME_POKEMON)
@@ -73,14 +69,9 @@ sign_pics = [
 ]
 SIGN_PIC_NAMES = {item.name for item in sign_pics} | {SIGN_PIC_NAME}
 
-def key_item_names(world: "PokemonSnapWorld") -> set:
-    key_item_names_list = set(base_key_item_names) # Make a copy so we don't break other worlds
-    if world.options.goal_type == GOAL_SIGN_PICS:
-        key_item_names_list |= SIGN_PIC_NAMES
-    elif world.options.goal_type == GOAL_POKEMON_PICS:
-        key_item_names_list |= POKEMON_PIC_NAMES
-
-    return key_item_names_list
+useful_item_names = {
+    FILM_UPGRADE, L_TO_STOP, *POKEMON_PIC_NAMES, *SIGN_PIC_NAMES
+}
 
 # We're doing this weirdness so that each adjective/pokemon combo has its own ID.
 # This way, when a tracker connects, it knows exactly which trash item you got.
@@ -155,13 +146,9 @@ filler_item_names = [item.name for item in _all_items if item.category is Pokemo
 
 item_dictionary = {item_data.name: item_data for item_data in _all_items}
 
-def build_item_pool(world: "PokemonSnapWorld") -> list[PokemonSnapItemData]:
+def build_required_item_pool(world: "PokemonSnapWorld") -> list[PokemonSnapItemData]:
     item_pool = []
 
-    def unfilled_count():
-        return len(world.multiworld.get_unfilled_locations(world.player)) - len(item_pool)
-
-    ## Add all the required items
     item_pool.extend(item for item in _all_items if item.name in [DASH_ENGINE, SIGN_DETECTOR, L_TO_STOP])
 
     pokemon_pic_count = len(ALL_INGAME_POKEMON)
@@ -214,6 +201,14 @@ def build_item_pool(world: "PokemonSnapWorld") -> list[PokemonSnapItemData]:
         count = world.options.extra_photo_scoring_items.value + 2
         item_pool.extend([item_dictionary[PROG_SCORING]] * count)
 
+    return item_pool
+
+def build_item_pool(world: "PokemonSnapWorld") -> list[PokemonSnapItemData]:
+    item_pool = build_required_item_pool(world)
+
+    def unfilled_count():
+        return len(world.multiworld.get_unfilled_locations(world.player)) - len(item_pool)
+
     if world.options.filler_item_names == FillerItemNamingScheme.option_flavorful:
         ## Fill with one of each custom trash item, then one of each trash pokemon pic, then random pokemon pics
         trash_items = [item for item in _all_items if item.category is PokemonSnapItemCategory.TRASH_CUSTOM]
@@ -227,7 +222,6 @@ def build_item_pool(world: "PokemonSnapWorld") -> list[PokemonSnapItemData]:
     else:
         item_pool.extend([item_dictionary[SIMPLE_TRASH_ITEM_NAME]] * unfilled_count())
 
-    world.random.shuffle(item_pool)
     return item_pool
 
 

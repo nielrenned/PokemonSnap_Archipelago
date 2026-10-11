@@ -4,15 +4,16 @@ from typing import ClassVar, Any
 
 from BaseClasses import MultiWorld, Region, Entrance, Tutorial, ItemClassification
 from NetUtils import MultiData
+from Options import OptionError
 from worlds.AutoWorld import World, WebWorld
 from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess, icon_paths
 from math import ceil
 from .constants import *
 from .items import PokemonSnapItem, PokemonSnapItemCategory, key_item_names, useful_item_names, \
-    _all_items, build_item_pool, PokemonSnapItemData, item_dictionary
+    _all_items, build_item_pool, build_required_item_pool, PokemonSnapItemData, item_dictionary, POKEMON_PIC_NAMES, SIGN_PIC_NAMES
 from .locations import PokemonSnapLocation, PokemonSnapLocationCategory, location_tables, bonus, wonderful, \
     RNG_LOCATIONS, HARD_LOCATIONS
-from .options import PokemonSnapOption, PhotoBonusChecks, FillerItemNamingScheme, PressLToStop, pokemon_snap_option_groups
+from .options import PokemonSnapOption, PhotoBonusChecks, FillerItemNamingScheme, PressLToStop, pokemon_snap_option_groups, GoalType
 from .psnap_settings import PokemonSnapSettings
 from .rom import PokemonSnapProcedurePatch
 from .rules import set_rules
@@ -110,6 +111,16 @@ class PokemonSnapWorld(World):
         if self.options.enable_left_bumper_to_start_stop:
             self.options.left_bumper_to_start_stop.value = PressLToStop.option_start_with
 
+        if not getattr(self.multiworld, "generation_is_fake", False):
+            # Check that the options don't generate too much stuff
+            base_fillable = sum(1 for table in location_tables.values() for loc in table if self.location_enabled(loc))
+            max_fillable = 2 * base_fillable - 1 # double every location and then remove one for victory item
+            if len(build_required_item_pool(self)) > max_fillable:
+                raise OptionError(
+                    f"YAML for Pokemon Snap - {self.player_name}: not enough locations for items. "
+                    "Try reducing extra items or enabling more checks (`photo_bonuses` is a likely culprit)."
+                )
+
     def create_regions(self):
         # Create Regions
         regions = {"Menu": self.create_region("Menu", [])}
@@ -141,15 +152,17 @@ class PokemonSnapWorld(World):
         create_connection(START_GAME, LVL_VALLEY)
         create_connection(START_GAME, LVL_CLOUD)
 
+    def location_enabled(self, location) -> bool:
+        return (
+            location.category in self.enabled_location_categories and
+            (location.name not in RNG_LOCATIONS  or self.options.rng_checks) and
+            (location.name not in HARD_LOCATIONS or self.options.hard_checks)
+        )
+
     def create_region(self, region_name, location_table) -> Region:
         new_region = Region(region_name, self.player, self.multiworld)
         for location in location_table:
-            if location.category not in self.enabled_location_categories:
-                continue
-            if location.name in RNG_LOCATIONS and not self.options.rng_checks:
-                continue
-            if location.name in HARD_LOCATIONS and not self.options.hard_checks:
-                continue
+            if not self.location_enabled(location): continue
 
             new_location = PokemonSnapLocation(
                 self.player,
@@ -186,31 +199,57 @@ class PokemonSnapWorld(World):
 
     def create_items(self):
         item_pool = build_item_pool(self)
-        self.multiworld.itempool.extend(self.create_item(item.name) for item in item_pool if item.name != FILM_UPGRADE)
+        self.multiworld.itempool.extend(
+            self.create_item(item.name) for item in item_pool 
+            if item.name not in ({FILM_UPGRADE} | POKEMON_PIC_NAMES | SIGN_PIC_NAMES)
+        )
 
-        # Separate step for film upgrades
+        # For Film Upgrades, Pokemon Pics, and Sign Pics, we need to upgrade some of the
+        # items to "progression" instead of "useful" so that the world is completable.
+        # But classifying every one of these items as "progression" can lead to fill
+        # errors, so we'll only include the minimum amount necessary.
+
+        # Add the pokemon pictures
+        pokemon_pics = [item for item in item_pool if item.name in POKEMON_PIC_NAMES]
+        self.random.shuffle(pokemon_pics)
+        for i, item in enumerate(pokemon_pics):
+            item_class = ItemClassification.useful
+            # intentionally including an extra progressive pokemon picture here
+            if self.options.goal_type == GoalType.option_pokemon_pictures and i < self.options.pokemon_required.value:
+                item_class = ItemClassification.progression
+            self.multiworld.itempool.append(self.create_classified_item(item.name, item_class))
+
+        # Add the sign pictures
+        sign_pics = [item for item in item_pool if item.name in SIGN_PIC_NAMES]
+        self.random.shuffle(sign_pics)
+        for i, item in enumerate(sign_pics):
+            item_class = ItemClassification.useful
+            # intentionally including an extra progressive sign here
+            if self.options.goal_type == GoalType.option_signs and i < self.options.signs_required.value:
+                item_class = ItemClassification.progression
+            self.multiworld.itempool.append(self.create_classified_item(item.name, item_class))
+
+        # Add the film upgrades
         film_upgrade_count = item_pool.count(item_dictionary[FILM_UPGRADE])
         min_film = min(10 if self.options.hard_logic else 15, self.options.maximum_film)
         required_progressive = max(0, ceil((min_film - self.options.starting_film) / self.options.film_upgrade_amount))
         self.multiworld.itempool.extend(
-            PokemonSnapItem(FILM_UPGRADE, ItemClassification.progression_skip_balancing, self.item_name_to_id[FILM_UPGRADE], self.player)
+            self.create_classified_item(FILM_UPGRADE, ItemClassification.progression_skip_balancing)
             for _ in range(required_progressive))
         self.multiworld.itempool.extend(
-                    PokemonSnapItem(FILM_UPGRADE, ItemClassification.useful, self.item_name_to_id[FILM_UPGRADE], self.player)
-                    for _ in range(film_upgrade_count - required_progressive))
+            self.create_classified_item(FILM_UPGRADE, ItemClassification.useful)
+            for _ in range(film_upgrade_count - required_progressive))
 
     def create_item(self, name: str) -> PokemonSnapItem:
-        data = self.item_name_to_id[name]
-
-        key_items = key_item_names(self)
-        if name in key_items:
-            item_classification = ItemClassification.progression
+        if name in key_item_names:
+            return self.create_classified_item(name, ItemClassification.progression)
         elif name in useful_item_names:
-            item_classification = ItemClassification.useful
+            return self.create_classified_item(name, ItemClassification.useful)
         else:
-            item_classification = ItemClassification.filler
+            return self.create_classified_item(name, ItemClassification.filler)
 
-        return PokemonSnapItem(name, item_classification, data, self.player)
+    def create_classified_item(self, name: str, classification: ItemClassification) -> PokemonSnapItem:
+        return PokemonSnapItem(name, classification, self.item_name_to_id[name], self.player)
 
     def get_filler_item_name(self) -> str:
         if self.options.filler_item_names == FillerItemNamingScheme.option_flavorful: 

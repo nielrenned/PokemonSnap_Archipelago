@@ -66,7 +66,7 @@ class ExtraPokemonPictures(Range):
     display_name = "Extra Pokemon Pictures"
     default     = 0
     range_start = 0
-    range_end   = 21
+    range_end   = 20
 
 
 class GoalItemNamingScheme(Choice):
