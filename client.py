@@ -11,7 +11,7 @@ from .constants import *
 from .locations import wonderful_id as wdfl_id, multiple_id as mult_id, special_pose_id, secret_exit_id, sign_id, bonus_id, oak_reward_id, OAK_REWARDS, POKEMON_TO_SLOTS
 from .update_pj64_config import safe_load_pj64_config
 from .items import item_dictionary, SIGN_PIC_NAMES, POKEMON_PIC_NAMES, fragment, unfragment
-from .options import PhotoScoring, PressLToStop
+from .options import PhotoScoring, PressLToStop, PhotoBonusChecks
 from . import addresses as addr
 
 _code_to_name = {data.ps_code: name for name, data in item_dictionary.items()}
@@ -329,7 +329,7 @@ class PokemonSnapContext(CommonContext, PJ64Context):
                 await self.send_msgs([{"cmd": "StatusUpdate", "status": ClientStatus.CLIENT_GOAL}])
                 self.finished_game = True
                 await pj64_write_memory(self, "u32", addr.DIALOG_REQUEST_FLAGS, [0x80])
-                if self.slot_data['good_technique_mew_photo']:
+                if self.slot_data['good_technique_mew_photo'] and self.slot_data['photo_bonuses'] != PhotoBonusChecks.option_none:
                     logger.info("Mew photographed with good technique - goal complete!")
                 else:
                     logger.info("Mew photographed - goal complete!")
