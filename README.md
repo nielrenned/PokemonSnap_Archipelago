@@ -33,12 +33,12 @@ See [Setup Instructions](docs/setup_en.md) for set up and [FAQ](docs/faq_en.md) 
   * Each course unlock can be split into up to six "map fragments"
 * Pokémon Food (a.k.a. Apples), Pester Balls, Pokéflute
   * Optionally can be unlocked per course, rather than globally
-* Pester Balls
 * Dash Engine (can be enabled from the start)
 * Pokémon Sign Detector (custom AP item)
 * Film Capacity Upgrades
   * Start, Upgrade Amount, and Max Film are all customizable
 * "Good Technique" and "Multiple Pokemon" Scoring (optional)
+* Press L to Stop (custom, optional unlock)
 
 ### Win Condition
 * Unlock the Rainbow Cloud course by finding the required amount of Pokemon Sign Pictures or Pokemon Pictures (may be in others' worlds!)
