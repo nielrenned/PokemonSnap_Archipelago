@@ -104,8 +104,8 @@
   },
   "idents": {
     "auth": {
-      "addr": "0x804004C4",
-      "rom_offset": "0x010004D4",
+      "addr": "0x80400544",
+      "rom_offset": "0x01000554",
       "len": 16,
       "type": "u8[16]",
       "access": "rw",
