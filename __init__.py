@@ -59,6 +59,7 @@ class PokemonSnapWorld(World):
     topology_present: bool = True
 
     enabled_location_categories: set[PokemonSnapLocationCategory]
+    enabled_regular_poses: set[PokemonSnapLocation]
     required_client_version = (0, 6, 7)
     item_name_to_id = PokemonSnapItem.get_name_to_id()
     location_name_to_id = PokemonSnapLocation.get_name_to_id()
@@ -93,6 +94,13 @@ class PokemonSnapWorld(World):
         if self.options.report_score_total:
             self.enabled_location_categories.add(PokemonSnapLocationCategory.REPORT_SCORE)
 
+        if self.options.posesanity > 0:
+            self.enabled_location_categories.add(PokemonSnapLocationCategory.REGULAR_POSE)
+            all_poses = [location 
+                         for region in location_tables.values() for location in region 
+                         if location.category == PokemonSnapLocationCategory.REGULAR_POSE]
+            self.random.shuffle(all_poses)
+            self.enabled_regular_poses = set(all_poses[:self.options.posesanity])
 
         # Per-seed connect token, baked into the ROM and registered server-side.
         self.auth = self.random.randbytes(16)
@@ -156,7 +164,8 @@ class PokemonSnapWorld(World):
         return (
             location.category in self.enabled_location_categories and
             (location.name not in RNG_LOCATIONS  or self.options.rng_checks) and
-            (location.name not in HARD_LOCATIONS or self.options.hard_checks)
+            (location.name not in HARD_LOCATIONS or self.options.hard_checks) and
+            (location.category != PokemonSnapLocationCategory.REGULAR_POSE or location in self.enabled_regular_poses)
         )
 
     def create_region(self, region_name, location_table) -> Region:

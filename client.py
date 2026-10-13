@@ -8,7 +8,7 @@ from NetUtils import ClientStatus
 
 from .pj64_connector import PJ64Context, pj64connect, pj64disconnect, pj64_read_memory, pj64_write_memory
 from .constants import *
-from .locations import wonderful_id as wdfl_id, multiple_id as mult_id, special_pose_id, secret_exit_id, sign_id, bonus_id, oak_reward_id, OAK_REWARDS, POKEMON_TO_SLOTS
+from .locations import wonderful_id as wdfl_id, multiple_id as mult_id, special_pose_id, regular_pose_id as pose_id, secret_exit_id, sign_id, bonus_id, oak_reward_id, OAK_REWARDS, POKEMON_TO_SLOTS
 from .update_pj64_config import safe_load_pj64_config
 from .items import item_dictionary, SIGN_PIC_NAMES, POKEMON_PIC_NAMES, fragment, unfragment
 from .options import PhotoScoring, PressLToStop, PhotoBonusChecks
@@ -27,11 +27,14 @@ except ImportError:
 class PokemonSnapReportScore(NamedTuple):
     special_bonus: int
     pose_score: int
+    last_pose_id: int
     size_score: int
     technique_score: int
     same_pokemon_score: int
     special_pose_bits: int
     total_score: int
+
+SPECIES_DATA_SIZE = len(PokemonSnapReportScore._fields)
 
 class PokemonSnapCommandProcessor(ClientCommandProcessor):
     def __init__(self, ctx: CommonContext, server_address: str = None):
@@ -182,7 +185,7 @@ class PokemonSnapContext(CommonContext, PJ64Context):
 
         # TODO: condense into one read and split based on addresses
         level_id = (await pj64_read_memory(self, "s32", addr.LEVEL_ID, 4))[0]
-        raw_scores = await pj64_read_memory(self, "u16", addr.SPECIES_SCORES, addr.NUM_SPECIES_SCORES * 7 * 2)
+        raw_scores = await pj64_read_memory(self, "u16", addr.SPECIES_SCORES, addr.NUM_SPECIES_SCORES * SPECIES_DATA_SIZE * 2)
         sign_flags = await pj64_read_memory(self, "u8", addr.SIGN_FLAGS, addr.NUM_SIGNS)
         secret_exit_flags = (await pj64_read_memory(self, "u8", addr.SECRET_EXIT_FLAGS, 1))[0]
 
@@ -199,14 +202,16 @@ class PokemonSnapContext(CommonContext, PJ64Context):
 
         all_checks = set()
 
-        scores = [PokemonSnapReportScore(*raw_scores[i:i+7]) for i in range(0, addr.NUM_SPECIES_SCORES * 7, 7)]
+        scores = [PokemonSnapReportScore(*raw_scores[i:i+SPECIES_DATA_SIZE]) 
+                  for i in range(0, addr.NUM_SPECIES_SCORES * SPECIES_DATA_SIZE, SPECIES_DATA_SIZE)]
         for slot, report in enumerate(scores):
             if report.total_score == 0: continue
 
-            location_id = slot + 1
-            all_checks.add(location_id)
-            if report.technique_score > 0:    all_checks.add(wdfl_id(location_id))
-            if report.same_pokemon_score > 0: all_checks.add(mult_id(location_id))
+            pokemon_id = slot + 1
+            all_checks.add(pokemon_id)
+            if report.technique_score > 0:    all_checks.add(wdfl_id(pokemon_id))
+            if report.same_pokemon_score > 0: all_checks.add(mult_id(pokemon_id))
+            if report.last_pose_id > 0:       all_checks.add(pose_id(report.last_pose_id, pokemon_id))
 
             poses_seen_ids = [i+1 for i in range(12) if ((1 << i) & report.special_pose_bits) != 0]
             all_checks |= {special_pose_id(pose_id) for pose_id in poses_seen_ids}

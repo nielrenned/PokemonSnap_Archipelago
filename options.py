@@ -252,6 +252,12 @@ class PokemonReportTotalScore(DefaultOnToggle):
     display_name = "PKMN Report Score Rewards"
 
 
+class PoseSanity(Range):
+    range_start = 0
+    range_end = 144 # only if we count each zapping pika as separate, etc.
+    default = 0
+
+
 class IncludeRNGChecks(Toggle):
     """
     Include the luck-heavy photos as checks. They are:
@@ -354,6 +360,7 @@ class PokemonSnapOption(PerGameCommonOptions):
     secret_exits:  SecretExits
     report_photo_count: PokemonReportPhotoCount
     report_score_total: PokemonReportTotalScore
+    posesanity: PoseSanity
 
     rng_checks:  IncludeRNGChecks
     hard_checks: IncludeHardChecks
@@ -394,6 +401,7 @@ pokemon_snap_option_groups = [
         SecretExits,
         PokemonReportPhotoCount,
         PokemonReportTotalScore,
+        PoseSanity
     ]),
     OptionGroup("Checks - Difficulty Settings", [
 		IncludeRNGChecks,
