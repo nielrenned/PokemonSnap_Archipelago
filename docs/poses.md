@@ -45,10 +45,7 @@ For any pose to count, the Pokemon must be center frame and close enough to the 
 | Electabuzz | 1000 | It must be angry. |
 | Electabuzz | 1200 | Oh! It looks yummy! |
 | Zapdos | 1350 | Oh! What a Thunder Jolt! |
-| Magikarp | 1200 | Oh! What a splash! |
 | Magikarp | 800 | It splashed! |
-| Magikarp | 1000 | That's a good splash. |
-| Magikarp | 1200 | Oh! It's splashing. |
 | Pikachu | 1300 | This pose zaps even me! |
 | Pikachu | 1250 | Oh! This is very lively! |
 | Pikachu | 1400 | Oh! That's PIKA! |
@@ -74,16 +71,13 @@ For any pose to count, the Pokemon must be center frame and close enough to the 
 | Growlithe | 1300 | Oh! Tons of embers! |
 | Arcanine | 1200 | Oh! So many embers! |
 | Rapidash | 1200 | Oh! It's neighing. |
-| Magmar | 1000 | Interesting! It's dizzy! |
 | Magmar | 800 | It's unstable... |
 | Magmar | 800 | This is pretty funny! |
 | Magmar | 800 | Ha, ha, ha! This is so funny! |
+| Magmar | 1000 | Interesting! It's dizzy! |
 | Magmar | 1200 | Oh! It looks hot! |
 | Moltres | 1350 | Oh! What a wonderful pose! |
-| Magikarp | 1200 | Oh! What a splash! |
-| Magikarp | 800 | It splashed! |
 | Magikarp | 1000 | That's a good splash. |
-| Magikarp | 1200 | Oh! It's splashing. |
 
 ## River
 
@@ -92,19 +86,19 @@ For any pose to count, the Pokemon must be center frame and close enough to the 
 | Vileplume | 1000 | Isn't the Pokémon dance fun? |
 | Vileplume | 1200 | Oh! It's rockin'! |
 | Vileplume | 1350 | Oh! It's about to wake up! |
-| Psyduck | 1000 | Nice jump. |
+| Psyduck | 800 | It's submerging. |
 | Psyduck | 800 | It jumped. |
-| Psyduck | 1200 | Oh! What a jump! |
+| Psyduck | 1000 | Nice jump. |
 | Psyduck | 1000 | It's about to fall. |
 | Psyduck | 1000 | Quite unique! |
-| Psyduck | 800 | It's submerging. |
-| Poliwag | 1000 | Nice jump. |
-| Poliwag | 800 | It's jumping. |
-| Poliwag | 1200 | Oh! What a jump! |
+| Psyduck | 1200 | Oh! What a jump! |
 | Poliwag | 800 | It's dizzy. |
 | Poliwag | 800 | Oh dear, it fainted. |
 | Poliwag | 800 | Oh! It's about to wake up. |
+| Poliwag | 800 | It's jumping. |
+| Poliwag | 1000 | Nice jump. |
 | Poliwag | 1150 | Oh! It's about to jump in! |
+| Poliwag | 1200 | Oh! What a jump! |
 | Slowpoke | 1000 | It looks like it's going to fish. |
 | Slowpoke | 1000 | Gone fishing... |
 | Slowpoke | 1200 | Oh! It got a bite! |
@@ -115,16 +109,11 @@ For any pose to count, the Pokemon must be center frame and close enough to the 
 | Porygon | 1000 | Hmm... It looks jolly. |
 | Porygon | 1400 | Oh! It sure is jolly! |
 | Bulbasaur | 800 | You've thrown a PESTER BALL. |
-| Bulbasaur | 800 | You've thrown a PESTER BALL. |
-| Bulbasaur | 800 | You've thrown a PESTER BALL. |
 | Bulbasaur | 1200 | Oh! What a happy face! |
-| Magikarp | 1200 | Oh! What a splash! |
 | Magikarp | 800 | It splashed! |
 | Magikarp | 1000 | That's a good splash. |
-| Magikarp | 1200 | Oh! It's splashing. |
+| Magikarp | 1200 | Oh! What a splash! |
 | Pikachu | 1300 | This pose zaps even me! |
-| Pikachu | 1250 | Oh! This is very lively! |
-| Pikachu | 1400 | Oh! That's PIKA! |
 
 ## Cave
 
@@ -140,62 +129,47 @@ For any pose to count, the Pokemon must be center frame and close enough to the 
 | Ditto | 1150 | Oh! It's happy. |
 | Articuno | 1350 | Oh! How beautiful! |
 | Koffing | 1200 | Oh! What a weird dance. |
-| Bulbasaur | 800 | You've thrown a PESTER BALL. |
-| Bulbasaur | 800 | You've thrown a PESTER BALL. |
-| Bulbasaur | 800 | You've thrown a PESTER BALL. |
-| Bulbasaur | 1200 | Oh! What a happy face! |
 | Magikarp | 1200 | Oh! What a splash! |
-| Magikarp | 800 | It splashed! |
-| Magikarp | 1000 | That's a good splash. |
-| Magikarp | 1200 | Oh! It's splashing. |
-| Pikachu | 1300 | This pose zaps even me! |
 | Pikachu | 1250 | Oh! This is very lively! |
-| Pikachu | 1400 | Oh! That's PIKA! |
+| Pikachu | 1300 | This pose zaps even me! |
 
 ## Valley
 
 | Pokémon | Points | Oak's comment | How to capture |
 |---|---|---|---|
-| Squirtle | 800 | You've thrown a PESTER BALL. |
-| Squirtle | 800 | You've thrown a PESTER BALL. |
-| Squirtle | 800 | You've thrown a PESTER BALL. |
+| Squirtle | 150 | I only see its shell. |
 | Squirtle | 500 | It's about to withdraw. |
-| Squirtle | 150 ⚠ | I only see its shell. |
+| Squirtle | 800 | You've thrown a PESTER BALL. |
 | Squirtle | 900 | It's about to come out. |
 | Squirtle | 1100 | Oh! It's happy! |
 | Sandshrew | 800 | You've thrown a PESTER BALL. |
-| Sandshrew | 800 | You've thrown a PESTER BALL. |
-| Sandshrew | 800 | You've thrown a PESTER BALL. |
-| Sandshrew | 1350 | Oh! It's about to pop up. |
 | Sandshrew | 800 | It's about to go underground. |
 | Sandshrew | 1000 | Hmm... It looks jolly. |
+| Sandshrew | 1350 | Oh! It's about to pop up. |
 | Sandslash | 800 | It stumbled. |
-| Sandslash | 800 | It stumbled. |
-| Sandslash | 800 | It stumbled. |
-| Sandslash | 1400 | Oh! It's about to pop up. |
 | Sandslash | 850 | It's about to go underground. |
 | Sandslash | 1050 | Oh! It's happy. |
+| Sandslash | 1400 | Oh! It's about to pop up. |
+| Mankey | 800 | You've thrown a PESTER BALL. |
 | Mankey | 1250 | Oh! It's MANKEY in the sky! |
 | Mankey | 1250 | Oh! MANKEY got blasted! |
-| Mankey | 800 | You've thrown a PESTER BALL. |
-| Graveler | 1200 | Oh! It's falling. |
 | Graveler | 1200 | Oh! It's falling. |
 | Graveler | 1200 | Oh! It fell. |
-| Goldeen | 1000 | That's a good splash! |
 | Goldeen | 800 | It's splashing. |
+| Goldeen | 1000 | That's a good splash! |
 | Goldeen | 1200 | Oh! What a splash! |
-| Gyarados | 1350 | Oh! How powerful! |
 | Gyarados | 1000 | It just showed its face. |
 | Gyarados | 1000 | Umm... looks scary! |
 | Gyarados | 1200 | Oh! It's furious! |
 | Gyarados | 1200 | Oh! It looks astonished! |
+| Gyarados | 1350 | Oh! How powerful! |
 | Dratini | 1200 | Oh! What an amazing jump! |
 | Dratini | 1000 | That's a pretty good jump. |
 | Dratini | 800 | It's jumping. |
 | Dragonite | 1200 | Oh! It's DRAGONITE! |
-| Magikarp | 1200 | Oh! What a splash! |
 | Magikarp | 800 | It splashed! |
 | Magikarp | 1000 | That's a good splash. |
+| Magikarp | 1200 | Oh! What a splash! |
 | Magikarp | 1200 | Oh! It's splashing. |
 
 ## Rainbow Cloud
@@ -203,7 +177,6 @@ For any pose to count, the Pokemon must be center frame and close enough to the 
 | Pokémon | Points | Oak's comment | How to capture |
 |---|---|---|---|
 | Mew | 800 | If only it were facing you... |
-| Mew | 800 | If only it were facing you... |
-| Mew | 1350 | Oh! Well done! |
 | Mew | 1250 | Oh! It's spinning. |
+| Mew | 1350 | Oh! Well done! |
 | Mew | 1500 | Why, it's perfect! |
