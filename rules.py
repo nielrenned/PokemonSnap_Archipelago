@@ -290,28 +290,29 @@ LOCATION_RULES = {
     # Environment
     BEACH_SIGN:          { Category.POKEMON_SIGN: Has(SIGN_DETECTOR) },
     # Regular Poses
-    PIDGEY_SCREECH:             { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    MEOWTH_FUNNY:               { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    MEOWTH_FAINTED:             { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    MEOWTH_PESTER:              { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    MEOWTH_DANCING:             { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    DODUO_HIT:                  { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    DODUO_FAINTED:              { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    DODUO_WAKING:               { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    CHANSEY_JOLLY:              { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    CHANSEY_FUNNY:              { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    KANGASKHAN_ANGRY:           { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    KANGASKHAN_DANCE:           { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    SCYTHER_FIGHTING:           { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    LAPRAS_RELAXED:             { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    EEVEE_HAPPY:                { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    SNORLAX_FOR_SURE:           { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    SNORLAX_JOLLY:              { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    SNORLAX_WAKING:             { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    SNORLAX_SCRATCHING:         { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    PIKACHU_BEACH_ZAPS_EVEN_ME: { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    PIKACHU_BEACH_VERY_LIVELY:  { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    MAGIKARP_BEACH_GOOD_SPLASH: { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
+    PIDGEY_SCREECH:             { Category.REGULAR_POSE: _NO_ITEMS },
+    MEOWTH_FUNNY:               { Category.REGULAR_POSE: _NO_ITEMS },
+    MEOWTH_FAINTED:             { Category.REGULAR_POSE: _NO_ITEMS },
+    MEOWTH_PESTER:              { Category.REGULAR_POSE: has(PESTER_BALL, LVL_BEACH) },
+    MEOWTH_DANCING:             { Category.REGULAR_POSE: has(POKEFLUTE, LVL_BEACH) },
+    # TODO: [hard] are the Doduo checks possible without dash engine?
+    DODUO_HIT:                  { Category.REGULAR_POSE: Has(DASH_ENGINE) & (has(POKEMON_FOOD, LVL_BEACH) | has(PESTER_BALL, LVL_BEACH)) },
+    DODUO_FAINTED:              { Category.REGULAR_POSE: Has(DASH_ENGINE) & (has(POKEMON_FOOD, LVL_BEACH) | has(PESTER_BALL, LVL_BEACH)) },
+    DODUO_WAKING:               { Category.REGULAR_POSE: Has(DASH_ENGINE) & (has(POKEMON_FOOD, LVL_BEACH) | has(PESTER_BALL, LVL_BEACH)) },
+    CHANSEY_FUNNY:              { Category.REGULAR_POSE: has(POKEMON_FOOD, LVL_BEACH) | has(PESTER_BALL, LVL_BEACH) },
+    CHANSEY_JOLLY:              { Category.REGULAR_POSE: has(POKEMON_FOOD, LVL_BEACH) },
+    KANGASKHAN_ANGRY:           { Category.REGULAR_POSE: has(POKEMON_FOOD, LVL_BEACH) | has(PESTER_BALL, LVL_BEACH) },
+    KANGASKHAN_DANCE:           { Category.REGULAR_POSE: has(POKEFLUTE, LVL_BEACH) & (has(POKEMON_FOOD, LVL_BEACH) | has(PESTER_BALL, LVL_BEACH)) },
+    SCYTHER_FIGHTING:           { Category.REGULAR_POSE: has(PESTER_BALL, LVL_BEACH) },
+    LAPRAS_RELAXED:             { Category.REGULAR_POSE: HasFilm(5) | (HasFilm(2) & _HARD_LOGIC_ON) },
+    EEVEE_HAPPY:                { Category.REGULAR_POSE: has(POKEMON_FOOD, LVL_BEACH) },
+    SNORLAX_FOR_SURE:           { Category.REGULAR_POSE: has(POKEFLUTE, LVL_BEACH) },
+    SNORLAX_JOLLY:              { Category.REGULAR_POSE: has(POKEFLUTE, LVL_BEACH) },
+    SNORLAX_WAKING:             { Category.REGULAR_POSE: has(POKEFLUTE, LVL_BEACH) },
+    SNORLAX_SCRATCHING:         { Category.REGULAR_POSE: has(PESTER_BALL, LVL_BEACH) },
+    PIKACHU_BEACH_ZAPS_EVEN_ME: { Category.REGULAR_POSE: has(POKEFLUTE, LVL_BEACH) },
+    PIKACHU_BEACH_VERY_LIVELY:  { Category.REGULAR_POSE: has(POKEMON_FOOD, LVL_BEACH) | has(PESTER_BALL, LVL_BEACH) }, 
+    MAGIKARP_BEACH_GOOD_SPLASH: { Category.REGULAR_POSE: CanReachLocation(course(MAGIKARP, LVL_BEACH)) },
 
 
     ############
@@ -378,24 +379,24 @@ LOCATION_RULES = {
     # Environment
     LVL_TUNNEL:        { Category.SECRET_EXIT: has(POKEMON_FOOD, LVL_TUNNEL) | has(PESTER_BALL, LVL_TUNNEL) },
     # Regular Poses
-    DIGLETT_UNDERGROUND:         { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    DIGLETT_POP_UP:              { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    DUGTRIO_UNDERGROUND:         { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    DUGTRIO_POP_UP:              { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    MAGNEMITE_SURPRISED:         { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    MAGNEMITE_HAPPY:             { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    ELECTRODE_ROLLING:           { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    ELECTRODE_EXPLODED:          { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    ELECTABUZZ_BLAST:            { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    ELECTABUZZ_FAINTED:          { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    ELECTABUZZ_PESTER:           { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    ELECTABUZZ_ANGRY:            { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    ELECTABUZZ_YUMMY:            { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    ZAPDOS_THUNDER:              { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    MAGIKARP_TUNNEL_SPLASHED:    { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    PIKACHU_TUNNEL_ZAPS_EVEN_ME: { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    PIKACHU_TUNNEL_VERY_LIVELY:  { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    PIKACHU_TUNNEL_THATS_PIKA:   { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
+    DIGLETT_UNDERGROUND:         { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    DIGLETT_POP_UP:              { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    DUGTRIO_UNDERGROUND:         { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    DUGTRIO_POP_UP:              { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    MAGNEMITE_SURPRISED:         { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    MAGNEMITE_HAPPY:             { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    ELECTRODE_ROLLING:           { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    ELECTRODE_EXPLODED:          { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    ELECTABUZZ_BLAST:            { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    ELECTABUZZ_FAINTED:          { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    ELECTABUZZ_PESTER:           { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    ELECTABUZZ_ANGRY:            { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    ELECTABUZZ_YUMMY:            { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    ZAPDOS_THUNDER:              { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    MAGIKARP_TUNNEL_SPLASHED:    { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    PIKACHU_TUNNEL_ZAPS_EVEN_ME: { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    PIKACHU_TUNNEL_VERY_LIVELY:  { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    PIKACHU_TUNNEL_THATS_PIKA:   { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
 
     #############
     ## Volcano ##
@@ -453,28 +454,28 @@ LOCATION_RULES = {
     # Environment
     VOLCANO_SIGN:    { Category.POKEMON_SIGN: Has(SIGN_DETECTOR) & has(PESTER_BALL, LVL_VOLCANO) },
     # Regular Poses
-    CHARMANDER_UNSTABLE: { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    CHARMANDER_HMM:      { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    CHARMANDER_PESTER:   { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    CHARMANDER_HAPPY:    { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    CHARMELEON_FALL:     { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    CHARMELEON_FAINTED:  { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    CHARMELEON_AWOKEN:   { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    CHARMELEON_ROARING:  { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    CHARIZARD_SHOCKED:   { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    CHARIZARD_FLAME:     { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    VULPIX_PESTER:       { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    VULPIX_HAPPY:        { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    GROWLITHE_EMBERS:    { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    ARCANINE_EMBERS:     { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    RAPIDASH_NEIGHING:   { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    MAGMAR_DIZZY:        { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    MAGMAR_UNSTABLE:     { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    MAGMAR_PRETTY_FUNNY: { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    MAGMAR_SO_FUNNY:     { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    MAGMAR_HOT:          { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    MOLTRES_WONDERFUL:   { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    MAGIKARP_VOLCANO_GOOD_SPLASH: { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
+    CHARMANDER_UNSTABLE: { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    CHARMANDER_HMM:      { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    CHARMANDER_PESTER:   { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    CHARMANDER_HAPPY:    { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    CHARMELEON_FALL:     { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    CHARMELEON_FAINTED:  { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    CHARMELEON_AWOKEN:   { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    CHARMELEON_ROARING:  { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    CHARIZARD_SHOCKED:   { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    CHARIZARD_FLAME:     { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    VULPIX_PESTER:       { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    VULPIX_HAPPY:        { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    GROWLITHE_EMBERS:    { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    ARCANINE_EMBERS:     { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    RAPIDASH_NEIGHING:   { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    MAGMAR_DIZZY:        { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    MAGMAR_UNSTABLE:     { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    MAGMAR_PRETTY_FUNNY: { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    MAGMAR_SO_FUNNY:     { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    MAGMAR_HOT:          { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    MOLTRES_WONDERFUL:   { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    MAGIKARP_VOLCANO_GOOD_SPLASH: { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
 
 
     ###########
@@ -542,37 +543,37 @@ LOCATION_RULES = {
     RIVER_SIGN:    { Category.POKEMON_SIGN: Has(SIGN_DETECTOR) & has(POKEFLUTE, LVL_RIVER) },
     LVL_RIVER:     { Category.SECRET_EXIT: has(PESTER_BALL, LVL_RIVER) },
     # Regular Poses
-    VILEPLUME_FUN_DANCE:          { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    VILEPLUME_ROCKIN:             { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    VILEPLUME_WAKING:             { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    PSYDUCK_NICE_JUMP:            { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    PSYDUCK_IT_JUMPED:            { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    PSYDUCK_WHAT_A_JUMP:          { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    PSYDUCK_FALLING:              { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    PSYDUCK_UNIQUE:               { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    PSYDUCK_SUBMERGING:           { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    POLIWAG_NICE_JUMP:            { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    POLIWAG_JUMPING:              { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    POLIWAG_WHAT_A_JUMP:          { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    POLIWAG_DIZZY:                { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    POLIWAG_FAINTED:              { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    POLIWAG_WAKING:               { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    POLIWAG_JUMPING_IN:           { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    SLOWPOKE_WILL_FISH:           { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    SLOWPOKE_FISHING:             { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    SLOWPOKE_OH_A_BITE:           { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    SLOWBRO_EATING:               { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    SHELLDER_CAUGHT:              { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    SHELLDER_SNAPPING:            { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    PORYGON_HAPPY:                { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    PORYGON_LOOKS_JOLLY:          { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    PORYGON_SURE_JOLLY:           { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    BULBASAUR_RIVER_PESTER:       { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    BULBASAUR_RIVER_HAPPY:        { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    MAGIKARP_RIVER_WHAT_A_SPLASH: { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    MAGIKARP_RIVER_SPLASHED:      { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    MAGIKARP_RIVER_GOOD_SPLASH:   { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    PIKACHU_RIVER_ZAPS_EVEN_ME:   { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
+    VILEPLUME_FUN_DANCE:          { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    VILEPLUME_ROCKIN:             { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    VILEPLUME_WAKING:             { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    PSYDUCK_NICE_JUMP:            { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    PSYDUCK_IT_JUMPED:            { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    PSYDUCK_WHAT_A_JUMP:          { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    PSYDUCK_FALLING:              { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    PSYDUCK_UNIQUE:               { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    PSYDUCK_SUBMERGING:           { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    POLIWAG_NICE_JUMP:            { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    POLIWAG_JUMPING:              { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    POLIWAG_WHAT_A_JUMP:          { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    POLIWAG_DIZZY:                { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    POLIWAG_FAINTED:              { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    POLIWAG_WAKING:               { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    POLIWAG_JUMPING_IN:           { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    SLOWPOKE_WILL_FISH:           { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    SLOWPOKE_FISHING:             { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    SLOWPOKE_OH_A_BITE:           { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    SLOWBRO_EATING:               { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    SHELLDER_CAUGHT:              { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    SHELLDER_SNAPPING:            { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    PORYGON_HAPPY:                { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    PORYGON_LOOKS_JOLLY:          { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    PORYGON_SURE_JOLLY:           { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    BULBASAUR_RIVER_PESTER:       { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    BULBASAUR_RIVER_HAPPY:        { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    MAGIKARP_RIVER_WHAT_A_SPLASH: { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    MAGIKARP_RIVER_SPLASHED:      { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    MAGIKARP_RIVER_GOOD_SPLASH:   { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    PIKACHU_RIVER_ZAPS_EVEN_ME:   { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
 
 
     ##########
@@ -644,19 +645,19 @@ LOCATION_RULES = {
     # Environment
     CAVE_SIGN:           { Category.POKEMON_SIGN: Has(SIGN_DETECTOR) },
     # Regular Poses
-    JIGGLYPUFF_DANCE:            { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    JIGGLYPUFF_SHAME:            { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    JIGGLYPUFF_SINGING:          { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    VICTREEBEL_LEAPING:          { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    GRIMER_HAPPY:                { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    MUK_HAPPY:                   { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    JYNX_JOLLY_DANCE:            { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    DITTO_HAPPY:                 { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    ARTICUNO_BEAUTIFUL:          { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    KOFFING_WEIRD_DANCE:         { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    MAGIKARP_CAVE_WHAT_A_SPLASH: { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    PIKACHU_CAVE_ZAPS_EVEN_ME:   { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    PIKACHU_CAVE_VERY_LIVELY:    { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
+    JIGGLYPUFF_DANCE:            { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    JIGGLYPUFF_SHAME:            { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    JIGGLYPUFF_SINGING:          { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    VICTREEBEL_LEAPING:          { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    GRIMER_HAPPY:                { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    MUK_HAPPY:                   { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    JYNX_JOLLY_DANCE:            { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    DITTO_HAPPY:                 { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    ARTICUNO_BEAUTIFUL:          { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    KOFFING_WEIRD_DANCE:         { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    MAGIKARP_CAVE_WHAT_A_SPLASH: { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    PIKACHU_CAVE_ZAPS_EVEN_ME:   { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    PIKACHU_CAVE_VERY_LIVELY:    { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
 
 
     ############
@@ -729,40 +730,40 @@ LOCATION_RULES = {
     VALLEY_SIGN:           { Category.POKEMON_SIGN: Has(SIGN_DETECTOR) },
     LVL_VALLEY:            { Category.SECRET_EXIT:  has(PESTER_BALL, LVL_VALLEY) },
     # Regular Poses
-    SQUIRTLE_PESTER:               { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    SQUIRTLE_WITHDRAW:             { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    SQUIRTLE_SHELL:                { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    SQUIRTLE_COMING_OUT:           { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    SQUIRTLE_HAPPY:                { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    SANDSHREW_59:                  { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    SANDSHREW_POP_UP:              { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    SANDSHREW_GO_UNDER:            { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    SANDSHREW_JOLLY:               { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    SANDSLASH_STUMBLED:            { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    SANDSLASH_POP_UP:              { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    SANDSLASH_GO_UNDER:            { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    SANDSLASH_HAPPY:               { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    MANKEY_IN_THE_SKY:             { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    MANKEY_BLASTED:                { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    MANKEY_PESTER:                 { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    GRAVELER_FALLING:              { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    GRAVELER_FELL:                 { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    GOLDEEN_GOOD_SPLASH:           { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    GOLDEEN_SPLASHING:             { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    GOLDEEN_WHAT_A:                { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    GYARADOS_POWERFUL:             { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    GYARADOS_SHOW_FACE:            { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    GYARADOS_SCARY:                { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    GYARADOS_FURIOUS:              { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    GYARADOS_ASTONISHED:           { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    DRATINI_AMAZING:               { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    DRATINI_GOOD:                  { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    DRATINI_JUMPING:               { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    DRAGONITE_OH_IT_IS:            { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    MAGIKARP_VALLEY_WHAT_A_SPLASH: { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    MAGIKARP_VALLEY_IT_SPLASHED:   { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    MAGIKARP_VALLEY_GOOD_SPLASH:   { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    MAGIKARP_VALLEY_ITS_SPLASHING: { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
+    SQUIRTLE_PESTER:               { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    SQUIRTLE_WITHDRAW:             { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    SQUIRTLE_SHELL:                { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    SQUIRTLE_COMING_OUT:           { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    SQUIRTLE_HAPPY:                { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    SANDSHREW_PESTER:              { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    SANDSHREW_POP_UP:              { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    SANDSHREW_GO_UNDER:            { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    SANDSHREW_JOLLY:               { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    SANDSLASH_STUMBLED:            { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    SANDSLASH_POP_UP:              { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    SANDSLASH_GO_UNDER:            { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    SANDSLASH_HAPPY:               { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    MANKEY_IN_THE_SKY:             { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    MANKEY_BLASTED:                { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    MANKEY_PESTER:                 { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    GRAVELER_FALLING:              { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    GRAVELER_FELL:                 { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    GOLDEEN_GOOD_SPLASH:           { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    GOLDEEN_SPLASHING:             { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    GOLDEEN_WHAT_A:                { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    GYARADOS_POWERFUL:             { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    GYARADOS_SHOW_FACE:            { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    GYARADOS_SCARY:                { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    GYARADOS_FURIOUS:              { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    GYARADOS_ASTONISHED:           { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    DRATINI_AMAZING:               { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    DRATINI_GOOD:                  { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    DRATINI_JUMPING:               { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    DRAGONITE_OH_IT_IS:            { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    MAGIKARP_VALLEY_WHAT_A_SPLASH: { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    MAGIKARP_VALLEY_IT_SPLASHED:   { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    MAGIKARP_VALLEY_GOOD_SPLASH:   { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    MAGIKARP_VALLEY_ITS_SPLASHING: { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
 
     ###################
     ## Rainbow Cloud ##
@@ -772,10 +773,10 @@ LOCATION_RULES = {
         Category.WONDERFUL_PHOTO: has(POKEMON_FOOD, LVL_CLOUD) | has(PESTER_BALL, LVL_CLOUD),
     },
     # Regular Poses
-    MEW_FACING:    { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    MEW_WELL_DONE: { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    MEW_SPINNING:  { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
-    MEW_PERFECT:   { Category.REGULAR_POSE: _NO_ITEMS }, # TODO
+    MEW_FACING:    { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    MEW_WELL_DONE: { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    MEW_SPINNING:  { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    MEW_PERFECT:   { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
 
     #################
     ## Oak Rewards ##

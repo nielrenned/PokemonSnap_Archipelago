@@ -149,7 +149,7 @@ SQUIRTLE_WITHDRAW   = PokemonSnapPoseData(id=77,  score=500,  pokemon=SQUIRTLE, 
 SQUIRTLE_SHELL      = PokemonSnapPoseData(id=78,  score=150,  pokemon=SQUIRTLE,   phrase="I only see its shell.")
 SQUIRTLE_COMING_OUT = PokemonSnapPoseData(id=79,  score=900,  pokemon=SQUIRTLE,   phrase="It's about to come out.")
 SQUIRTLE_HAPPY      = PokemonSnapPoseData(id=80,  score=1100, pokemon=SQUIRTLE,   phrase="Oh! It's happy!")
-SANDSHREW_59        = PokemonSnapPoseData(id=59,  score=800,  pokemon=SANDSHREW,  phrase="You've thrown a PESTER BALL.")
+SANDSHREW_PESTER    = PokemonSnapPoseData(id=59,  score=800,  pokemon=SANDSHREW,  phrase="You've thrown a PESTER BALL.")
 # SANDSHREW_60        = PokemonSnapPoseData(id=60,  score=800,  pokemon=SANDSHREW,  phrase="You've thrown a PESTER BALL.")
 # SANDSHREW_61        = PokemonSnapPoseData(id=61,  score=800,  pokemon=SANDSHREW,  phrase="You've thrown a PESTER BALL.")
 SANDSHREW_POP_UP    = PokemonSnapPoseData(id=62,  score=1350, pokemon=SANDSHREW,  phrase="Oh! It's about to pop up.")
@@ -333,7 +333,7 @@ pose_location_data = {
         SQUIRTLE_SHELL,
         SQUIRTLE_COMING_OUT,
         SQUIRTLE_HAPPY,
-        SANDSHREW_59,
+        SANDSHREW_PESTER,
         SANDSHREW_POP_UP,
         SANDSHREW_GO_UNDER,
         SANDSHREW_JOLLY,
