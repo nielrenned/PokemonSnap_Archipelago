@@ -46,7 +46,7 @@ DIGLETT_UNDERGROUND = PokemonSnapPoseData(id=35,  score=1000, pokemon=DIGLETT,  
 DIGLETT_POP_UP      = PokemonSnapPoseData(id=160, score=1000, pokemon=DIGLETT,    phrase="It's about to pop up.")
 DUGTRIO_UNDERGROUND = PokemonSnapPoseData(id=37,  score=1000, pokemon=DUGTRIO,    phrase="It's trying to go underground.")
 DUGTRIO_POP_UP      = PokemonSnapPoseData(id=158, score=1000, pokemon=DUGTRIO,    phrase="It's about to pop up.")
-MAGNEMITE_SURPRISED = PokemonSnapPoseData(id=33,  score=1200, pokemon=MAGNEMITE,  phrase="Oh! It's surprised!")
+# MAGNEMITE_SURPRISED = PokemonSnapPoseData(id=33,  score=1200, pokemon=MAGNEMITE,  phrase="Oh! It's surprised!")
 MAGNEMITE_HAPPY     = PokemonSnapPoseData(id=34,  score=800,  pokemon=MAGNEMITE,  phrase="It sure is happy!")
 ELECTRODE_ROLLING   = PokemonSnapPoseData(id=27,  score=500,  pokemon=ELECTRODE,  phrase="It's rolling...")
 ELECTRODE_EXPLODED  = PokemonSnapPoseData(id=28,  score=1200, pokemon=ELECTRODE,  phrase="Oh! It exploded!")
@@ -240,7 +240,6 @@ pose_location_data = {
         DIGLETT_POP_UP,
         DUGTRIO_UNDERGROUND,
         DUGTRIO_POP_UP,
-        MAGNEMITE_SURPRISED,
         MAGNEMITE_HAPPY,
         ELECTRODE_ROLLING,
         ELECTRODE_EXPLODED,

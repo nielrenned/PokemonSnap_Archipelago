@@ -31,24 +31,23 @@ For any pose to count, the Pokemon must be center frame and close enough to the 
 
 | Pokémon | Points | Oak's comment | How to capture |
 |---|---|---|---|
-| Diglett | 1000 | It's trying to go underground. |
-| Diglett | 1000 | It's about to pop up. |
-| Dugtrio | 1000 | It's trying to go underground. |
-| Dugtrio | 1000 | It's about to pop up. |
-| Magnemite | 800 | It sure is happy! |
-| Magnemite | 1200 | Oh! It's surprised! |
-| Electrode | 500 | It's rolling... |
-| Electrode | 1200 | Oh! It exploded! |
-| Electabuzz | 800 | It's a blast! |
-| Electabuzz | 800 | Oh dear, it fainted. |
-| Electabuzz | 800 | You've thrown a PESTER BALL. |
-| Electabuzz | 1000 | It must be angry. |
-| Electabuzz | 1200 | Oh! It looks yummy! |
-| Zapdos | 1350 | Oh! What a Thunder Jolt! |
-| Magikarp | 800 | It splashed! |
-| Pikachu | 1300 | This pose zaps even me! |
-| Pikachu | 1250 | Oh! This is very lively! |
-| Pikachu | 1400 | Oh! That's PIKA! |
+| Electrode | 500 | It's rolling... | Snap Electrode while it's rolling. |
+| Electrode | 1200 | Oh! It exploded! | Snap Electrode while it's exploding or after it exploded. |
+| Electabuzz | 800 | It's a blast! | Snap Electabuzz _while it's falling down_ after being hit with a Pester Ball. |
+| Electabuzz | 800 | Oh dear, it fainted. | Snap fainted Electabuzz after it was hit with a Pester Ball. |
+| Electabuzz | 800 | You've thrown a PESTER BALL. | Snap Electabuzz _while it's getting back up_ after being hit with a Pester Ball. |
+| Electabuzz | 1000 | It must be angry. | Snap Electabuzz using Thunderbolt at the end of the course (don't hatch Zapdos). |
+| Electabuzz | 1200 | Oh! It looks yummy! | Snap Electabuzz while it's eating. |
+| Pikachu | 1300 | This pose zaps even me! | Play the flute for Pikachu and snap while it's using Thunder. |
+| Pikachu | 1250 | Oh! This is very lively! | Snap Pikachu while it's backflipping after hatching the Zapdos egg. |
+| Pikachu | 1400 | Oh! That's PIKA! | Snap Pikachu while it's using Thunder on the Zapdos egg. |
+| Magikarp | 800 | It splashed! | No special requirements. |
+| Zapdos | 1350 | Oh! What a Thunder Jolt! | Snap Zapdos _just_ as it hatches from the egg (this timing is tight). |
+| Diglett | 1000 | It's about to pop up. | Snap Diglett as it's coming out of the ground. |
+| Diglett | 1000 | It's trying to go underground. | Snap Diglett as it's going underground. |
+| Dugtrio | 1000 | It's about to pop up. | Snap Dugtrio as it's coming out of the ground. |
+| Dugtrio | 1000 | It's trying to go underground. | Snap Dugtrio as it's going underground. |
+| Magnemite | 800 | It sure is happy! | Snap Magnemite while it's eating. |
 
 ## Volcano
 

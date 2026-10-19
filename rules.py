@@ -379,24 +379,23 @@ LOCATION_RULES = {
     # Environment
     LVL_TUNNEL:        { Category.SECRET_EXIT: has(POKEMON_FOOD, LVL_TUNNEL) | has(PESTER_BALL, LVL_TUNNEL) },
     # Regular Poses
-    DIGLETT_UNDERGROUND:         { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    DIGLETT_POP_UP:              { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    DUGTRIO_UNDERGROUND:         { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    DUGTRIO_POP_UP:              { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    MAGNEMITE_SURPRISED:         { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    MAGNEMITE_HAPPY:             { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    ELECTRODE_ROLLING:           { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    ELECTRODE_EXPLODED:          { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    ELECTABUZZ_BLAST:            { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    ELECTABUZZ_FAINTED:          { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    ELECTABUZZ_PESTER:           { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    ELECTABUZZ_ANGRY:            { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    ELECTABUZZ_YUMMY:            { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    ZAPDOS_THUNDER:              { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    MAGIKARP_TUNNEL_SPLASHED:    { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    PIKACHU_TUNNEL_ZAPS_EVEN_ME: { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    PIKACHU_TUNNEL_VERY_LIVELY:  { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    PIKACHU_TUNNEL_THATS_PIKA:   { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    ELECTRODE_ROLLING:           { Category.REGULAR_POSE: _NO_ITEMS },
+    ELECTRODE_EXPLODED:          { Category.REGULAR_POSE: _NO_ITEMS },
+    ELECTABUZZ_BLAST:            { Category.REGULAR_POSE: has(PESTER_BALL, LVL_TUNNEL) },
+    ELECTABUZZ_FAINTED:          { Category.REGULAR_POSE: has(PESTER_BALL, LVL_TUNNEL) },
+    ELECTABUZZ_PESTER:           { Category.REGULAR_POSE: has(PESTER_BALL, LVL_TUNNEL) },
+    ELECTABUZZ_ANGRY:            { Category.REGULAR_POSE: has(POKEMON_FOOD, LVL_TUNNEL) },
+    ELECTABUZZ_YUMMY:            { Category.REGULAR_POSE: has(POKEMON_FOOD, LVL_TUNNEL) },
+    PIKACHU_TUNNEL_ZAPS_EVEN_ME: { Category.REGULAR_POSE: has(POKEFLUTE, LVL_TUNNEL) },
+    PIKACHU_TUNNEL_VERY_LIVELY:  { Category.REGULAR_POSE: CanReachLocation(ZAPDOS) },
+    PIKACHU_TUNNEL_THATS_PIKA:   { Category.REGULAR_POSE: CanReachLocation(ZAPDOS) },
+    ZAPDOS_THUNDER:              { Category.REGULAR_POSE: CanReachLocation(ZAPDOS) },
+    MAGIKARP_TUNNEL_SPLASHED:    { Category.REGULAR_POSE: _NO_ITEMS },
+    DIGLETT_POP_UP:              { Category.REGULAR_POSE: _NO_ITEMS },
+    DIGLETT_UNDERGROUND:         { Category.REGULAR_POSE: _NO_ITEMS },
+    DUGTRIO_POP_UP:              { Category.REGULAR_POSE: CanReachLocation(DUGTRIO) },
+    DUGTRIO_UNDERGROUND:         { Category.REGULAR_POSE: CanReachLocation(DUGTRIO) },
+    MAGNEMITE_HAPPY:             { Category.REGULAR_POSE: has(POKEMON_FOOD, LVL_TUNNEL) },
 
     #############
     ## Volcano ##
