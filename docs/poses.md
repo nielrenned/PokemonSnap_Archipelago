@@ -5,26 +5,26 @@ For any pose to count, the Pokemon must be center frame and close enough to the 
 | Pokémon | Points | Oak's comment | How to capture |
 |---|---|---|---|
 | Pidgey | 1250 | Oh! It seems to be screeching. | Snap Pidgey attacking Meowth. |
-| Meowth | 800 | It's pretty funny. | Snap Meowth _while it's falling down_ after being hit with a Pester Ball or being attacked by Pidgey. |
-| Meowth | 800 | It seems to have fainted. | Snap fainted Meowth after it was hit with a Pester Ball or attacked by Pidgey. |
-| Meowth | 800 | You've thrown a PESTER BALL. | Snap Meowth _while it's getting back up_ after being hit with a Pester Ball. |
-| Meowth | 1200 | Oh! A dancing MEOWTH! | Play the PokéFlute for Meowth and snap it dancing. |
 | Doduo | 1300 | Oh! You hit 'em! | Snap Doduo _while it's falling down_ after being hit with a Pester Ball or Pokémon Food. |
 | Doduo | 1300 | Oh! It just fainted. | Snap fainted Doduo after it was hit with a Pester Ball or Pokémon Food. |
 | Doduo | 1300 | Oh! It's about to wake up. | Snap Doduo _while it's getting back up_ after being hit with a Pester Ball or Pokémon Food. |
-| Chansey | 1000 | What a funny pose. | Snap Chansey while it's unrolling from being a ball. |
-| Chansey | 1200 | Oh! It looks jolly. | Snap Chansey while it's eating Pokémon Food. |
-| Kangaskhan | 1000 | This angry shot is pretty cool. | Snap Kangaskhan roaring at you. |
-| Kangaskhan | 1050 | Oh! What an interesting pose! | Play the PokéFlute for Kangaskhan and snap it dancing. |
-| Scyther | 1300 | Oh! This is a fighting pose. | Snap Scyther while it's slashing. |
-| Lapras | 1000 | This is a relaxed pose. | No special requirements. |
-| Eevee | 1250 | Oh! It's happy. | Snap Eevee while it's eating Pokémon Food. |
+| Pikachu | 1250 | Oh! This is very lively! | Snap Pikachu while it's backflipping on the surfboard or a stump. |
+| Pikachu | 1300 | This pose zaps even me! | Play the flute for Pikachu and snap while it's using Thunder. |
 | Snorlax | 800 | That's SNORLAX for sure! | Snap Snorlax as it's laying back down. |
 | Snorlax | 800 | It's about to get up. | Snap Snorlax as it's getting up. |
 | Snorlax | 1000 | It's scratching its tummy. | Hit sleeping Snorlax with a Pester Ball. |
 | Snorlax | 1200 | Oh! What a jolly dance! | Play the third PokéFlute song for Snorlax and snap it dancing. |
-| Pikachu | 1250 | Oh! This is very lively! | Snap Pikachu while it's backflipping on the surfboard or a stump. |
-| Pikachu | 1300 | This pose zaps even me! | Play the flute for Pikachu and snap while it's using Thunder. |
+| Meowth | 800 | It's pretty funny. | Snap Meowth _while it's falling down_ after being hit with a Pester Ball or being attacked by Pidgey. |
+| Meowth | 800 | It seems to have fainted. | Snap fainted Meowth after it was hit with a Pester Ball or attacked by Pidgey. |
+| Meowth | 800 | You've thrown a PESTER BALL. | Snap Meowth _while it's getting back up_ after being hit with a Pester Ball. |
+| Meowth | 1200 | Oh! A dancing MEOWTH! | Play the PokéFlute for Meowth and snap it dancing. |
+| Chansey | 1000 | What a funny pose. | Snap Chansey while it's unrolling from being a ball. |
+| Chansey | 1200 | Oh! It looks jolly. | Snap Chansey while it's eating Pokémon Food. |
+| Eevee | 1250 | Oh! It's happy. | Snap Eevee while it's eating Pokémon Food. |
+| Kangaskhan | 1000 | This angry shot is pretty cool. | Snap Kangaskhan roaring at you. |
+| Kangaskhan | 1050 | Oh! What an interesting pose! | Play the PokéFlute for Kangaskhan and snap it dancing. |
+| Scyther | 1300 | Oh! This is a fighting pose. | Snap Scyther while it's slashing. |
+| Lapras | 1000 | This is a relaxed pose. | No special requirements. |
 | Magikarp | 1000 | That's a good splash. | No special requirements. |
 
 ## Tunnel
