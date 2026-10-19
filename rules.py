@@ -453,28 +453,28 @@ LOCATION_RULES = {
     # Environment
     VOLCANO_SIGN:    { Category.POKEMON_SIGN: Has(SIGN_DETECTOR) & has(PESTER_BALL, LVL_VOLCANO) },
     # Regular Poses
-    CHARMANDER_UNSTABLE: { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    CHARMANDER_HMM:      { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    CHARMANDER_PESTER:   { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    CHARMANDER_HAPPY:    { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    CHARMELEON_FALL:     { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    CHARMELEON_FAINTED:  { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    CHARMELEON_AWOKEN:   { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    CHARMELEON_ROARING:  { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    CHARIZARD_SHOCKED:   { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    CHARIZARD_FLAME:     { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    VULPIX_PESTER:       { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    VULPIX_HAPPY:        { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    GROWLITHE_EMBERS:    { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    ARCANINE_EMBERS:     { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    RAPIDASH_NEIGHING:   { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    MAGMAR_DIZZY:        { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    MAGMAR_UNSTABLE:     { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    MAGMAR_PRETTY_FUNNY: { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    MAGMAR_SO_FUNNY:     { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    MAGMAR_HOT:          { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    MOLTRES_WONDERFUL:   { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    MAGIKARP_VOLCANO_GOOD_SPLASH: { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    RAPIDASH_NEIGHING:            { Category.REGULAR_POSE: has(POKEMON_FOOD, LVL_VOLCANO) },
+    VULPIX_PESTER:                { Category.REGULAR_POSE: has(PESTER_BALL, LVL_VOLCANO) },
+    VULPIX_HAPPY:                 { Category.REGULAR_POSE: has(POKEMON_FOOD, LVL_VOLCANO) },
+    CHARMANDER_UNSTABLE:          { Category.REGULAR_POSE: has(PESTER_BALL, LVL_VOLCANO) },
+    CHARMANDER_HMM:               { Category.REGULAR_POSE: has(PESTER_BALL, LVL_VOLCANO) },
+    CHARMANDER_PESTER:            { Category.REGULAR_POSE: has(PESTER_BALL, LVL_VOLCANO) },
+    CHARMANDER_HAPPY:             { Category.REGULAR_POSE: has(POKEMON_FOOD, LVL_VOLCANO) },
+    CHARMELEON_FALL:              { Category.REGULAR_POSE: has(PESTER_BALL, LVL_VOLCANO) },
+    CHARMELEON_FAINTED:           { Category.REGULAR_POSE: has(PESTER_BALL, LVL_VOLCANO) },
+    CHARMELEON_AWOKEN:            { Category.REGULAR_POSE: has(PESTER_BALL, LVL_VOLCANO) },
+    CHARMELEON_ROARING:           { Category.REGULAR_POSE: has(PESTER_BALL, LVL_VOLCANO) | has(POKEMON_FOOD, LVL_VOLCANO) },
+    MAGMAR_UNSTABLE:              { Category.REGULAR_POSE: has(PESTER_BALL, LVL_VOLCANO) },
+    MAGMAR_PRETTY_FUNNY:          { Category.REGULAR_POSE: has(PESTER_BALL, LVL_VOLCANO) | has(POKEMON_FOOD, LVL_VOLCANO) },
+    MAGMAR_SO_FUNNY:              { Category.REGULAR_POSE: has(PESTER_BALL, LVL_VOLCANO) },
+    MAGMAR_DIZZY:                 { Category.REGULAR_POSE: has(POKEMON_FOOD, LVL_VOLCANO) },
+    MAGMAR_HOT:                   { Category.REGULAR_POSE: has(POKEMON_FOOD, LVL_VOLCANO) },
+    MOLTRES_WONDERFUL:            { Category.REGULAR_POSE: CanReachLocation(MOLTRES) },
+    GROWLITHE_EMBERS:             { Category.REGULAR_POSE: CanReachLocation(GROWLITHE) },
+    ARCANINE_EMBERS:              { Category.REGULAR_POSE: CanReachLocation(ARCANINE) },
+    MAGIKARP_VOLCANO_GOOD_SPLASH: { Category.REGULAR_POSE: CanReachLocation(course(MAGIKARP, LVL_VOLCANO)) },
+    CHARIZARD_SHOCKED:            { Category.REGULAR_POSE: has(PESTER_BALL, LVL_VOLCANO) },
+    CHARIZARD_FLAME:              { Category.REGULAR_POSE: has(PESTER_BALL, LVL_VOLCANO) | has(POKEMON_FOOD, LVL_VOLCANO) },
 
 
     ###########

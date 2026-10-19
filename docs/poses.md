@@ -53,30 +53,28 @@ For any pose to count, the Pokemon must be center frame and close enough to the 
 
 | Pokémon | Points | Oak's comment | How to capture |
 |---|---|---|---|
-| Charmander | 800 | It's unstable... |
-| Charmander | 800 | Hmm... |
-| Charmander | 800 | You've thrown a PESTER BALL. |
-| Charmander | 1200 | Oh! It looks happy! |
-| Charmeleon | 800 | It's about to fall. |
-| Charmeleon | 800 | It seems to have fainted. |
-| Charmeleon | 800 | It seems to have woken up. |
-| Charmeleon | 1200 | Oh! It's roaring! |
-| Charizard | 900 | It looks like it's shocked. |
-| Charizard | 1250 | Oh! What a flame! |
-| Vulpix | 800 | You've thrown a PESTER BALL. |
-| Vulpix | 800 | You've thrown a PESTER BALL. |
-| Vulpix | 800 | You've thrown a PESTER BALL. |
-| Vulpix | 1000 | Hmm... It looks happy. |
-| Growlithe | 1300 | Oh! Tons of embers! |
-| Arcanine | 1200 | Oh! So many embers! |
-| Rapidash | 1200 | Oh! It's neighing. |
-| Magmar | 800 | It's unstable... |
-| Magmar | 800 | This is pretty funny! |
-| Magmar | 800 | Ha, ha, ha! This is so funny! |
-| Magmar | 1000 | Interesting! It's dizzy! |
-| Magmar | 1200 | Oh! It looks hot! |
-| Moltres | 1350 | Oh! What a wonderful pose! |
-| Magikarp | 1000 | That's a good splash. |
+| Rapidash | 1200 | Oh! It's neighing. | Snap Rapidash while it's prancing after throwing it some Pokemon Food. |
+| Vulpix | 800 | You've thrown a PESTER BALL. | Snap Vulpix after hitting it with a Pester Ball. |
+| Vulpix | 1000 | Hmm... It looks happy. | Snap Vulpix while it's eating. |
+| Charmander | 800 | It's unstable... | Snap Charmander _while it's falling down_ after being hit with a Pester Ball. |
+| Charmander | 800 | Hmm... | Snap fainted Charmander after it was hit with a Pester Ball. |
+| Charmander | 800 | You've thrown a PESTER BALL. | Snap Charmander _while it's getting back up_ after being hit with a Pester Ball. |
+| Charmander | 1200 | Oh! It looks happy! | Snap Charmander while it's eating. |
+| Charmeleon | 800 | It's about to fall. | Snap Charmeleon _while it's falling down_ after being hit with a Pester Ball. |
+| Charmeleon | 800 | It seems to have fainted. | Snap fainted Charmeleon after it was hit with a Pester Ball. |
+| Charmeleon | 800 | It seems to have woken up. | Snap Charmeleon _while it's getting back up_ after being hit with a Pester Ball. |
+| Charmeleon | 1200 | Oh! It's roaring! | Snap Charmeleon roaring after hitting it with a Pester Ball or giving it Pokemon Food. |
+| Magmar | 800 | It's unstable... | Snap Magmar _while it's falling down_ after being hit with a Pester Ball. |
+| Magmar | 800 | This is pretty funny! | Snap fainted Magmar. |
+| Magmar | 800 | Ha, ha, ha! This is so funny! | Snap Magmar _while it's getting back up_ after being hit with a Pester Ball. |
+| Magmar | 1000 | Interesting! It's dizzy! | Snap Magmar after hitting it with Pokemon Food. |
+| Magmar | 1200 | Oh! It looks hot! | Snap Magmar while it's using Flamethrower. |
+| Moltres | 1350 | Oh! What a wonderful pose! | Snap Moltres while it's posing in the air after hatching. |
+| Growlithe | 1300 | Oh! Tons of embers! | Snap Growlithe while it's shaking off the lava after coming out of the crater. |
+| Arcanine | 1200 | Oh! So many embers! | Snap Arcanine while it's shaking off the lava after coming out of the crater. |
+| Magikarp | 1000 | That's a good splash. | No special requirements. |
+| Charizard | 900 | It looks like it's shocked. | Snap Charizard after hitting it with a Pester Ball. |
+| Charizard | 1250 | Oh! What a flame! | Snap Charizard while it's using Flamethrower after hitting with a Pester Ball or Pokemon Food. |
 
 ## River
 
