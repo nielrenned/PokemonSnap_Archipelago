@@ -17,7 +17,7 @@ For any pose to count, the Pokemon must be center frame and close enough to the 
 | Meowth | 800 | It's pretty funny. | Snap Meowth _while it's falling down_ after being hit with a Pester Ball or being attacked by Pidgey. |
 | Meowth | 800 | It seems to have fainted. | Snap fainted Meowth after it was hit with a Pester Ball or attacked by Pidgey. |
 | Meowth | 800 | You've thrown a PESTER BALL. | Snap Meowth _while it's getting back up_ after being hit with a Pester Ball. |
-| Meowth | 1200 | Oh! A dancing MEOWTH! | Play the PokéFlute for Meowth and snap it dancing. |
+| Meowth | 1200 | Oh! A dancing MEOWTH! | Snap dancing Meowth after playing the PokeFlute or scaring off the Pidgeys at the end of the course. |
 | Chansey | 1000 | What a funny pose. | Snap Chansey while it's unrolling from being a ball. |
 | Chansey | 1200 | Oh! It looks jolly. | Snap Chansey while it's eating Pokémon Food. |
 | Eevee | 1250 | Oh! It's happy. | Snap Eevee while it's eating Pokémon Food. |
@@ -33,10 +33,10 @@ For any pose to count, the Pokemon must be center frame and close enough to the 
 |---|---|---|---|
 | Electrode | 500 | It's rolling... | Snap Electrode while it's rolling. |
 | Electrode | 1200 | Oh! It exploded! | Snap Electrode while it's exploding or after it exploded. |
-| Electabuzz | 800 | It's a blast! | Snap Electabuzz _while it's falling down_ after being hit with a Pester Ball. |
-| Electabuzz | 800 | Oh dear, it fainted. | Snap fainted Electabuzz after it was hit with a Pester Ball. |
+| Electabuzz | 800 | It's a blast! | Snap Electabuzz _while it's falling down_ after being exploded by Electrode or hit with a Pester Ball. |
+| Electabuzz | 800 | Oh dear, it fainted. | Snap fainted Electabuzz after it was exploded by Electrode or hit with a Pester Ball. |
 | Electabuzz | 800 | You've thrown a PESTER BALL. | Snap Electabuzz _while it's getting back up_ after being hit with a Pester Ball. |
-| Electabuzz | 1000 | It must be angry. | Snap Electabuzz using Thunderbolt at the end of the course (don't hatch Zapdos). |
+| Electabuzz | 1000 | It must be angry. | Snap Electabuzz using Thunderbolt after being hit with Pokemon Food or a Pester Ball (end of course; don't hatch Zapdos). |
 | Electabuzz | 1200 | Oh! It looks yummy! | Snap Electabuzz while it's eating. |
 | Pikachu | 1300 | This pose zaps even me! | Play the flute for Pikachu and snap while it's using Thunder. |
 | Pikachu | 1250 | Oh! This is very lively! | Snap Pikachu while it's backflipping after hatching the Zapdos egg. |
@@ -56,17 +56,17 @@ For any pose to count, the Pokemon must be center frame and close enough to the 
 | Rapidash | 1200 | Oh! It's neighing. | Snap Rapidash while it's prancing after throwing it some Pokemon Food. |
 | Vulpix | 800 | You've thrown a PESTER BALL. | Snap Vulpix after hitting it with a Pester Ball. |
 | Vulpix | 1000 | Hmm... It looks happy. | Snap Vulpix while it's eating. |
-| Charmander | 800 | It's unstable... | Snap Charmander _while it's falling down_ after being hit with a Pester Ball. |
-| Charmander | 800 | Hmm... | Snap fainted Charmander after it was hit with a Pester Ball. |
+| Charmander | 800 | It's unstable... | Snap Charmander _while it's falling down_ after being hit with a Pester Ball  or Flamethrower. |
+| Charmander | 800 | Hmm... | Snap fainted Charmander after it was hit with a Pester Ball  or Flamethrower. |
 | Charmander | 800 | You've thrown a PESTER BALL. | Snap Charmander _while it's getting back up_ after being hit with a Pester Ball. |
 | Charmander | 1200 | Oh! It looks happy! | Snap Charmander while it's eating. |
 | Charmeleon | 800 | It's about to fall. | Snap Charmeleon _while it's falling down_ after being hit with a Pester Ball. |
 | Charmeleon | 800 | It seems to have fainted. | Snap fainted Charmeleon after it was hit with a Pester Ball. |
-| Charmeleon | 800 | It seems to have woken up. | Snap Charmeleon _while it's getting back up_ after being hit with a Pester Ball. |
+| Charmeleon | 800 | It seems to have woken up. | Snap Charmeleon _while it's getting back up_ after being hit with a Pester Ball or evolving from Charmander. |
 | Charmeleon | 1200 | Oh! It's roaring! | Snap Charmeleon roaring after hitting it with a Pester Ball or giving it Pokemon Food. |
-| Magmar | 800 | It's unstable... | Snap Magmar _while it's falling down_ after being hit with a Pester Ball. |
+| Magmar | 800 | It's unstable... | Snap Magmar _while it's falling down_ after being hit with a Pester Ball or Flamethrower. |
 | Magmar | 800 | This is pretty funny! | Snap fainted Magmar. |
-| Magmar | 800 | Ha, ha, ha! This is so funny! | Snap Magmar _while it's getting back up_ after being hit with a Pester Ball. |
+| Magmar | 800 | Ha, ha, ha! This is so funny! | Snap Magmar _while it's getting back up_ after being hit with a Pester Ball or Flamethrower. |
 | Magmar | 1000 | Interesting! It's dizzy! | Snap Magmar after hitting it with Pokemon Food. |
 | Magmar | 1200 | Oh! It looks hot! | Snap Magmar while it's using Flamethrower. |
 | Moltres | 1350 | Oh! What a wonderful pose! | Snap Moltres while it's posing in the air after hatching. |
