@@ -9,7 +9,7 @@ For any pose to count, the Pokemon must be center frame and close enough to the 
 | Doduo | 1300 | Oh! It just fainted. | Snap fainted Doduo after it was hit with a Pester Ball or Pokémon Food. |
 | Doduo | 1300 | Oh! It's about to wake up. | Snap Doduo _while it's getting back up_ after being hit with a Pester Ball or Pokémon Food. |
 | Pikachu | 1250 | Oh! This is very lively! | Snap Pikachu while it's backflipping on the surfboard or a stump. |
-| Pikachu | 1300 | This pose zaps even me! | Play the flute for Pikachu and snap while it's using Thunder. |
+| Pikachu | 1300 | This pose zaps even me! | Play the PokeFlute for Pikachu and snap it using Thunder. |
 | Snorlax | 800 | That's SNORLAX for sure! | Snap Snorlax as it's laying back down. |
 | Snorlax | 800 | It's about to get up. | Snap Snorlax as it's getting up. |
 | Snorlax | 1000 | It's scratching its tummy. | Hit sleeping Snorlax with a Pester Ball. |
@@ -80,37 +80,37 @@ For any pose to count, the Pokemon must be center frame and close enough to the 
 
 | Pokémon | Points | Oak's comment | How to capture |
 |---|---|---|---|
-| Vileplume | 1000 | Isn't the Pokémon dance fun? |
-| Vileplume | 1200 | Oh! It's rockin'! |
-| Vileplume | 1350 | Oh! It's about to wake up! |
-| Psyduck | 800 | It's submerging. |
-| Psyduck | 800 | It jumped. |
-| Psyduck | 1000 | Nice jump. |
-| Psyduck | 1000 | It's about to fall. |
-| Psyduck | 1000 | Quite unique! |
-| Psyduck | 1200 | Oh! What a jump! |
-| Poliwag | 800 | It's dizzy. |
-| Poliwag | 800 | Oh dear, it fainted. |
-| Poliwag | 800 | Oh! It's about to wake up. |
-| Poliwag | 800 | It's jumping. |
-| Poliwag | 1000 | Nice jump. |
-| Poliwag | 1150 | Oh! It's about to jump in! |
-| Poliwag | 1200 | Oh! What a jump! |
-| Slowpoke | 1000 | It looks like it's going to fish. |
-| Slowpoke | 1000 | Gone fishing... |
-| Slowpoke | 1200 | Oh! It got a bite! |
-| Slowbro | 1300 | Oh! It's enjoying the food. |
-| Shellder | 1200 | Oh! It's been caught! |
-| Shellder | 1200 | Oh! It's snapping! |
-| Porygon | 1000 | Hmm... It looks happy. |
-| Porygon | 1000 | Hmm... It looks jolly. |
-| Porygon | 1400 | Oh! It sure is jolly! |
-| Bulbasaur | 800 | You've thrown a PESTER BALL. |
-| Bulbasaur | 1200 | Oh! What a happy face! |
-| Magikarp | 800 | It splashed! |
-| Magikarp | 1000 | That's a good splash. |
-| Magikarp | 1200 | Oh! What a splash! |
-| Pikachu | 1300 | This pose zaps even me! |
+| Magikarp | 800 | It splashed! | Snap Magikarp jumping out of the water. |
+| Magikarp | 1000 | That's a good splash. | Snap Magikarp flipping out of the water. |
+| Magikarp | 1200 | Oh! What a splash! | Snap _sparkling_ Magikarp jumping out of the water. |
+| Poliwag | 800 | It's dizzy. | Snap Poliwag _while it's falling down_ after being hit with a Pester Ball or Pokemon Food. |
+| Poliwag | 800 | Oh dear, it fainted. | Snap fainted Poliwag after hitting it with a Pester Ball or Pokemon Food. |
+| Poliwag | 800 | Oh! It's about to wake up. | Snap Poliwag _while it's getting back up_ after being hit with a Pester Ball or Pokemon Food. |
+| Poliwag | 1150 | Oh! It's about to jump in! | Snap Poliwag as it's jumping _into_ the river. |
+| Poliwag | 800 | It's jumping. | Snap Poliwag doing a flip while jumping out of the river. |
+| Poliwag | 1000 | Nice jump. | Snap Poliwag floating in the air while jumping out of the river. |
+| Poliwag | 1200 | Oh! What a jump! | Snap _sparkling_ Poliwag after it jumps out of the river. |
+| Bulbasaur | 800 | You've thrown a PESTER BALL. | Snap Bulbasaur after hitting it with a Pester Ball. |
+| Bulbasaur | 1200 | Oh! What a happy face! | Snap Bulbasaur eating. |
+| Vileplume | 1000 | Isn't the Pokémon dance fun? | Snap Vileplume dancing to the first PokeFlute song. |
+| Vileplume | 1200 | Oh! It's rockin'! | Snap Vileplume dancing to the second PokeFlute song. |
+| Vileplume | 1350 | Oh! It's about to wake up! | Snap Vileplume right as it's waking up.
+| Slowpoke | 1000 | It looks like it's going to fish. | Snap Slowpoke while it's getting ready to fish. |
+| Slowpoke | 1000 | Gone fishing... | Snap Slowpoke while it's fishing. |
+| Slowpoke | 1200 | Oh! It got a bite! | Snap Slowpoke when Shellder bites its tail. |
+| Slowbro | 1300 | Oh! It's enjoying the food. | Snap Slowbro eating. |
+| Shellder | 1200 | Oh! It's been caught! | Snap Shellder _just_ as it's being caught. |
+| Shellder | 1200 | Oh! It's snapping! | Snap Shellder on Slowpoke's tail. |
+| Psyduck | 800 | It's submerging. | Snap Psyduck diving under water. |
+| Psyduck | 800 | It jumped. | Snap Psyduck jumping out of the water while it's leaning backwards. |
+| Psyduck | 1000 | It's about to fall. | Snap Psyduck right after hitting it with an Apple or a Pester Ball. (hard) |
+| Psyduck | 1000 | Nice jump. | Snap Psyduck jumping out of the water with its arms in the air. |
+| Psyduck | 1000 | Quite unique! | Snap Psyduck as it's sinking after being hit with an Apple or a Pester Ball. |
+| Psyduck | 1200 | Oh! What a jump! | Snap _sparkling_ Psyduck jumping out of the water. |
+| Porygon | 1000 | Hmm... It looks happy. | Snap the brown-camouflaged Porygon eating. |
+| Porygon | 1000 | Hmm... It looks jolly. | Snap the green-camouflaged Porygon eating. |
+| Porygon | 1400 | Oh! It sure is jolly! | Snap the un-camouflaged Proygon it while it's eating. |
+| Pikachu | 1300 | This pose zaps even me! | Play the PokeFlute for Pikachu and snap it using Thunder. |
 
 ## Cave
 

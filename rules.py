@@ -74,7 +74,7 @@ def multiple_requirement(world: "PokemonSnapWorld"):
 
 
 def has(item_name: str, course_name: str):
-    if item_name == POKEMON_FOOD:
+    if item_name == POKEMON_FOOD or item_name == APPLE:
         return Has(POKEMON_FOOD) | Has(course_item(POKEMON_FOOD, course_name)) | Has(APPLE) | Has(course_item(APPLE, course_name))
     return Has(item_name) | Has(course_item(item_name, course_name))
 
@@ -542,37 +542,37 @@ LOCATION_RULES = {
     RIVER_SIGN:    { Category.POKEMON_SIGN: Has(SIGN_DETECTOR) & has(POKEFLUTE, LVL_RIVER) },
     LVL_RIVER:     { Category.SECRET_EXIT: has(PESTER_BALL, LVL_RIVER) },
     # Regular Poses
-    VILEPLUME_FUN_DANCE:          { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    VILEPLUME_ROCKIN:             { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    VILEPLUME_WAKING:             { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    PSYDUCK_NICE_JUMP:            { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    PSYDUCK_IT_JUMPED:            { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    PSYDUCK_WHAT_A_JUMP:          { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    PSYDUCK_FALLING:              { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    PSYDUCK_UNIQUE:               { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    PSYDUCK_SUBMERGING:           { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    POLIWAG_NICE_JUMP:            { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    POLIWAG_JUMPING:              { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    POLIWAG_WHAT_A_JUMP:          { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    POLIWAG_DIZZY:                { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    POLIWAG_FAINTED:              { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    POLIWAG_WAKING:               { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    POLIWAG_JUMPING_IN:           { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    SLOWPOKE_WILL_FISH:           { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    SLOWPOKE_FISHING:             { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    SLOWPOKE_OH_A_BITE:           { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    SLOWBRO_EATING:               { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    SHELLDER_CAUGHT:              { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    SHELLDER_SNAPPING:            { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    PORYGON_HAPPY:                { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    PORYGON_LOOKS_JOLLY:          { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    PORYGON_SURE_JOLLY:           { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    BULBASAUR_RIVER_PESTER:       { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    BULBASAUR_RIVER_HAPPY:        { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    MAGIKARP_RIVER_WHAT_A_SPLASH: { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    MAGIKARP_RIVER_SPLASHED:      { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    MAGIKARP_RIVER_GOOD_SPLASH:   { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    PIKACHU_RIVER_ZAPS_EVEN_ME:   { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    MAGIKARP_RIVER_SPLASHED:      { Category.REGULAR_POSE: has(POKEMON_FOOD, LVL_RIVER) | has(PESTER_BALL, LVL_RIVER) }, # TODO: [rng]
+    MAGIKARP_RIVER_GOOD_SPLASH:   { Category.REGULAR_POSE: has(POKEMON_FOOD, LVL_RIVER) | has(PESTER_BALL, LVL_RIVER) }, # TODO: [rng]
+    MAGIKARP_RIVER_WHAT_A_SPLASH: { Category.REGULAR_POSE: has(POKEMON_FOOD, LVL_RIVER) | has(PESTER_BALL, LVL_RIVER) }, # TODO: [rng/hard]
+    POLIWAG_DIZZY:                { Category.REGULAR_POSE: has(POKEMON_FOOD, LVL_RIVER) | has(PESTER_BALL, LVL_RIVER) },
+    POLIWAG_FAINTED:              { Category.REGULAR_POSE: has(POKEMON_FOOD, LVL_RIVER) | has(PESTER_BALL, LVL_RIVER) },
+    POLIWAG_WAKING:               { Category.REGULAR_POSE: has(POKEMON_FOOD, LVL_RIVER) | has(PESTER_BALL, LVL_RIVER) },
+    POLIWAG_JUMPING_IN:           { Category.REGULAR_POSE: has(POKEMON_FOOD, LVL_RIVER) | has(PESTER_BALL, LVL_RIVER) },
+    POLIWAG_NICE_JUMP:            { Category.REGULAR_POSE: has(POKEMON_FOOD, LVL_RIVER) | has(PESTER_BALL, LVL_RIVER) }, # TODO: [rng]
+    POLIWAG_JUMPING:              { Category.REGULAR_POSE: has(POKEMON_FOOD, LVL_RIVER) | has(PESTER_BALL, LVL_RIVER) }, # TODO: [rng]
+    POLIWAG_WHAT_A_JUMP:          { Category.REGULAR_POSE: has(POKEMON_FOOD, LVL_RIVER) | has(PESTER_BALL, LVL_RIVER) }, # TODO: [rng/hard]
+    BULBASAUR_RIVER_PESTER:       { Category.REGULAR_POSE: has(PESTER_BALL, LVL_RIVER) },
+    BULBASAUR_RIVER_HAPPY:        { Category.REGULAR_POSE: has(POKEMON_FOOD, LVL_RIVER) },
+    VILEPLUME_FUN_DANCE:          { Category.REGULAR_POSE: CanReachLocation(VILEPLUME) },
+    VILEPLUME_ROCKIN:             { Category.REGULAR_POSE: CanReachLocation(VILEPLUME) },
+    VILEPLUME_WAKING:             { Category.REGULAR_POSE: CanReachLocation(VILEPLUME) },
+    SLOWPOKE_WILL_FISH:           { Category.REGULAR_POSE: has(POKEMON_FOOD, LVL_RIVER) },
+    SLOWPOKE_FISHING:             { Category.REGULAR_POSE: has(POKEMON_FOOD, LVL_RIVER) },
+    SLOWPOKE_OH_A_BITE:           { Category.REGULAR_POSE: has(POKEMON_FOOD, LVL_RIVER) },
+    SLOWBRO_EATING:               { Category.REGULAR_POSE: has(POKEMON_FOOD, LVL_RIVER) },
+    SHELLDER_CAUGHT:              { Category.REGULAR_POSE: has(POKEMON_FOOD, LVL_RIVER) }, # TODO: [hard]
+    SHELLDER_SNAPPING:            { Category.REGULAR_POSE: has(POKEMON_FOOD, LVL_RIVER) },
+    PSYDUCK_SUBMERGING:           { Category.REGULAR_POSE: Has(DASH_ENGINE) },
+    PSYDUCK_UNIQUE:               { Category.REGULAR_POSE: has(POKEMON_FOOD, LVL_RIVER) | has(PESTER_BALL, LVL_RIVER) },
+    PSYDUCK_FALLING:              { Category.REGULAR_POSE: has(POKEMON_FOOD, LVL_RIVER) | has(PESTER_BALL, LVL_RIVER) }, # TODO: [hard]
+    PSYDUCK_NICE_JUMP:            { Category.REGULAR_POSE: has(POKEMON_FOOD, LVL_RIVER) | has(PESTER_BALL, LVL_RIVER) }, # TODO: [rng]
+    PSYDUCK_IT_JUMPED:            { Category.REGULAR_POSE: has(POKEMON_FOOD, LVL_RIVER) | has(PESTER_BALL, LVL_RIVER) }, # TODO: [rng]
+    PSYDUCK_WHAT_A_JUMP:          { Category.REGULAR_POSE: has(POKEMON_FOOD, LVL_RIVER) | has(PESTER_BALL, LVL_RIVER) }, # TODO: [rng/hard]
+    PORYGON_HAPPY:                { Category.REGULAR_POSE: CanReachLocation(PORYGON) & has(POKEMON_FOOD, LVL_RIVER) },
+    PORYGON_LOOKS_JOLLY:          { Category.REGULAR_POSE: CanReachLocation(PORYGON) & has(POKEMON_FOOD, LVL_RIVER) },
+    PORYGON_SURE_JOLLY:           { Category.REGULAR_POSE: CanReachLocation(PORYGON) & has(POKEMON_FOOD, LVL_RIVER) },
+    PIKACHU_RIVER_ZAPS_EVEN_ME:   { Category.REGULAR_POSE: CanReachLocation(SPEED_PIKACHU) & has(POKEFLUTE, LVL_RIVER) },
 
 
     ##########
