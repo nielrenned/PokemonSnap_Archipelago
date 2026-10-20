@@ -644,19 +644,19 @@ LOCATION_RULES = {
     # Environment
     CAVE_SIGN:           { Category.POKEMON_SIGN: Has(SIGN_DETECTOR) },
     # Regular Poses
-    JIGGLYPUFF_DANCE:            { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    JIGGLYPUFF_SHAME:            { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    JIGGLYPUFF_SINGING:          { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    VICTREEBEL_LEAPING:          { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    GRIMER_HAPPY:                { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    MUK_HAPPY:                   { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    JYNX_JOLLY_DANCE:            { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    DITTO_HAPPY:                 { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    ARTICUNO_BEAUTIFUL:          { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    KOFFING_WEIRD_DANCE:         { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    MAGIKARP_CAVE_WHAT_A_SPLASH: { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    PIKACHU_CAVE_VERY_LIVELY:    { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
-    PIKACHU_CAVE_ZAPS_EVEN_ME:   { Category.REGULAR_POSE: _NO_ITEMS }, # TODO: verify
+    GRIMER_HAPPY:                { Category.REGULAR_POSE: has(PESTER_BALL, LVL_CAVE) & (HasFilm(4) | (HasFilm(2) & _HARD_LOGIC_ON)) },
+    MUK_HAPPY:                   { Category.REGULAR_POSE: has(PESTER_BALL, LVL_CAVE) & (HasFilm(4) | (HasFilm(2) & _HARD_LOGIC_ON)) },
+    DITTO_HAPPY:                 { Category.REGULAR_POSE: has(PESTER_BALL, LVL_CAVE) & has(POKEMON_FOOD, LVL_CAVE) },
+    KOFFING_WEIRD_DANCE:         { Category.REGULAR_POSE: has(POKEFLUTE, LVL_CAVE) },
+    JIGGLYPUFF_DANCE:            { Category.REGULAR_POSE: CanReachLocation(JIGGLYPUFF_TRIO) },
+    JIGGLYPUFF_SHAME:            { Category.REGULAR_POSE: has(POKEMON_FOOD, LVL_CAVE) | has(PESTER_BALL, LVL_CAVE) },
+    JIGGLYPUFF_SINGING:          { Category.REGULAR_POSE: CanReachLocation(JIGGLYPUFF_ON_STAGE) },
+    VICTREEBEL_LEAPING:          { Category.REGULAR_POSE: CanReachLocation(VICTREEBEL) },
+    JYNX_JOLLY_DANCE:            { Category.REGULAR_POSE: has(POKEFLUTE, LVL_CAVE) },
+    ARTICUNO_BEAUTIFUL:          { Category.REGULAR_POSE: CanReachLocation(ARTICUNO) },
+    MAGIKARP_CAVE_WHAT_A_SPLASH: { Category.REGULAR_POSE: CanReachLocation(course(MAGIKARP, LVL_CAVE)) },
+    PIKACHU_CAVE_VERY_LIVELY:    { Category.REGULAR_POSE: CanReachLocation(course(PIKACHU, LVL_CAVE)) & has(POKEFLUTE, LVL_CAVE) },
+    PIKACHU_CAVE_ZAPS_EVEN_ME:   { Category.REGULAR_POSE: CanReachLocation(course(PIKACHU, LVL_CAVE)) & has(POKEFLUTE, LVL_CAVE) },
 
 
     ############

@@ -8,7 +8,7 @@ For any pose to count, the Pokemon must be center frame and close enough to the 
 | Doduo | 1300 | Oh! You hit 'em! | Snap Doduo _while it's falling down_ after being hit with a Pester Ball or Pokémon Food. |
 | Doduo | 1300 | Oh! It just fainted. | Snap fainted Doduo after it was hit with a Pester Ball or Pokémon Food. |
 | Doduo | 1300 | Oh! It's about to wake up. | Snap Doduo _while it's getting back up_ after being hit with a Pester Ball or Pokémon Food. |
-| Pikachu | 1250 | Oh! This is very lively! | Snap Pikachu while it's backflipping on the surfboard or a stump. |
+| Pikachu | 1250 | Oh! This is very lively! | Snap Pikachu while it's backflipping. |
 | Pikachu | 1300 | This pose zaps even me! | Play the PokeFlute for Pikachu and snap it using Thunder. |
 | Snorlax | 800 | That's SNORLAX for sure! | Snap Snorlax as it's laying back down. |
 | Snorlax | 800 | It's about to get up. | Snap Snorlax as it's getting up. |
@@ -116,19 +116,19 @@ For any pose to count, the Pokemon must be center frame and close enough to the 
 
 | Pokémon | Points | Oak's comment | How to capture |
 |---|---|---|---|
-| Jigglypuff | 1000 | JIGGLYPUFF's dance is great! |
-| Jigglypuff | 1200 | Oh! That's a shame... |
-| Jigglypuff | 1400 | Oh! It's singing cheerfully. |
-| Victreebel | 1300 | Oh! It's about to leap out! |
-| Grimer | 1150 | Oh! It's happy. |
-| Muk | 1000 | It looks happy. |
-| Jynx | 1200 | Oh! What a jolly dance! |
-| Ditto | 1150 | Oh! It's happy. |
-| Articuno | 1350 | Oh! How beautiful! |
-| Koffing | 1200 | Oh! What a weird dance. |
-| Magikarp | 1200 | Oh! What a splash! |
-| Pikachu | 1250 | Oh! This is very lively! |
-| Pikachu | 1300 | This pose zaps even me! |
+| Grimer | 1150 | Oh! It's happy. | Snap Grimer after hitting it with a Pester Ball. |
+| Muk | 1000 | It looks happy. | Snap Muk after hitting it with a Pester Ball. |
+| Ditto | 1150 | Oh! It's happy. | Snap Ditto eating. |
+| Koffing | 1200 | Oh! What a weird dance. | Snap Koffing dancing to the second PokeFlute song. |
+| Jigglypuff | 1000 | JIGGLYPUFF's dance is great! | Snap Jigglypuff dancing. |
+| Jigglypuff | 1200 | Oh! That's a shame... | Snap Jigglypuff after hitting it with a Pester Ball or Pokemon Food. |
+| Jigglypuff | 1400 | Oh! It's singing cheerfully. | Snap Jigglypuff singing. |
+| Magikarp | 1200 | Oh! What a splash! | No special requirements. |
+| Victreebel | 1300 | Oh! It's about to leap out! | Snap Victreebell as it's coming out of the water. |
+| Jynx | 1200 | Oh! What a jolly dance! | Snap Jynx dancing to the third PokeFlute song. |
+| Articuno | 1350 | Oh! How beautiful! | No special requirements. |
+| Pikachu | 1250 | Oh! This is very lively! | Snap Pikachu while it's backflipping after hatching Articuno. |
+| Pikachu | 1300 | This pose zaps even me! | Play the PokeFlute for Pikachu and snap it using Thunder. |
 
 ## Valley
 
