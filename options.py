@@ -254,7 +254,7 @@ class PokemonReportTotalScore(DefaultOnToggle):
 
 class PoseSanity(Range):
     range_start = 0
-    range_end = 144 # only if we count each zapping pika as separate, etc.
+    range_end = 141
     default = 0
 
 

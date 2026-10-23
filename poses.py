@@ -153,7 +153,7 @@ SANDSHREW_PESTER    = PokemonSnapPoseData(id=59,  score=800,  pokemon=SANDSHREW,
 # SANDSHREW_60        = PokemonSnapPoseData(id=60,  score=800,  pokemon=SANDSHREW,  phrase="You've thrown a PESTER BALL.")
 # SANDSHREW_61        = PokemonSnapPoseData(id=61,  score=800,  pokemon=SANDSHREW,  phrase="You've thrown a PESTER BALL.")
 SANDSHREW_POP_UP    = PokemonSnapPoseData(id=62,  score=1350, pokemon=SANDSHREW,  phrase="Oh! It's about to pop up.")
-SANDSHREW_GO_UNDER  = PokemonSnapPoseData(id=63,  score=800,  pokemon=SANDSHREW,  phrase="It's about to go underground.")
+# SANDSHREW_GO_UNDER  = PokemonSnapPoseData(id=63,  score=800,  pokemon=SANDSHREW,  phrase="It's about to go underground.")
 SANDSHREW_JOLLY     = PokemonSnapPoseData(id=64,  score=1000, pokemon=SANDSHREW,  phrase="Hmm... It looks jolly.")
 SANDSLASH_STUMBLED  = PokemonSnapPoseData(id=65,  score=800,  pokemon=SANDSLASH,  phrase="It stumbled.")
 # SANDSLASH_66        = PokemonSnapPoseData(id=66,  score=800,  pokemon=SANDSLASH,  phrase="It stumbled.")
@@ -186,7 +186,7 @@ MAGIKARP_VALLEY_GOOD_SPLASH   = PokemonSnapPoseData(id=50,  score=1000, pokemon=
 MAGIKARP_VALLEY_ITS_SPLASHING = PokemonSnapPoseData(id=51,  score=1200, pokemon=course(MAGIKARP, LVL_VALLEY),   phrase="Oh! It's splashing.")
 
 # Rainbow Cloud
-MEW_FACING          = PokemonSnapPoseData(id=149, score=800,  pokemon=MEW,        phrase="If only it were facing you...")
+# MEW_FACING          = PokemonSnapPoseData(id=149, score=800,  pokemon=MEW,        phrase="If only it were facing you...")
 # MEW_150             = PokemonSnapPoseData(id=150, score=800,  pokemon=MEW,        phrase="If only it were facing you...")
 MEW_WELL_DONE       = PokemonSnapPoseData(id=151, score=1350, pokemon=MEW,        phrase="Oh! Well done!")
 MEW_SPINNING        = PokemonSnapPoseData(id=152, score=1250, pokemon=MEW,        phrase="Oh! It's spinning.")
@@ -205,7 +205,6 @@ POSE_REMAPPING = {
     98: 96,
     117: 116,
     118: 116,
-    150: 149,
 }
 
 
@@ -230,7 +229,6 @@ pose_location_data = {
         SNORLAX_JOLLY,
         SNORLAX_WAKING,
         SNORLAX_SCRATCHING,
-
         PIKACHU_BEACH_ZAPS_EVEN_ME,
         PIKACHU_BEACH_VERY_LIVELY,
         MAGIKARP_BEACH_GOOD_SPLASH,
@@ -334,7 +332,6 @@ pose_location_data = {
         SQUIRTLE_HAPPY,
         SANDSHREW_PESTER,
         SANDSHREW_POP_UP,
-        SANDSHREW_GO_UNDER,
         SANDSHREW_JOLLY,
         SANDSLASH_STUMBLED,
         SANDSLASH_POP_UP,
@@ -363,7 +360,6 @@ pose_location_data = {
         MAGIKARP_VALLEY_ITS_SPLASHING,
     ],
     LVL_CLOUD: [
-        MEW_FACING,
         MEW_WELL_DONE,
         MEW_SPINNING,
         MEW_PERFECT,

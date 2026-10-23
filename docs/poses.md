@@ -134,46 +134,44 @@ For any pose to count, the Pokemon must be center frame and close enough to the 
 
 | Pokémon | Points | Oak's comment | How to capture |
 |---|---|---|---|
-| Squirtle | 150 | I only see its shell. |
-| Squirtle | 500 | It's about to withdraw. |
-| Squirtle | 800 | You've thrown a PESTER BALL. |
-| Squirtle | 900 | It's about to come out. |
-| Squirtle | 1100 | Oh! It's happy! |
-| Sandshrew | 800 | You've thrown a PESTER BALL. |
-| Sandshrew | 800 | It's about to go underground. |
-| Sandshrew | 1000 | Hmm... It looks jolly. |
-| Sandshrew | 1350 | Oh! It's about to pop up. |
-| Sandslash | 800 | It stumbled. |
-| Sandslash | 850 | It's about to go underground. |
-| Sandslash | 1050 | Oh! It's happy. |
-| Sandslash | 1400 | Oh! It's about to pop up. |
-| Mankey | 800 | You've thrown a PESTER BALL. |
-| Mankey | 1250 | Oh! It's MANKEY in the sky! |
-| Mankey | 1250 | Oh! MANKEY got blasted! |
-| Graveler | 1200 | Oh! It's falling. |
-| Graveler | 1200 | Oh! It fell. |
-| Goldeen | 800 | It's splashing. |
-| Goldeen | 1000 | That's a good splash! |
-| Goldeen | 1200 | Oh! What a splash! |
-| Gyarados | 1000 | It just showed its face. |
-| Gyarados | 1000 | Umm... looks scary! |
-| Gyarados | 1200 | Oh! It's furious! |
-| Gyarados | 1200 | Oh! It looks astonished! |
-| Gyarados | 1350 | Oh! How powerful! |
-| Dratini | 1200 | Oh! What an amazing jump! |
-| Dratini | 1000 | That's a pretty good jump. |
-| Dratini | 800 | It's jumping. |
-| Dragonite | 1200 | Oh! It's DRAGONITE! |
-| Magikarp | 800 | It splashed! |
-| Magikarp | 1000 | That's a good splash. |
-| Magikarp | 1200 | Oh! What a splash! |
-| Magikarp | 1200 | Oh! It's splashing. |
+| Squirtle | 150 | I only see its shell. | Snap Squirtle in the water. |
+| Squirtle | 500 | It's about to withdraw. | Snap Squirtle in its shell at the end of the course. |
+| Squirtle | 800 | You've thrown a PESTER BALL. | Snap Squirtle after knocking it out with a Pester Ball. |
+| Squirtle | 900 | It's about to come out. | Snap Squirtle coming out of its shell. |
+| Squirtle | 1100 | Oh! It's happy! | Snap Squirtle jumping after throwing it Pokemon Food or seeing you at the end of the course. |
+| Sandshrew | 800 | You've thrown a PESTER BALL. | Snap Sandshrew after knocking it out with a Pester Ball. |
+| Sandshrew | 1000 | Hmm... It looks jolly. | Snap Sandshrew jumping after throwing it Pokemon Food. |
+| Sandshrew | 1350 | Oh! It's about to pop up. | Snap Sandshrew coming up out of the ground. |
+| Sandslash | 800 | It stumbled. | Snap Sandslash after hitting it with a Pester Ball. |
+| Sandslash | 850 | It's about to go underground. | Snap Sandslash digging into the ground (requires Dash Engine?). |
+| Sandslash | 1050 | Oh! It's happy. | Snap Sandslash jumping after throwing it Pokemon Food. |
+| Sandslash | 1400 | Oh! It's about to pop up. | Snap Sandslash coming up out of the ground. |
+| Mankey | 800 | You've thrown a PESTER BALL. | Snap fainted Mankey after hitting it with a Pester Ball. |
+| Mankey | 1250 | Oh! It's MANKEY in the sky! | Snap Manket _while it's in the air_ after getting hit with a Pester Ball. |
+| Mankey | 1250 | Oh! MANKEY got blasted! | Snap Mankey _while it's falling down_ after getting hit with a Pester Ball. |
+| Graveler | 1200 | Oh! It's falling. | Snap Graveler as it's falling off the cliff. |
+| Graveler | 1200 | Oh! It fell. | Snap Graveler on the ground after it falls off the cliff. |
+| Goldeen | 800 | It's splashing. | Snap Goldeen jumping out of the water. |
+| Goldeen | 1000 | That's a good splash! | Snap Goldeen jumping high out of the water. |
+| Goldeen | 1200 | Oh! What a splash! | Snap _sparkling_ Goldeen jumping out of the water. |
+| Gyarados | 1000 | It just showed its face. | Snap Gyarados as it's coming out of the waterfall. |
+| Gyarados | 1000 | Umm... looks scary! | Snap Gyarados in its normal pose. |
+| Gyarados | 1200 | Oh! It looks astonished! | Snap Gyarados after hitting it with a Pester Ball. |
+| Gyarados | 1200 | Oh! It's furious! | Snap Gyarados using Roar. |
+| Gyarados | 1350 | Oh! How powerful! | Snap Gyarados using Hydro Pump. |
+| Dratini | 800 | It's jumping. | Snap Dratini jumping out of the water. |
+| Dratini | 1000 | That's a pretty good jump. | Snap Dratini flipping out of the water. |
+| Dratini | 1200 | Oh! What an amazing jump! | Snap _sparkling_ Dratini jumping out of the water. |
+| Dragonite | 1200 | Oh! It's DRAGONITE! | Snap Dragonite posing after it comes out of the whirlpool. |
+| Magikarp | 800 | It splashed! | Snap Magikarp jumping out of the water. |
+| Magikarp | 1000 | That's a good splash. | Snap Magikarp jumping high out of the water. |
+| Magikarp | 1200 | Oh! It's splashing. | Snap Magikarp flopping on the ground. |
+| Magikarp | 1200 | Oh! What a splash! | Snap _sparkling_ Magikarp jumping out of the water. |
 
 ## Rainbow Cloud
 
 | Pokémon | Points | Oak's comment | How to capture |
 |---|---|---|---|
-| Mew | 800 | If only it were facing you... |
-| Mew | 1250 | Oh! It's spinning. |
-| Mew | 1350 | Oh! Well done! |
-| Mew | 1500 | Why, it's perfect! |
+| Mew | 1250 | Oh! It's spinning. | Snap Mew spinning. |
+| Mew | 1350 | Oh! Well done! | Snap Mew trying to get back to its bubble. |
+| Mew | 1500 | Why, it's perfect! | Snap Mew facing you and posing. |
