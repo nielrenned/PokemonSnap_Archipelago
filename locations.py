@@ -5,7 +5,7 @@ from BaseClasses import Location, Region
 from .addresses import COURSE_IDS
 from .items import PokemonSnapItem
 from .constants import *
-from .poses import pose_location_data, regular_pose, regular_pose_id
+from .poses import *
 
 class PokemonSnapLocationCategory(IntEnum):
     NORMAL_PHOTO    = 0
@@ -94,23 +94,51 @@ RNG_LOCATIONS = [
     # River
     multiple(CLOYSTER),
     multiple(PSYDUCK),
+    regular_pose(MAGIKARP_RIVER_SPLASHED),
+    regular_pose(MAGIKARP_RIVER_GOOD_SPLASH),
+    regular_pose(MAGIKARP_RIVER_WHAT_A_SPLASH),
+    regular_pose(POLIWAG_NICE_JUMP),
+    regular_pose(POLIWAG_JUMPING),
+    regular_pose(POLIWAG_WHAT_A_JUMP),
+    regular_pose(PSYDUCK_NICE_JUMP),
+    regular_pose(PSYDUCK_IT_JUMPED),
+    regular_pose(PSYDUCK_WHAT_A_JUMP),
     # Valley
     multiple(DRATINI),
     multiple(course(MAGIKARP, LVL_VALLEY)),
+    regular_pose(GOLDEEN_SPLASHING),
+    regular_pose(GOLDEEN_GOOD_SPLASH),
+    regular_pose(GOLDEEN_WHAT_A),
+    regular_pose(DRATINI_JUMPING),
+    regular_pose(DRATINI_GOOD),
+    regular_pose(DRATINI_AMAZING),
+    regular_pose(MAGIKARP_VALLEY_IT_SPLASHED),
+    regular_pose(MAGIKARP_VALLEY_GOOD_SPLASH),
+    regular_pose(MAGIKARP_VALLEY_WHAT_A_SPLASH),
 ]
 
 HARD_LOCATIONS = [
     # River
     wonderful(course(PIKACHU, LVL_RIVER)),
+    regular_pose(SHELLDER_CAUGHT),
+    regular_pose(MAGIKARP_RIVER_WHAT_A_SPLASH),
+    regular_pose(POLIWAG_WHAT_A_JUMP),
+    regular_pose(PSYDUCK_FALLING),
+    regular_pose(PSYDUCK_WHAT_A_JUMP),
     # Cave
     wonderful(course(MAGIKARP, LVL_CAVE)),
     multiple(course(ZUBAT, LVL_CAVE)),
     BALLOON_PIKACHU,
     FLYING_PIKACHU,
+    regular_pose(PIKACHU_CAVE_VERY_LIVELY),
+    regular_pose(PIKACHU_CAVE_ZAPS_EVEN_ME),
     # Valley
     multiple(STARYU),
     multiple(STARMIE),
     wonderful(GOLDEEN),
+    regular_pose(GOLDEEN_WHAT_A),
+    regular_pose(DRATINI_AMAZING),
+    regular_pose(MAGIKARP_VALLEY_WHAT_A_SPLASH),
 ]
 
 

@@ -253,12 +253,14 @@ class PokemonReportTotalScore(DefaultOnToggle):
 
 
 class PoseSanity(Range):
+    # TODO: me
     range_start = 0
     range_end = 141
     default = 0
 
 
 class IncludeRNGChecks(Toggle):
+    # TODO: update this to mention regular poses
     """
     Include the luck-heavy photos as checks. They are:
     - [Volcano] Arcanine: Multiple
@@ -269,6 +271,7 @@ class IncludeRNGChecks(Toggle):
 
 
 class IncludeHardChecks(Toggle):
+    # TODO: update this to mention regular poses
     """
     Include the hard photos as checks. They are:
     - [ River] Pikachu (River): Good Technique

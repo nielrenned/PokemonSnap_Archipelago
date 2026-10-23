@@ -80,16 +80,16 @@ For any pose to count, the Pokemon must be center frame and close enough to the 
 
 | Pokémon | Points | Oak's comment | How to capture |
 |---|---|---|---|
-| Magikarp | 800 | It splashed! | Snap Magikarp jumping out of the water. |
-| Magikarp | 1000 | That's a good splash. | Snap Magikarp flipping out of the water. |
-| Magikarp | 1200 | Oh! What a splash! | Snap _sparkling_ Magikarp jumping out of the water. |
+| Magikarp | 800 | It splashed! | [RNG] Snap Magikarp jumping out of the water. |
+| Magikarp | 1000 | That's a good splash. | [RNG] Snap Magikarp flipping out of the water. |
+| Magikarp | 1200 | Oh! What a splash! | [RNG & HARD] Snap _sparkling_ Magikarp jumping out of the water. |
 | Poliwag | 800 | It's dizzy. | Snap Poliwag _while it's falling down_ after being hit with a Pester Ball or Pokemon Food. |
 | Poliwag | 800 | Oh dear, it fainted. | Snap fainted Poliwag after hitting it with a Pester Ball or Pokemon Food. |
 | Poliwag | 800 | Oh! It's about to wake up. | Snap Poliwag _while it's getting back up_ after being hit with a Pester Ball or Pokemon Food. |
 | Poliwag | 1150 | Oh! It's about to jump in! | Snap Poliwag as it's jumping _into_ the river. |
-| Poliwag | 800 | It's jumping. | Snap Poliwag doing a flip while jumping out of the river. |
-| Poliwag | 1000 | Nice jump. | Snap Poliwag floating in the air while jumping out of the river. |
-| Poliwag | 1200 | Oh! What a jump! | Snap _sparkling_ Poliwag after it jumps out of the river. |
+| Poliwag | 800 | It's jumping. | [RNG] Snap Poliwag doing a flip while jumping out of the river. |
+| Poliwag | 1000 | Nice jump. | [RNG] Snap Poliwag floating in the air while jumping out of the river. |
+| Poliwag | 1200 | Oh! What a jump! | [RNG & HARD] Snap _sparkling_ Poliwag after it jumps out of the river. |
 | Bulbasaur | 800 | You've thrown a PESTER BALL. | Snap Bulbasaur after hitting it with a Pester Ball. |
 | Bulbasaur | 1200 | Oh! What a happy face! | Snap Bulbasaur eating. |
 | Vileplume | 1000 | Isn't the Pokémon dance fun? | Snap Vileplume dancing to the first PokeFlute song. |
@@ -99,17 +99,17 @@ For any pose to count, the Pokemon must be center frame and close enough to the 
 | Slowpoke | 1000 | Gone fishing... | Snap Slowpoke while it's fishing. |
 | Slowpoke | 1200 | Oh! It got a bite! | Snap Slowpoke when Shellder bites its tail. |
 | Slowbro | 1300 | Oh! It's enjoying the food. | Snap Slowbro eating. |
-| Shellder | 1200 | Oh! It's been caught! | Snap Shellder _just_ as it's being caught. |
+| Shellder | 1200 | Oh! It's been caught! | [HARD] Snap Shellder _just_ as it's being caught. |
 | Shellder | 1200 | Oh! It's snapping! | Snap Shellder on Slowpoke's tail. |
 | Psyduck | 800 | It's submerging. | Snap Psyduck diving under water. |
-| Psyduck | 800 | It jumped. | Snap Psyduck jumping out of the water while it's leaning backwards. |
-| Psyduck | 1000 | It's about to fall. | Snap Psyduck right after hitting it with an Apple or a Pester Ball. (hard) |
-| Psyduck | 1000 | Nice jump. | Snap Psyduck jumping out of the water with its arms in the air. |
+| Psyduck | 800 | It jumped. | [RNG] Snap Psyduck jumping out of the water while it's leaning backwards. |
+| Psyduck | 1000 | It's about to fall. | [HARD] Snap Psyduck right after hitting it with an Apple or a Pester Ball. |
+| Psyduck | 1000 | Nice jump. | [RNG] Snap Psyduck jumping out of the water with its arms in the air. |
 | Psyduck | 1000 | Quite unique! | Snap Psyduck as it's sinking after being hit with an Apple or a Pester Ball. |
-| Psyduck | 1200 | Oh! What a jump! | Snap _sparkling_ Psyduck jumping out of the water. |
+| Psyduck | 1200 | [RNG & HARD] Oh! What a jump! | Snap _sparkling_ Psyduck jumping out of the water. |
 | Porygon | 1000 | Hmm... It looks happy. | Snap the brown-camouflaged Porygon eating. |
 | Porygon | 1000 | Hmm... It looks jolly. | Snap the green-camouflaged Porygon eating. |
-| Porygon | 1400 | Oh! It sure is jolly! | Snap the un-camouflaged Proygon it while it's eating. |
+| Porygon | 1400 | Oh! It sure is jolly! | Snap the un-camouflaged Porygon while it's eating. |
 | Pikachu | 1300 | This pose zaps even me! | Play the PokeFlute for Pikachu and snap it using Thunder. |
 
 ## Cave
@@ -127,8 +127,8 @@ For any pose to count, the Pokemon must be center frame and close enough to the 
 | Victreebel | 1300 | Oh! It's about to leap out! | Snap Victreebell as it's coming out of the water. |
 | Jynx | 1200 | Oh! What a jolly dance! | Snap Jynx dancing to the third PokeFlute song. |
 | Articuno | 1350 | Oh! How beautiful! | No special requirements. |
-| Pikachu | 1250 | Oh! This is very lively! | Snap Pikachu while it's backflipping after hatching Articuno. |
-| Pikachu | 1300 | This pose zaps even me! | Play the PokeFlute for Pikachu and snap it using Thunder. |
+| Pikachu | 1250 | Oh! This is very lively! | [HARD] Snap Pikachu while it's backflipping after hatching Articuno. |
+| Pikachu | 1300 | This pose zaps even me! | [HARD] Play the PokeFlute for Pikachu and snap it using Thunder. |
 
 ## Valley
 
@@ -151,22 +151,22 @@ For any pose to count, the Pokemon must be center frame and close enough to the 
 | Mankey | 1250 | Oh! MANKEY got blasted! | Snap Mankey _while it's falling down_ after getting hit with a Pester Ball. |
 | Graveler | 1200 | Oh! It's falling. | Snap Graveler as it's falling off the cliff. |
 | Graveler | 1200 | Oh! It fell. | Snap Graveler on the ground after it falls off the cliff. |
-| Goldeen | 800 | It's splashing. | Snap Goldeen jumping out of the water. |
-| Goldeen | 1000 | That's a good splash! | Snap Goldeen jumping high out of the water. |
-| Goldeen | 1200 | Oh! What a splash! | Snap _sparkling_ Goldeen jumping out of the water. |
+| Goldeen | 800 | It's splashing. | [RNG] Snap Goldeen jumping out of the water. |
+| Goldeen | 1000 | That's a good splash! | [RNG] Snap Goldeen jumping high out of the water. |
+| Goldeen | 1200 | Oh! What a splash! | [RNG & HARD] Snap _sparkling_ Goldeen jumping out of the water. |
 | Gyarados | 1000 | It just showed its face. | Snap Gyarados as it's coming out of the waterfall. |
 | Gyarados | 1000 | Umm... looks scary! | Snap Gyarados in its normal pose. |
 | Gyarados | 1200 | Oh! It looks astonished! | Snap Gyarados after hitting it with a Pester Ball. |
 | Gyarados | 1200 | Oh! It's furious! | Snap Gyarados using Roar. |
 | Gyarados | 1350 | Oh! How powerful! | Snap Gyarados using Hydro Pump. |
-| Dratini | 800 | It's jumping. | Snap Dratini jumping out of the water. |
-| Dratini | 1000 | That's a pretty good jump. | Snap Dratini flipping out of the water. |
-| Dratini | 1200 | Oh! What an amazing jump! | Snap _sparkling_ Dratini jumping out of the water. |
+| Dratini | 800 | It's jumping. | [RNG] Snap Dratini jumping out of the water. |
+| Dratini | 1000 | That's a pretty good jump. | [RNG] Snap Dratini flipping out of the water. |
+| Dratini | 1200 | Oh! What an amazing jump! | [RNG & HARD] Snap _sparkling_ Dratini jumping out of the water. |
 | Dragonite | 1200 | Oh! It's DRAGONITE! | Snap Dragonite posing after it comes out of the whirlpool. |
-| Magikarp | 800 | It splashed! | Snap Magikarp jumping out of the water. |
-| Magikarp | 1000 | That's a good splash. | Snap Magikarp jumping high out of the water. |
+| Magikarp | 800 | It splashed! | [RNG] Snap Magikarp jumping out of the water. |
+| Magikarp | 1000 | That's a good splash. | [RNG] Snap Magikarp jumping high out of the water. |
 | Magikarp | 1200 | Oh! It's splashing. | Snap Magikarp flopping on the ground. |
-| Magikarp | 1200 | Oh! What a splash! | Snap _sparkling_ Magikarp jumping out of the water. |
+| Magikarp | 1200 | Oh! What a splash! | [RNG & HARD] Snap _sparkling_ Magikarp jumping out of the water. |
 
 ## Rainbow Cloud
 

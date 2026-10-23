@@ -98,7 +98,9 @@ class PokemonSnapWorld(World):
             self.enabled_location_categories.add(PokemonSnapLocationCategory.REGULAR_POSE)
             all_poses = [location 
                          for region in location_tables.values() for location in region 
-                         if location.category == PokemonSnapLocationCategory.REGULAR_POSE]
+                         if  location.category == PokemonSnapLocationCategory.REGULAR_POSE
+                         and (location.name not in RNG_LOCATIONS or self.options.rng_checks)
+                         and (location.name not in HARD_LOCATIONS or self.options.hard_checks)]
             self.random.shuffle(all_poses)
             self.enabled_regular_poses = set(all_poses[:self.options.posesanity])
 
