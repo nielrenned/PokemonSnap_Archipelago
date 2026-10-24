@@ -59,7 +59,7 @@ class PokemonSnapWorld(World):
     topology_present: bool = True
 
     enabled_location_categories: set[PokemonSnapLocationCategory]
-    enabled_regular_poses: set[PokemonSnapLocation]
+    enabled_regular_poses: set[PokemonSnapLocation] = set()
     required_client_version = (0, 6, 7)
     item_name_to_id = PokemonSnapItem.get_name_to_id()
     location_name_to_id = PokemonSnapLocation.get_name_to_id()
