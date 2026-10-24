@@ -103,6 +103,12 @@ class PokemonSnapWorld(World):
                          and (location.name not in HARD_LOCATIONS or self.options.hard_checks)]
             self.random.shuffle(all_poses)
             self.enabled_regular_poses = set(all_poses[:self.options.posesanity])
+        
+        if getattr(self.multiworld, "generation_is_fake", False) and self.options.posesanity > 0:
+            self.enabled_regular_poses = [
+                location for region in location_tables.values() for location in region 
+                if location.category == PokemonSnapLocationCategory.REGULAR_POSE
+            ]
 
         # Per-seed connect token, baked into the ROM and registered server-side.
         self.auth = self.random.randbytes(16)
@@ -292,10 +298,14 @@ class PokemonSnapWorld(World):
         patch.write(out_path)
 
     def fill_slot_data(self) -> dict[str, Any]:
-        return self.options.as_dict(
+        options_dict = self.options.as_dict(
             "goal_type", "good_technique_mew_photo", "signs_required", "pokemon_required", "photo_scoring",
             "photo_bonuses", "pokemon_signs", "secret_exits", "report_photo_count",
             "report_score_total", "rng_checks", "hard_checks", "hard_logic",
             "left_bumper_to_start_stop", "camera_inversion",
             "starting_film", "film_upgrade_amount", "maximum_film", 
-            "map_fragments", "per_course_items")
+            "map_fragments", "per_course_items", "posesanity"
+        )
+
+        options_dict['posesanity_poses'] = [location.id for location in self.enabled_regular_poses]
+        return options_dict
