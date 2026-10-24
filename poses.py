@@ -10,10 +10,9 @@ class PokemonSnapPoseData(NamedTuple):
 
 regular_pose = lambda pose_data:  f'{pose_data.pokemon} Pose: "{pose_data.phrase}"'
 
-def regular_pose_id(pose_id: int, pokemon_id: str):
-    # This weirdness gives every pose/pokemon/level combo its own ID.
-    # TODO: something simpler for the tracker...
-    return 100000 + 1000 * pokemon_id + pose_id
+def regular_pose_id(game_pose_id: int, course_id: int):
+    ap_pose_id = POSE_REMAPPING.get(game_pose_id, game_pose_id)
+    return 10000 + 1000 * course_id + ap_pose_id
 
 
 # Beach

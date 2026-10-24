@@ -79,13 +79,13 @@ secret_exit = lambda level_name: f'{level_name}: Secret Exit'
 bonus       = lambda loc_name:   f'{loc_name} 2'
 
 # Alternate ID functions
-wonderful_id    = lambda poke_id:  100 + poke_id
-multiple_id     = lambda poke_id:  200 + poke_id
-special_pose_id = lambda pose_id:  300 + pose_id
-sign_id         = lambda lvl_id:   400 + lvl_id
-secret_exit_id  = lambda lvl_id:   500 + lvl_id
-oak_reward_id   = lambda reward:   600 + reward
-bonus_id        = lambda loc_id:  1000 + loc_id
+wonderful_id    = lambda poke_id:      100 + poke_id
+multiple_id     = lambda poke_id:      200 + poke_id
+special_pose_id = lambda pose_id:      300 + pose_id
+sign_id         = lambda lvl_id:       400 + lvl_id
+secret_exit_id  = lambda lvl_id:       500 + lvl_id
+oak_reward_id   = lambda reward:       600 + reward
+bonus_id        = lambda loc_id: 1_000_000 + loc_id
 
 
 RNG_LOCATIONS = [
@@ -280,7 +280,7 @@ for region, species_data_list in species_data_tables.items():
 
 for region, poses in pose_location_data.items():
     for pose in poses:
-        location_id = regular_pose_id(pose.id, POKEMON_NAME_TO_ID[pose.pokemon])
+        location_id = regular_pose_id(pose.id, COURSE_IDS[region])
         location_tables[region].append(PokemonSnapLocationData(location_id, regular_pose(pose), PokemonSnapLocationCategory.REGULAR_POSE))
 
 
