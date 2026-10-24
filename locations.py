@@ -5,6 +5,7 @@ from BaseClasses import Location, Region
 from .addresses import COURSE_IDS
 from .items import PokemonSnapItem
 from .constants import *
+from .poses import *
 
 class PokemonSnapLocationCategory(IntEnum):
     NORMAL_PHOTO    = 0
@@ -15,6 +16,7 @@ class PokemonSnapLocationCategory(IntEnum):
     SECRET_EXIT     = 5
     PHOTO_COUNT     = 6
     REPORT_SCORE    = 7
+    REGULAR_POSE    = 8
 
     # for when there aren't enough locations in the pool
     BONUS_LOCATION = 10
@@ -71,19 +73,19 @@ class PokemonSnapLocation(Location):
         item.location = self
 
 # Location naming functions
-wonderful   = lambda name:         f'{name}: Good Technique'
-multiple    = lambda name:         f'{name}: Multiple'
-secret_exit = lambda level_name:   f'{level_name}: Secret Exit'
-bonus       = lambda loc_name:     f'{loc_name} 2'
+wonderful   = lambda name:       f'{name}: Good Technique'
+multiple    = lambda name:       f'{name}: Multiple'
+secret_exit = lambda level_name: f'{level_name}: Secret Exit'
+bonus       = lambda loc_name:   f'{loc_name} 2'
 
 # Alternate ID functions
-wonderful_id    = lambda poke_id:  100 + poke_id
-multiple_id     = lambda poke_id:  200 + poke_id
-special_pose_id = lambda pose_id:  300 + pose_id
-sign_id         = lambda lvl_id:   400 + lvl_id
-secret_exit_id  = lambda lvl_id:   500 + lvl_id
-oak_reward_id   = lambda reward:   600 + reward
-bonus_id        = lambda loc_id:  1000 + loc_id
+wonderful_id    = lambda poke_id:      100 + poke_id
+multiple_id     = lambda poke_id:      200 + poke_id
+special_pose_id = lambda pose_id:      300 + pose_id
+sign_id         = lambda lvl_id:       400 + lvl_id
+secret_exit_id  = lambda lvl_id:       500 + lvl_id
+oak_reward_id   = lambda reward:       600 + reward
+bonus_id        = lambda loc_id: 1_000_000 + loc_id
 
 
 RNG_LOCATIONS = [
@@ -92,23 +94,51 @@ RNG_LOCATIONS = [
     # River
     multiple(CLOYSTER),
     multiple(PSYDUCK),
+    regular_pose(MAGIKARP_RIVER_SPLASHED),
+    regular_pose(MAGIKARP_RIVER_GOOD_SPLASH),
+    regular_pose(MAGIKARP_RIVER_WHAT_A_SPLASH),
+    regular_pose(POLIWAG_NICE_JUMP),
+    regular_pose(POLIWAG_JUMPING),
+    regular_pose(POLIWAG_WHAT_A_JUMP),
+    regular_pose(PSYDUCK_NICE_JUMP),
+    regular_pose(PSYDUCK_IT_JUMPED),
+    regular_pose(PSYDUCK_WHAT_A_JUMP),
     # Valley
     multiple(DRATINI),
     multiple(course(MAGIKARP, LVL_VALLEY)),
+    regular_pose(GOLDEEN_SPLASHING),
+    regular_pose(GOLDEEN_GOOD_SPLASH),
+    regular_pose(GOLDEEN_WHAT_A),
+    regular_pose(DRATINI_JUMPING),
+    regular_pose(DRATINI_GOOD),
+    regular_pose(DRATINI_AMAZING),
+    regular_pose(MAGIKARP_VALLEY_IT_SPLASHED),
+    regular_pose(MAGIKARP_VALLEY_GOOD_SPLASH),
+    regular_pose(MAGIKARP_VALLEY_WHAT_A_SPLASH),
 ]
 
 HARD_LOCATIONS = [
     # River
     wonderful(course(PIKACHU, LVL_RIVER)),
+    regular_pose(SHELLDER_CAUGHT),
+    regular_pose(MAGIKARP_RIVER_WHAT_A_SPLASH),
+    regular_pose(POLIWAG_WHAT_A_JUMP),
+    regular_pose(PSYDUCK_FALLING),
+    regular_pose(PSYDUCK_WHAT_A_JUMP),
     # Cave
     wonderful(course(MAGIKARP, LVL_CAVE)),
     multiple(course(ZUBAT, LVL_CAVE)),
     BALLOON_PIKACHU,
     FLYING_PIKACHU,
+    regular_pose(PIKACHU_CAVE_VERY_LIVELY),
+    regular_pose(PIKACHU_CAVE_ZAPS_EVEN_ME),
     # Valley
     multiple(STARYU),
     multiple(STARMIE),
     wonderful(GOLDEEN),
+    regular_pose(GOLDEEN_WHAT_A),
+    regular_pose(DRATINI_AMAZING),
+    regular_pose(MAGIKARP_VALLEY_WHAT_A_SPLASH),
 ]
 
 
@@ -208,9 +238,15 @@ species_data_tables = {
     ],
 }
 
+POKEMON_NAME_TO_ID = {
+    pokemon.name: pokemon.id
+    for species_data in species_data_tables.values() for pokemon in species_data 
+}
+
 POKEMON_TO_SLOTS = {
     pokemon.name: [pokemon.id]
-    for species_data in species_data_tables.values() for pokemon in species_data if pokemon.name in ALL_INGAME_POKEMON
+    for species_data in species_data_tables.values() for pokemon in species_data 
+    if pokemon.name in ALL_INGAME_POKEMON
 } | {
     BULBASAUR: [1, 64],
     MAGIKARP:  [51, 65, 66, 67, 68, 69],
@@ -242,6 +278,12 @@ for region, species_data_list in species_data_tables.items():
     location_tables[region] = location_data_list
 
 
+for region, poses in pose_location_data.items():
+    for pose in poses:
+        location_id = regular_pose_id(pose.id, COURSE_IDS[region])
+        location_tables[region].append(PokemonSnapLocationData(location_id, regular_pose(pose), PokemonSnapLocationCategory.REGULAR_POSE))
+
+
 special_poses = {
     1:  SURFING_PIKACHU,
     2:  PIKACHU_ON_A_BALL,
@@ -257,7 +299,7 @@ special_poses = {
     12: JIGGLYPUFF_TRIO,
 }
 
-pose_locations = {
+special_pose_locations = {
     LVL_BEACH:   [1, 5, 7],
     LVL_TUNNEL:  [2],
     LVL_VOLCANO: [11],
@@ -270,7 +312,7 @@ pose_locations = {
 }
 
 # Add the poses
-for region, pose_ids in pose_locations.items():
+for region, pose_ids in special_pose_locations.items():
     location_data_list = location_tables[region]
     for pose_id in pose_ids:
         pose_name = special_poses[pose_id]

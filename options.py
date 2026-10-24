@@ -252,12 +252,28 @@ class PokemonReportTotalScore(DefaultOnToggle):
     display_name = "PKMN Report Score Rewards"
 
 
+class PoseSanity(Range):
+    """
+    The number of Pokemon poses to include as checks.
+    These are the poses that Oak has a line for, but do not give a "Special Pose" bonus.
+    
+    Setting this to a high number will make your playthrough much longer. See the Pose FAQ for a guide to each pose.
+    Note that some poses are hard/RNG checks, so this number may be adjusted during generation if you do not have those enabled.
+    """
+    display_name = "Posesanity"
+    range_start = 0
+    range_end = 141
+    default = 0
+
+
 class IncludeRNGChecks(Toggle):
     """
-    Include the luck-heavy photos as checks. They are:
+    Include the luck-heavy photos as checks. The photos are:
     - [Volcano] Arcanine: Multiple
     - [  River] Cloyster: Multiple and Psyduck: Multiple
     - [ Valley] Magikarp (Valley): Multiple and Dratini: Multiple
+
+    Some regular poses are RNG checks. See the Pose FAQ for a list.
     """
     display_name = "Include random checks"
 
@@ -268,6 +284,8 @@ class IncludeHardChecks(Toggle):
     - [ River] Pikachu (River): Good Technique
     - [  Cave] Zubat (Cave): Multiple, Magikarp (Cave): Wonderful, Balloon Pikachu, and Flying Pikachu
     - [Valley] Staryu: Multiple, Starmie: Multiple, and Goldeen: Good Technique
+
+    Some regular poses are hard checks. See the Pose FAQ for a list.
     """
     display_name = "Include hard checks"
 
@@ -354,6 +372,7 @@ class PokemonSnapOption(PerGameCommonOptions):
     secret_exits:  SecretExits
     report_photo_count: PokemonReportPhotoCount
     report_score_total: PokemonReportTotalScore
+    posesanity: PoseSanity
 
     rng_checks:  IncludeRNGChecks
     hard_checks: IncludeHardChecks
@@ -394,6 +413,7 @@ pokemon_snap_option_groups = [
         SecretExits,
         PokemonReportPhotoCount,
         PokemonReportTotalScore,
+        PoseSanity
     ]),
     OptionGroup("Checks - Difficulty Settings", [
 		IncludeRNGChecks,
