@@ -103,12 +103,11 @@ class PokemonSnapWorld(World):
                          and (location.name not in HARD_LOCATIONS or self.options.hard_checks)]
             self.random.shuffle(all_poses)
             self.enabled_regular_poses = set(all_poses[:self.options.posesanity])
-        
-        if getattr(self.multiworld, "generation_is_fake", False) and self.options.posesanity > 0:
-            self.enabled_regular_poses = [
-                location for region in location_tables.values() for location in region 
-                if location.category == PokemonSnapLocationCategory.REGULAR_POSE
-            ]
+            if getattr(self.multiworld, "generation_is_fake", False):
+                self.enabled_regular_poses = [
+                    location for region in location_tables.values() for location in region 
+                    if location.category == PokemonSnapLocationCategory.REGULAR_POSE
+                ]
 
         # Per-seed connect token, baked into the ROM and registered server-side.
         self.auth = self.random.randbytes(16)
