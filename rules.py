@@ -2,11 +2,11 @@ from typing import TYPE_CHECKING, override
 from dataclasses import dataclass
 
 from rule_builder.rules import Rule, True_, False_, And, Or, Has, HasGroup, CanReachLocation, CollectionState, OptionFilter
-from .locations import wonderful, multiple, secret_exit, course, bonus, regular_pose, species_data_tables, \
+from .locations import wonderful, multiple, secret_exit, course, bonus, regular_pose, species_data_tables, special_pose_by_pokemon, special_pose_scores, \
     PokemonSnapLocationCategory as Category, RNG_LOCATIONS, HARD_LOCATIONS, POKEMON_IN_MULTIPLE_LEVELS
 from .constants import *
 from .items import PokemonSnapItemCategory as ItemCategory, fragment, course as course_item
-from .options import GoalType, PhotoScoring, IncludeRNGChecks, UseHardLogic
+from .options import GoalType, PhotoScoring, IncludeRNGChecks, UseHardLogic, PhotoBonusChecks
 from .poses import *
 if TYPE_CHECKING:
     from . import PokemonSnapWorld
@@ -21,8 +21,6 @@ _NO_ITEMS   = True_()
 _SEPARATE_SCORING = OptionFilter(PhotoScoring, [PhotoScoring.option_separate, PhotoScoring.option_separate_unlocks], operator="in")
 _RNG_LOCATIONS_ON = OptionFilter(IncludeRNGChecks, IncludeRNGChecks.option_true)
 _HARD_LOGIC_ON    = OptionFilter(UseHardLogic, UseHardLogic.option_true)
-
-REPORT_EXCLUSIONS = RNG_LOCATIONS + HARD_LOCATIONS
 
 _identity = lambda s: s
 
@@ -123,8 +121,14 @@ class ReportScoreAchievable(Rule["PokemonSnapWorld"], game="Pokemon Snap"):
 
     @override
     def _instantiate(self, world: "PokemonSnapWorld") -> Rule.Resolved:
+        self.report_exclusions = []
+        if not world.options.hard_checks:
+            self.report_exclusions += HARD_LOCATIONS
+        if not world.options.rng_checks:
+            self.report_exclusions += RNG_LOCATIONS
+
         all_pokemon_rules = [
-            (self.build_rules_triplet(world, pokemon_name), ) # 1-tuple for pokemon only in one course
+            (self.build_location_rules(world, pokemon_name), ) # 1-tuple for pokemon only in one course
             for pokemon_name in ALL_INGAME_POKEMON
             if pokemon_name not in POKEMON_IN_MULTIPLE_LEVELS
         ]
@@ -135,55 +139,75 @@ class ReportScoreAchievable(Rule["PokemonSnapWorld"], game="Pokemon Snap"):
                 location_name = course(pokemon_name, level_name)
                 if location_name not in LOCATION_RULES: continue
 
-                this_pokemon_rules.append(self.build_rules_triplet(world, location_name))
+                this_pokemon_rules.append(self.build_location_rules(world, location_name))
             all_pokemon_rules.append(tuple(this_pokemon_rules))
 
-        return self.Resolved(self.score_goal, tuple(all_pokemon_rules), player=world.player)
+        fudge_multiplier = 0.9 if world.options.hard_logic else 0.8
+        return self.Resolved(self.score_goal, fudge_multiplier, tuple(all_pokemon_rules), player=world.player)
 
-    def build_rules_triplet(self, world: "PokemonSnapWorld", location: str):
+    def build_location_rules(self, world: "PokemonSnapWorld", location: str):
         species_data = [species_data for region in species_data_tables for species_data in species_data_tables[region] if species_data.name == location][0]
+
+        special_pose_rules = tuple()
+        if location in special_pose_by_pokemon:
+            special_pose_rules = tuple((LOCATION_RULES[pose_name][Category.SPECIAL_POSE].resolve(world), special_pose_scores[pose_name]) 
+                                       for pose_name in special_pose_by_pokemon[location] 
+                                       if pose_name not in self.report_exclusions)
+
+        regular_pose_rules = tuple((LOCATION_RULES[pose_data][Category.REGULAR_POSE].resolve(world), pose_data.score) 
+                                   for pose_data in regular_pose_by_pokemon[location] 
+                                   if regular_pose(pose_data) not in self.report_exclusions)
         
         normal_rule = CanReachLocation(location_name(location, Category.NORMAL_PHOTO))
 
         wonderful_rule = False_()
-        if species_data.wonderful and wonderful(location) not in REPORT_EXCLUSIONS:
+        if species_data.wonderful and wonderful(location) not in self.report_exclusions:
             if (location not in LOCATION_RULES or Category.WONDERFUL_PHOTO not in LOCATION_RULES[location]):
                 wonderful_rule = normal_rule
             else:
                 wonderful_rule = And(normal_rule, LOCATION_RULES[location][Category.WONDERFUL_PHOTO], wonderful_requirement(world))
 
         multiple_rule = False_()
-        if species_data.multiple and multiple(location) not in REPORT_EXCLUSIONS:
+        if species_data.multiple and multiple(location) not in self.report_exclusions:
             access_requirement = wonderful_rule | (normal_rule & _SEPARATE_SCORING)
             if (location not in LOCATION_RULES or Category.MULTIPLE_PHOTO not in LOCATION_RULES[location]):
                 multiple_rule = access_requirement
             else:
                 multiple_rule = And(access_requirement, LOCATION_RULES[location][Category.MULTIPLE_PHOTO], multiple_requirement(world))
 
-        return normal_rule.resolve(world), wonderful_rule.resolve(world), multiple_rule.resolve(world)
+        return normal_rule.resolve(world), wonderful_rule.resolve(world), multiple_rule.resolve(world), special_pose_rules, regular_pose_rules
 
     class Resolved(Rule.Resolved):
         score_goal: int
-        all_pokemon_rules: tuple[tuple[tuple[Rule.Resolved, Rule.Resolved, Rule.Resolved]]]
+        fudge_multiplier: float
+        all_pokemon_rules: tuple[tuple[tuple[Rule.Resolved, Rule.Resolved, Rule.Resolved, tuple[tuple[Rule.Resolved, int]], tuple[tuple[Rule.Resolved, int]]]]]
 
         @override
         def _evaluate(self, state: CollectionState) -> bool:
-            achievable_score_total = 0
-            for rule_set in self.all_pokemon_rules:
-                achievable_score_total += max((self.achievable_score(state, *rule_tuple) for rule_tuple in rule_set), default=0)
-                if achievable_score_total >= self.score_goal: return True
-            return False
+            return self.achievable_total(state, goal=self.score_goal) >= self.score_goal
 
-        def achievable_score(self, state: CollectionState, normal_rule: Rule.Resolved, wonderful_rule: Rule.Resolved, multiple_rule: Rule.Resolved):
+        def achievable_total(self, state: CollectionState, goal: int | None = None) -> int:
+            total = 0
+            for rule_set in self.all_pokemon_rules:
+                total += max((self.achievable_score(state, *rule_tuple) for rule_tuple in rule_set), default=0)
+                if goal is not None and total >= goal: break
+            return total
+
+        def achievable_score(self, state: CollectionState, normal_rule: Rule.Resolved, wonderful_rule: Rule.Resolved, multiple_rule: Rule.Resolved, special_pose_rules: tuple[tuple[Rule.Resolved, int]], regular_pose_rules: tuple[tuple[Rule.Resolved, int]]) -> int:
             # This is a heuristic, as it can change drastically between pokemon
             if not normal_rule(state): return 0
 
-            score = 200
+            max_special_pose_score = max((score for rule, score in special_pose_rules if rule(state)), default=0)
+            max_regular_pose_score = max(int(self.fudge_multiplier * 1000), max((score for rule, score in regular_pose_rules if rule(state)), default=0))
+
+            score = int(self.fudge_multiplier * 250) # 250 is max without being able to get the pose
             if wonderful_rule(state):
-                score += 900 # 150 more for size, and 750 more for pose
+                score = max_special_pose_score # reset the score
+                score += int(self.fudge_multiplier * 1000) # size TODO: update me with better data
+                score += max_regular_pose_score
                 score *= 2
             if multiple_rule(state):
-                score += 150
+                score += 150 # TODO: update me with better data
 
             return score
 
@@ -769,6 +793,8 @@ LOCATION_RULES = {
         Category.NORMAL_PHOTO:    has(POKEMON_FOOD, LVL_CLOUD) | has(PESTER_BALL, LVL_CLOUD),
         Category.WONDERFUL_PHOTO: has(POKEMON_FOOD, LVL_CLOUD) | has(PESTER_BALL, LVL_CLOUD),
     },
+    # Special Poses
+    RARE_POKEMON_MEW: { Category.SPECIAL_POSE: CanReachLocation(MEW) },
     # Regular Poses
     MEW_SPINNING:  { Category.REGULAR_POSE: CanReachLocation(MEW) },
     MEW_WELL_DONE: { Category.REGULAR_POSE: CanReachLocation(MEW) },

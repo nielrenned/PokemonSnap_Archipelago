@@ -254,13 +254,6 @@ POKEMON_TO_SLOTS = {
     ZUBAT:     [15, 73]
 }
 
-POKEMON_IN_MULTIPLE_LEVELS = {
-    BULBASAUR: [LVL_RIVER, LVL_CAVE],
-    MAGIKARP:  [LVL_BEACH, LVL_TUNNEL, LVL_VOLCANO, LVL_RIVER, LVL_CAVE, LVL_VALLEY],
-    PIKACHU:   [LVL_BEACH, LVL_TUNNEL, LVL_RIVER, LVL_CAVE],
-    ZUBAT:     [LVL_TUNNEL, LVL_CAVE]
-}
-
 
 location_tables = {
     START_GAME: [],
@@ -306,9 +299,36 @@ special_pose_locations = {
     LVL_RIVER:   [4],
     LVL_CAVE:    [3, 6, 8, 12],
     LVL_VALLEY:  [9],
- 
-    # I don't think we want this? Or maybe it's the goal item eventually?
-    # LVL_CLOUD:   [10]
+    LVL_CLOUD:   [10],
+}
+
+special_pose_by_pokemon = {
+    course(PIKACHU, LVL_BEACH):  [SURFING_PIKACHU, PIKACHU_ON_A_STUMP],
+    course(PIKACHU, LVL_TUNNEL): [PIKACHU_ON_A_BALL],
+    course(PIKACHU, LVL_CAVE):   [BALLOON_PIKACHU, FLYING_PIKACHU],
+    course(PIKACHU, LVL_RIVER):  [SPEED_PIKACHU],
+
+    PIDGEY:     [GUST_USING_PIDGEY],
+    MAGMAR:     [FIGHTING_MAGMAR],
+    JIGGLYPUFF: [JIGGLYPUFF_ON_STAGE, JIGGLYPUFF_TRIO],
+    GRAVELER:   [GRAVELERS_GROUP_DANCE],
+    MEW:        [RARE_POKEMON_MEW],
+}
+
+# TODO: fill in scores
+special_pose_scores = {
+    SURFING_PIKACHU: 1000,
+    PIKACHU_ON_A_BALL: 600,
+    BALLOON_PIKACHU: 1600,
+    SPEED_PIKACHU: 800,
+    PIKACHU_ON_A_STUMP: 1300,
+    FLYING_PIKACHU: 2000,
+    GUST_USING_PIDGEY: 500,
+    JIGGLYPUFF_ON_STAGE: 500,
+    GRAVELERS_GROUP_DANCE: 500,
+    RARE_POKEMON_MEW: 2500,
+    FIGHTING_MAGMAR: 800,
+    JIGGLYPUFF_TRIO: 1200,
 }
 
 # Add the poses

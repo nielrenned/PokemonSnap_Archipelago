@@ -156,6 +156,13 @@ ALL_INGAME_POKEMON = [
     VICTREEBEL, VILEPLUME, VULPIX, WEEPINBELL, ZAPDOS, ZUBAT, 
 ]
 
+POKEMON_IN_MULTIPLE_LEVELS = {
+    BULBASAUR: [LVL_RIVER, LVL_CAVE],
+    MAGIKARP:  [LVL_BEACH, LVL_TUNNEL, LVL_VOLCANO, LVL_RIVER, LVL_CAVE, LVL_VALLEY],
+    PIKACHU:   [LVL_BEACH, LVL_TUNNEL, LVL_RIVER, LVL_CAVE],
+    ZUBAT:     [LVL_TUNNEL, LVL_CAVE]
+}
+
 ORIGINAL_151 = [
     "Bulbasaur", "Ivysaur", "Venusaur", "Charmander", "Charmeleon", "Charizard", "Squirtle",
     "Wartortle", "Blastoise", "Caterpie", "Metapod", "Butterfree", "Weedle", "Kakuna",
