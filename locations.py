@@ -254,6 +254,13 @@ POKEMON_TO_SLOTS = {
     ZUBAT:     [15, 73]
 }
 
+POKEMON_LOCATION_TO_SPECIES = {
+    pokemon: pokemon for pokemon in ALL_INGAME_POKEMON if pokemon not in POKEMON_IN_MULTIPLE_LEVELS
+} | {
+    course(pokemon, level): pokemon
+    for pokemon, levels in POKEMON_IN_MULTIPLE_LEVELS.items()
+    for level in levels
+}
 
 location_tables = {
     START_GAME: [],
