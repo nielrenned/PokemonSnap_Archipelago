@@ -405,3 +405,13 @@ HARD_POSES = [
     regular_pose(DRATINI_AMAZING),
     regular_pose(MAGIKARP_VALLEY_WHAT_A_SPLASH),
 ]
+
+regular_pose_by_pokemon = {
+    pokemon: [pose_data for pose_data in ALL_POSE_DATA if pose_data.pokemon == pokemon]
+    for pokemon in ALL_INGAME_POKEMON
+    if pokemon not in POKEMON_IN_MULTIPLE_LEVELS
+} | {
+    course(pokemon, level): [pose_data for pose_data in ALL_POSE_DATA if pose_data.pokemon == course(pokemon, level)]
+    for pokemon, levels in POKEMON_IN_MULTIPLE_LEVELS.items()
+    for level in levels
+}
