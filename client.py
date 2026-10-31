@@ -1,5 +1,5 @@
 from typing import Optional, NamedTuple
-import base64, os, re, time, asyncio, sys
+import base64, os, re, time, asyncio, sys, json, uuid
 from collections import defaultdict
 
 import Utils
@@ -8,7 +8,7 @@ from NetUtils import ClientStatus
 
 from .pj64_connector import PJ64Context, pj64connect, pj64disconnect, pj64_read_memory, pj64_write_memory
 from .constants import *
-from .locations import wonderful_id as wdfl_id, multiple_id as mult_id, special_pose_id, regular_pose_id as pose_id, secret_exit_id, sign_id, bonus_id, oak_reward_id, OAK_REWARDS, POKEMON_TO_SLOTS
+from .locations import wonderful_id as wdfl_id, multiple_id as mult_id, special_pose_id, regular_pose_id as pose_id, secret_exit_id, sign_id, bonus_id, oak_reward_id, OAK_REWARDS, POKEMON_TO_SLOTS, special_poses
 from .update_pj64_config import safe_load_pj64_config
 from .items import item_dictionary, SIGN_PIC_NAMES, POKEMON_PIC_NAMES, fragment, unfragment
 from .options import PhotoScoring, PressLToStop, PhotoBonusChecks
@@ -34,7 +34,56 @@ class PokemonSnapReportScore(NamedTuple):
     special_pose_bits: int
     total_score: int
 
+class PokemonSnapRawScore(NamedTuple):
+    frame: int
+    pokemon_id: int
+    special_pose_id: int
+    size_score: int
+    pose_id: int
+    pose_score: int
+    is_wonderful: int
+    multiple_score: int
+    total_score: int
+
+
+class PokemonSnapRunEvent(NamedTuple):
+    frame: int
+    type: int
+
+
 SPECIES_DATA_SIZE = len(PokemonSnapReportScore._fields)
+RAW_SCORE_SIZE = len(PokemonSnapRawScore._fields)
+RUN_LOG_SIZE = len(PokemonSnapRunEvent._fields)
+
+def raw_score_to_data_dict(raw_score: PokemonSnapRawScore, run_log: list[PokemonSnapRunEvent]):
+    events_before = [event for event in run_log if event.frame <= raw_score.frame]
+    last_food = None
+    last_flute = None
+    last_pester = None
+    last_dash_on = None
+    last_dash_off = None
+    for event in events_before:
+        if event.type == 0: last_food = raw_score.frame - event.frame
+        if event.type == 1: last_flute = raw_score.frame - event.frame
+        if event.type == 2: last_pester = raw_score.frame - event.frame
+        if event.type == 3: last_dash_on = raw_score.frame - event.frame
+        if event.type == 4: last_dash_off = raw_score.frame - event.frame
+    
+    return {
+        "pokemon_id": raw_score.pokemon_id,
+        "special_pose_id": raw_score.special_pose_id,
+        "size_score": raw_score.size_score,
+        "pose_id": raw_score.pose_id,
+        "pose_score": raw_score.pose_score,
+        "is_wonderful": raw_score.is_wonderful,
+        "multiple_score": raw_score.multiple_score,
+        "total_score": raw_score.total_score,
+        "last_food": last_food,
+        "last_flute": last_flute,
+        "last_pester": last_pester,
+        "last_dash_on": last_dash_on,
+        "last_dash_off": last_dash_off,
+    }
 
 class PokemonSnapCommandProcessor(ClientCommandProcessor):
     def __init__(self, ctx: CommonContext, server_address: str = None):
@@ -47,6 +96,11 @@ class PokemonSnapCommandProcessor(ClientCommandProcessor):
         if isinstance(self.ctx, PokemonSnapContext):
             logger.info(f"Project64 Status: {self.ctx.pj64_status}")
 
+    def _cmd_photo_log(self):
+        """Gets the path to the photo log."""
+        if isinstance(self.ctx, PokemonSnapContext):
+            logger.info(self.ctx.photo_log_path)
+
 class PokemonSnapContext(CommonContext, PJ64Context):
     command_processor = PokemonSnapCommandProcessor
     game = "Pokemon Snap"
@@ -58,6 +112,8 @@ class PokemonSnapContext(CommonContext, PJ64Context):
     finished_game: bool = False
     should_play_cloud_dialog: bool = True
     current_level_id: int = -1
+    photo_roll_count: int = 0
+    photo_log_path: str = None
 
     OAK_REWARD_CHECK_FUNCTIONS = {
         POKEMON_TOTAL_6:  (lambda slot_data, count, _: count >= 6  and slot_data["report_photo_count"]),
@@ -86,6 +142,7 @@ class PokemonSnapContext(CommonContext, PJ64Context):
         self.goal_type = DEFAULT_GOAL_TYPE
         self.signs_required = DEFAULT_SIGN_REQUIREMENT
         self.pokemon_required = DEFAULT_POKEMON_REQUIREMENT
+        self.photo_log_path = Utils.user_path("pokemon_snap", f"photo_scores_{uuid.uuid4()}.jsonl")
 
     def on_package(self, cmd: str, args: dict):
         """
@@ -142,6 +199,12 @@ class PokemonSnapContext(CommonContext, PJ64Context):
                 return container
 
         return UniversalWrapper
+    
+    def append_photo_log(self, record: dict) -> None:
+        if self.photo_log_path is None: return
+        os.makedirs(os.path.dirname(self.photo_log_path), exist_ok=True)
+        with open(self.photo_log_path, 'a', encoding='utf-8') as f:
+            f.write(json.dumps(record) + "\n")
 
     async def _expansion_loaded(self) -> bool:
         magic = (await pj64_read_memory(self, "u32", addr.EXPANSION_MAGIC, 4))[0]
@@ -185,9 +248,28 @@ class PokemonSnapContext(CommonContext, PJ64Context):
 
         # TODO: condense into one read and split based on addresses
         level_id = (await pj64_read_memory(self, "s32", addr.LEVEL_ID, 4))[0]
-        raw_scores = await pj64_read_memory(self, "u16", addr.SPECIES_SCORES, addr.NUM_SPECIES_SCORES * SPECIES_DATA_SIZE * 2)
+        report_scores = await pj64_read_memory(self, "u16", addr.SPECIES_SCORES, addr.NUM_SPECIES_SCORES * SPECIES_DATA_SIZE * 2)
         sign_flags = await pj64_read_memory(self, "u8", addr.SIGN_FLAGS, addr.NUM_SIGNS)
         secret_exit_flags = (await pj64_read_memory(self, "u8", addr.SECRET_EXIT_FLAGS, 1))[0]
+
+        photo_roll_count = (await pj64_read_memory(self, "u32", addr.ROLL_COUNT, 4))[0]
+        if photo_roll_count != self.photo_roll_count:
+            self.photo_roll_count = photo_roll_count
+            raw_score_count = (await pj64_read_memory(self, "u32", addr.PHOTO_COUNT, 4))[0]
+            raw_scores = []
+            if raw_score_count > 0:
+                raw_score_ints = await pj64_read_memory(self, "u16", addr.RAW_SCORES, raw_score_count * RAW_SCORE_SIZE * 2)
+                raw_scores = [PokemonSnapRawScore(*raw_score_ints[i:i+RAW_SCORE_SIZE]) for i in range(0, raw_score_count * RAW_SCORE_SIZE, RAW_SCORE_SIZE)]
+
+            run_log_count = (await pj64_read_memory(self, "u32", addr.RUN_EVENT_COUNT, 4))[0]
+            run_log = []
+            if run_log_count > 0:
+                run_log_ints = await pj64_read_memory(self, "u16", addr.RUN_EVENTS, run_log_count * 2 * RUN_LOG_SIZE)
+                run_log = [PokemonSnapRunEvent(*run_log_ints[i:i+RUN_LOG_SIZE]) for i in range(0, run_log_count * RUN_LOG_SIZE, RUN_LOG_SIZE)]
+
+            for raw_score in raw_scores:
+                if raw_score.pokemon_id > 0:
+                    self.append_photo_log(raw_score_to_data_dict(raw_score, run_log))
 
         if level_id != self.current_level_id:
             self.current_level_id = level_id
@@ -202,7 +284,7 @@ class PokemonSnapContext(CommonContext, PJ64Context):
 
         all_checks = set()
 
-        scores = [PokemonSnapReportScore(*raw_scores[i:i+SPECIES_DATA_SIZE]) 
+        scores = [PokemonSnapReportScore(*report_scores[i:i+SPECIES_DATA_SIZE]) 
                   for i in range(0, addr.NUM_SPECIES_SCORES * SPECIES_DATA_SIZE, SPECIES_DATA_SIZE)]
         for slot, report in enumerate(scores):
             if report.total_score == 0: continue
