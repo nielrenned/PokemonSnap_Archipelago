@@ -7,20 +7,40 @@ class Shot(NamedTuple):
     size: int
     pose: int | PokemonSnapPoseData = 0
     multiple: int = 0
-    wonderful: bool = True
+    wonderful: bool = False
     special: str | None = None
     rule: Rule = True_()
 
+'''
+Thoughts on how to collect this data:
+- For the base set of photos, we really only need the best possible shot with each subset of items, including multiple scoring
+  - And for some pokemon, this doesn't even matter. E.g. if PokeFlute does nothing for it, we can ignore subsets with only PokeFlute
+- Then we also need a photo for each pose, just to also have those in the scoring logic
+  - And again, we sort of need to do it with each subset of items that impact it
+- So if I take the best photo I can, we can use the fudge factor to make the logic a little softer.
+- After some people do some playtesting, we can update this logic if needed
+
+Can we programatically make a list of all the photos I need to take?
+And then programatically generate the lines of code from my playthrough?
+
+Also I think it would be pretty reasonable to compare the score of the photos I take with the
+Retro Achievements "Perfect Picture" list: https://retroachievements.org/game/10155?set=33039.
+On second thought, the "Perfect Picture" achievements are _hard_. It can still be a reference,
+but we'll need to take those scores with a grain of salt.
+'''
+
 # Actual in-game shots to help with report score logic.
+# SHOTS = {}
 SHOTS: dict[str, list[Shot]] = {
     ###########
     ## Beach ##
     ###########
     BUTTERFREE: [
-        Shot(size=0),
+        Shot(size=1000, pose=1000, wonderful=True),
+        Shot(size=800,  pose=1000, wonderful=True, multiple=600),
     ],
     PIDGEY: [
-        Shot(size=0),
+        Shot(size=740,  pose=PIDGEY_SCREECH, wonderful=True, multiple=270),
     ],
     MEOWTH: [
         Shot(size=0),
@@ -133,7 +153,7 @@ SHOTS: dict[str, list[Shot]] = {
     ## River ##
     ###########
     METAPOD: [
-        Shot(size=0),
+        Shot(size=260, pose=800, wonderful=False, multiple=570),
     ],
     VILEPLUME: [
         Shot(size=0),
