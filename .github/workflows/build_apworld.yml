@@ -3,6 +3,8 @@ name: Build AP World
 on:
   release:
     types: [published]
+  push:
+    branches: [107-improve-report-score-logic]
 
 jobs:
   build:
@@ -34,7 +36,13 @@ jobs:
         run: |
           cd Archipelago
           python Launcher.py "Build APWorlds"
+      - name: Upload .apworld artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pokemon_snap.apworld
+          path: Archipelago/build/apworlds/pokemon_snap.apworld
       - name: Attach apworld to release
+        if: github.event_name == 'release'        
         uses: softprops/action-gh-release@v3
         with:
           files: Archipelago/build/apworlds/pokemon_snap.apworld
