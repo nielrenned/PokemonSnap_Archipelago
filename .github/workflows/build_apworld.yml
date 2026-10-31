@@ -15,7 +15,11 @@ jobs:
         with:
           repository: ArchipelagoMW/Archipelago
           path: Archipelago
-          ref: 0.6.7
+          ref: 0.6.8
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
       - name: Install Archipelago Requirements
         run: |
           cd Archipelago
