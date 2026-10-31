@@ -25,7 +25,7 @@ jobs:
       - name: Install Archipelago Requirements
         run: |
           cd Archipelago
-          python -m pip install -r requirements.txt
+          python ModuleUpdate.py --yes --force
       - name: Clear worlds folder
         run: find Archipelago/worlds/ -mindepth 1 -type d -exec rm -rf {} +          
       - name: Checkout Pokemon Snap
