@@ -105,31 +105,31 @@
       "addr": "0x80400548",
       "type": "u32",
       "access": "r",
-      "desc": "Photo Count"
+      "desc": "number of photos on the last scored roll"
     },
     "photoRollCount": {
       "addr": "0x80400544",
       "type": "u32",
-      "access": "r",
-      "desc": "Photo Roll Count"
+      "access": "rw",
+      "desc": "incremented when camera check finishes scoring a roll; the client writes 0 after logging it"
     },
     "rawPhotoScores": {
-      "addr": "0x80405200",
-      "type": "s16[60][8]",
+      "addr": "0x80405220",
+      "type": "ApRawPhotoScore[61]",
       "access": "r",
-      "desc": "Raw scores for each camera roll"
+      "desc": "[roll index][0=frame (u16), 1=species slot + 1 (0 = none), 2=special pose id, 3=size, 4=pose id, 5=pose score, 6=good technique, 7=same pkmn, 8=total, 9=level id]; scored as if every scoring unlock were owned; [60] is scratch"
     },
     "runEvents": {
-      "addr": "0x80405650",
-      "type": "s16[256][3]",
+      "addr": "0x804056E8",
+      "type": "u16[256][2]",
       "access": "r",
-      "desc": "Log of events in the run"
+      "desc": "[event][0=frame since course start, 1=type: 0=food, 1=flute, 2=pester, 3=dash on, 4=dash off]"
     },
     "runEventCount": {
       "addr": "0x80400550",
       "type": "u32",
       "access": "r",
-      "desc": "Count of events in the run"
+      "desc": "number of runEvents recorded this course (max 256)"
     }
   },
   "idents": {
