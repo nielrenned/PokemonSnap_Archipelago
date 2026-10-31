@@ -3,6 +3,8 @@ name: Build AP World
 on:
   release:
     types: [published]
+  pull_request:
+  workflow_dispatch:
 
 jobs:
   build:
@@ -11,26 +13,42 @@ jobs:
       contents: write
     steps:
       - name: Checkout Archipelago
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           repository: ArchipelagoMW/Archipelago
           path: Archipelago
-          ref: 0.6.7
+          ref: 0.6.8
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Clear worlds folder
+        run: find Archipelago/worlds/ -mindepth 1 -maxdepth 1 -type d ! -name generic -exec rm -rf {} +
+      - name: Checkout Pokemon Snap
+        uses: actions/checkout@v7
+        with:
+          path: Archipelago/worlds/pokemon_snap
       - name: Install Archipelago Requirements
         run: |
           cd Archipelago
-          python -m pip install -r requirements.txt
-      - name: Clear worlds folder
-        run: find Archipelago/worlds/ -mindepth 1 -type d -exec rm -rf {} +          
-      - name: Checkout Pokemon Snap
-        uses: actions/checkout@v6
-        with:
-          path: Archipelago/worlds/pokemon_snap
+          python -m pip install -r ci-requirements.txt
+          python ModuleUpdate.py --yes --force
+          python Launcher.py --update_settings
+      - name: Run tests
+        run: |
+          cd Archipelago
+          python -m pytest worlds/pokemon_snap/test
       - name: Build .apworld
         run: |
           cd Archipelago
           python Launcher.py "Build APWorlds"
+      - name: Upload .apworld artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: pokemon_snap.apworld
+          path: Archipelago/build/apworlds/pokemon_snap.apworld
       - name: Attach apworld to release
+        if: github.event_name == 'release'        
         uses: softprops/action-gh-release@v3
         with:
           files: Archipelago/build/apworlds/pokemon_snap.apworld
