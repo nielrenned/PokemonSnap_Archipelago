@@ -6,7 +6,7 @@ Some poses have a [HARD] or [RNG] tag (or both). This means that `hard_checks` o
 
 | Pokémon | Points | Oak's comment | How to capture |
 |---|---|---|---|
-| Pidgey | 1250 | Oh! It seems to be screeching. | Snap Pidgey attacking Meowth. |
+| Pidgey | 1250 | Oh! It seems to be screeching. | Snap Pidgey screeching at the start of the course or after attacking Meowth. |
 | Doduo | 1300 | Oh! You hit 'em! | Snap Doduo _while it's falling down_ after being hit with Pokémon Food or a Pester Ball. |
 | Doduo | 1300 | Oh! It just fainted. | Snap fainted Doduo after it was hit with Pokémon Food or a Pester Ball. |
 | Doduo | 1300 | Oh! It's about to wake up. | Snap Doduo _while it's getting back up_ after being hit with Pokémon Food or a Pester Ball. |
