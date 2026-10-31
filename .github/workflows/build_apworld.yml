@@ -3,8 +3,8 @@ name: Build AP World
 on:
   release:
     types: [published]
-  push:
-    branches: [fix-builds]
+  pull_request:
+  workflow_dispatch:
 
 jobs:
   build:
@@ -22,16 +22,22 @@ jobs:
         uses: actions/setup-python@v7
         with:
           python-version: "3.13"
-      - name: Install Archipelago Requirements
-        run: |
-          cd Archipelago
-          python ModuleUpdate.py --yes --force
       - name: Clear worlds folder
-        run: find Archipelago/worlds/ -mindepth 1 -type d -exec rm -rf {} +          
+        run: find Archipelago/worlds/ -mindepth 1 -maxdepth 1 -type d ! -name generic -exec rm -rf {} +
       - name: Checkout Pokemon Snap
         uses: actions/checkout@v7
         with:
           path: Archipelago/worlds/pokemon_snap
+      - name: Install Archipelago Requirements
+        run: |
+          cd Archipelago
+          python -m pip install -r ci-requirements.txt
+          python ModuleUpdate.py --yes --force
+          python Launcher.py --update_settings
+      - name: Run tests
+        run: |
+          cd Archipelago
+          python -m pytest worlds/pokemon_snap/test
       - name: Build .apworld
         run: |
           cd Archipelago
