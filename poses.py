@@ -10,9 +10,9 @@ class PokemonSnapPoseData(NamedTuple):
 
 regular_pose = lambda pose_data:  f'{pose_data.pokemon} Pose: "{pose_data.phrase}"'
 
-def regular_pose_id(game_pose_id: int, course_id: int):
+def regular_pose_id(game_pose_id: int, pokemon_slot_id: int):
     ap_pose_id = POSE_REMAPPING.get(game_pose_id, game_pose_id)
-    return 10000 + 1000 * course_id + ap_pose_id
+    return 100000 + 1000 * pokemon_slot_id + ap_pose_id
 
 
 # Beach

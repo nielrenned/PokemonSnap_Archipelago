@@ -280,7 +280,7 @@ for region, species_data_list in species_data_tables.items():
 
 for region, poses in pose_location_data.items():
     for pose in poses:
-        location_id = regular_pose_id(pose.id, COURSE_IDS[region])
+        location_id = regular_pose_id(pose.id, POKEMON_NAME_TO_ID[pose.pokemon])
         location_tables[region].append(PokemonSnapLocationData(location_id, regular_pose(pose), PokemonSnapLocationCategory.REGULAR_POSE))
 
 

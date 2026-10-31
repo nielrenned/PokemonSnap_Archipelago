@@ -211,7 +211,7 @@ class PokemonSnapContext(CommonContext, PJ64Context):
             all_checks.add(pokemon_id)
             if report.technique_score > 0:    all_checks.add(wdfl_id(pokemon_id))
             if report.same_pokemon_score > 0: all_checks.add(mult_id(pokemon_id))
-            if report.last_pose_id > 0:       all_checks.add(pose_id(report.last_pose_id, level_id))
+            if report.last_pose_id > 0:       all_checks.add(pose_id(report.last_pose_id, pokemon_id))
 
             poses_seen_ids = [i+1 for i in range(12) if ((1 << i) & report.special_pose_bits) != 0]
             all_checks |= {special_pose_id(pose_id) for pose_id in poses_seen_ids}
