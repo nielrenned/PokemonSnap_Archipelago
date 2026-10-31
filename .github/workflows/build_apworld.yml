@@ -4,7 +4,7 @@ on:
   release:
     types: [published]
   push:
-    branches: [107-improve-report-score-logic]
+    branches: [fix-builds]
 
 jobs:
   build:
