@@ -309,8 +309,8 @@ class PokemonSnapWorld(World):
     def fill_slot_data(self) -> dict[str, Any]:
         options_dict = self.options.as_dict(
             "goal_type", "good_technique_mew_photo", "signs_required", "pokemon_required", "photo_scoring",
-            "photo_bonuses", "pokemon_signs", "secret_exits", "report_photo_count",
-            "report_score_total", "rng_checks", "hard_checks", "hard_logic",
+            "photo_bonuses", "pokemon_signs", "secret_exits", "report_photo_count", "report_score_total",
+            "include_rng_photos", "include_rng_poses", "include_hard_photos", "include_hard_poses", "hard_logic",
             "left_bumper_to_start_stop", "camera_inversion",
             "starting_film", "film_upgrade_amount", "maximum_film", 
             "map_fragments", "per_course_items", "posesanity"
