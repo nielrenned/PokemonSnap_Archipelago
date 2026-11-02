@@ -266,7 +266,7 @@ class PoseSanity(Range):
     default = 0
 
 
-class IncludeRNGChecks(Toggle):
+class DeprecatedIncludeRNGChecks(Toggle):
     """
     This option is deprecated. Please use `include_rng_photos` and/or `include_rng_poses`.
     
@@ -280,7 +280,7 @@ class IncludeRNGChecks(Toggle):
     display_name = "[Deprecated] Include random checks"
     visibility = Visibility.none
 
-class IncludeHardChecks(Toggle):
+class DeprecatedIncludeHardChecks(Toggle):
     """
     This option is deprecated. Please use `include_hard_photos` and/or `include_hard_poses`.
     
@@ -369,7 +369,7 @@ class DeprecatedPressLToStop(Toggle):
     """
     Deprecated. Use the new option `left_bumper_to_start_stop` instead.
     """
-    display_name = "Press L to start/stop (deprecated)"
+    display_name = "[Deprecated] Press L to start/stop"
     visibility = Visibility.none
 
 
@@ -414,8 +414,8 @@ class PokemonSnapOption(PerGameCommonOptions):
     report_score_total: PokemonReportTotalScore
     posesanity: PoseSanity
 
-    rng_checks:  IncludeRNGChecks
-    hard_checks: IncludeHardChecks
+    rng_checks:  DeprecatedIncludeRNGChecks
+    hard_checks: DeprecatedIncludeHardChecks
     include_rng_photos:  IncludeRNGPhotos
     include_rng_poses:   IncludeRNGPoses
     include_hard_photos: IncludeHardPhotos
@@ -460,15 +460,15 @@ pokemon_snap_option_groups = [
         PoseSanity
     ]),
     OptionGroup("Checks - Difficulty Settings", [
-		IncludeRNGPhotos,
+        IncludeRNGPhotos,
         IncludeRNGPoses,
-		IncludeHardPhotos,
+        IncludeHardPhotos,
         IncludeHardPoses,
         UseHardLogic
-	]),
+    ]),
     OptionGroup("Quality Of Life", [
-		StartWithDashEngine,
+        StartWithDashEngine,
         PressLToStop,
         CameraInversion,
-	]),
+    ]),
 ]
