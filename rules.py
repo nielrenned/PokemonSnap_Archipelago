@@ -6,7 +6,7 @@ from .locations import wonderful, multiple, secret_exit, course, bonus, regular_
     PokemonSnapLocationCategory as Category, RNG_LOCATIONS, HARD_LOCATIONS, POKEMON_IN_MULTIPLE_LEVELS
 from .constants import *
 from .items import PokemonSnapItemCategory as ItemCategory, fragment, course as course_item
-from .options import GoalType, PhotoScoring, IncludeRNGChecks, UseHardLogic
+from .options import GoalType, PhotoScoring, IncludeRNGPhotos, UseHardLogic
 from .poses import *
 if TYPE_CHECKING:
     from . import PokemonSnapWorld
@@ -19,7 +19,7 @@ except ImportError:
 _NO_ITEMS   = True_()
 
 _SEPARATE_SCORING = OptionFilter(PhotoScoring, [PhotoScoring.option_separate, PhotoScoring.option_separate_unlocks], operator="in")
-_RNG_LOCATIONS_ON = OptionFilter(IncludeRNGChecks, IncludeRNGChecks.option_true)
+_RNG_LOCATIONS_ON = OptionFilter(IncludeRNGPhotos, IncludeRNGPhotos.option_true)
 _HARD_LOGIC_ON    = OptionFilter(UseHardLogic, UseHardLogic.option_true)
 
 REPORT_EXCLUSIONS = RNG_LOCATIONS + HARD_LOCATIONS
