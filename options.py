@@ -268,6 +268,8 @@ class PoseSanity(Range):
 
 class IncludeRNGChecks(Toggle):
     """
+    This option is deprecated. Please use `include_rng_photos` and/or `include_rng_poses`.
+    
     Include the luck-heavy photos as checks. The photos are:
     - [Volcano] Arcanine: Multiple
     - [  River] Cloyster: Multiple and Psyduck: Multiple
@@ -275,11 +277,13 @@ class IncludeRNGChecks(Toggle):
 
     Some regular poses are RNG checks. See the Pose FAQ for a list.
     """
-    display_name = "Include random checks"
-
+    display_name = "[Deprecated] Include random checks"
+    visibility = Visibility.none
 
 class IncludeHardChecks(Toggle):
     """
+    This option is deprecated. Please use `include_hard_photos` and/or `include_hard_poses`.
+    
     Include the hard photos as checks. They are:
     - [ River] Pikachu (River): Good Technique
     - [  Cave] Zubat (Cave): Multiple, Magikarp (Cave): Wonderful, Balloon Pikachu, and Flying Pikachu
@@ -287,7 +291,43 @@ class IncludeHardChecks(Toggle):
 
     Some regular poses are hard checks. See the Pose FAQ for a list.
     """
-    display_name = "Include hard checks"
+    display_name = "[Deprecated] Include hard checks"
+    visibility = Visibility.none
+
+class IncludeRNGPhotos(Toggle):
+    """
+    Include the luck-heavy photos as checks. The photos are:
+    - [Volcano] Arcanine: Multiple
+    - [  River] Cloyster: Multiple and Psyduck: Multiple
+    - [ Valley] Magikarp (Valley): Multiple and Dratini: Multiple
+    """
+    display_name = "Include random photos"
+
+
+class IncludeRNGPoses(Toggle):
+    """
+    Include the luck-heavy poses as checks.
+    See the Pose FAQ for a list of what poses are considered lucky heavy (tagged "RNG").
+    """
+    display_name = "Include random poses"
+
+
+class IncludeHardPhotos(Toggle):
+    """
+    Include the hard photos as checks. They are:
+    - [ River] Pikachu (River): Good Technique
+    - [  Cave] Zubat (Cave): Multiple, Magikarp (Cave): Wonderful, Balloon Pikachu, and Flying Pikachu
+    - [Valley] Staryu: Multiple, Starmie: Multiple, and Goldeen: Good Technique
+    """
+    display_name = "Include hard photos"
+
+
+class IncludeHardPoses(Toggle):
+    """
+    Include the hard poses as checks.
+    See the Pose FAQ for a list of what poses are considered hard (tagged "HARD").
+    """
+    display_name = "Include hard poses"
 
 
 class UseHardLogic(Toggle):
@@ -376,7 +416,11 @@ class PokemonSnapOption(PerGameCommonOptions):
 
     rng_checks:  IncludeRNGChecks
     hard_checks: IncludeHardChecks
-    hard_logic:  UseHardLogic
+    include_rng_photos:  IncludeRNGPhotos
+    include_rng_poses:   IncludeRNGPoses
+    include_hard_photos: IncludeHardPhotos
+    include_hard_poses:  IncludeHardPoses
+    hard_logic:          UseHardLogic
 
     start_with_dash_engine: StartWithDashEngine
     left_bumper_to_start_stop: PressLToStop
@@ -416,8 +460,10 @@ pokemon_snap_option_groups = [
         PoseSanity
     ]),
     OptionGroup("Checks - Difficulty Settings", [
-		IncludeRNGChecks,
-		IncludeHardChecks,
+		IncludeRNGPhotos,
+        IncludeRNGPoses,
+		IncludeHardPhotos,
+        IncludeHardPoses,
         UseHardLogic
 	]),
     OptionGroup("Quality Of Life", [
