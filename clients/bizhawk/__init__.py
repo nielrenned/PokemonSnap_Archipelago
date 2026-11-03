@@ -1,36 +1,25 @@
 import asyncio
 import Utils
 from CommonClient import get_base_parser, server_loop, gui_enabled, logger
-from worlds._bizhawk.context import BizHawkClientContext, BizHawkClientCommandProcessor, _game_watcher, _patch_and_run_game
+from worlds._bizhawk.context import _game_watcher, _patch_and_run_game
+from worlds._bizhawk.client import BizHawkClient
+from .ut_context import ContextClass
+from ...constants import GAME_NAME
 
-# Check for Universal Tracker
-try:
-    from worlds.tracker.TrackerClient import TrackerGameContext, TrackerCommandProcessor
-    tracker_loaded = True
-except ModuleNotFoundError:
-    tracker_loaded = False
+class PokemonSnapBizHawkClient(BizHawkClient):
+    game = GAME_NAME
+    system = "N64"
 
-if tracker_loaded:
-    class BizHawkTrackerCommandProcessor(BizHawkClientCommandProcessor, TrackerCommandProcessor):
-        pass
+    async def validate_rom(self, ctx):
+        # TODO: copy over ROM validation from other client
+        ctx.game = self.game
+        ctx.items_handling = 0b111
+        ctx.want_slot_data = True
+        ctx.watcher_timeout = 0.125
+        return True
 
-    class BizHawkTrackerClientContext(TrackerGameContext, BizHawkClientContext):
-        tags = {"AP"}
-        command_processor = BizHawkTrackerCommandProcessor
-        server_auth = BizHawkClientContext.server_auth
-
-        def on_package(self, cmd, args):
-            BizHawkClientContext.on_package(self, cmd, args)
-            TrackerGameContext.on_package(self, cmd, args)
-
-        def make_gui(self):
-            ui = super().make_gui()
-            ui.base_title = "Archipelago BizHawk Client"
-            return ui
-
-    ContextClass = BizHawkTrackerClientContext
-else:
-    ContextClass = BizHawkClientContext
+    async def game_watcher(self, ctx):
+        return await super().game_watcher(ctx)
 
 def launch(*launch_args: str) -> None:
     async def main():
@@ -46,8 +35,7 @@ def launch(*launch_args: str) -> None:
 
         ctx = ContextClass(args.connect, args.password)
         ctx.server_task = asyncio.create_task(server_loop(ctx), name="ServerLoop")
-        if tracker_loaded:
-            ctx.run_generator()
+        ctx.run_generator()
         if gui_enabled:
             ctx.run_gui()
         ctx.run_cli()

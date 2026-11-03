@@ -15,6 +15,7 @@ from .update_pj64_config import safe_load_pj64_config
 from .items import item_dictionary, SIGN_PIC_NAMES, POKEMON_PIC_NAMES, fragment, unfragment
 from .options import PhotoScoring, PressLToStop, PhotoBonusChecks
 from . import addresses as addr
+from .clients.ut_helper import has_invalid_universal_tracker
 
 _code_to_name = {data.ps_code: name for name, data in item_dictionary.items()}
 
@@ -198,7 +199,7 @@ class PokemonSnapContext(CommonContext, PJ64Context):
             logger.warning("Could not find Universal Tracker.")
 
     def make_gui(self):
-        if _tracker_loaded and _has_invalid_universal_tracker(UT_VERSION):
+        if _tracker_loaded and has_invalid_universal_tracker(UT_VERSION):
             Utils.messagebox("Universal Tracker needs updated",
             f"Please update your Universal Tracker. The version currently installed is {UT_VERSION}.", error=True)
             raise ImportError(f"Need to update universal tracker version to at least v{'.'.join(map(str,MIN_UNIVERSAL_TRACKER_VERSION))}.")
@@ -558,24 +559,6 @@ class PokemonSnapContext(CommonContext, PJ64Context):
         except Exception as threadEx:
             logger.error("Something went horribly wrong with the Pokemon Snap client. Details: " + str(threadEx))
 
-
-def _has_invalid_universal_tracker(universal_tracker_version) -> bool:
-    delimiter = "."
-
-    version_split = universal_tracker_version.split(delimiter)
-    if len(version_split) < 3:
-        return True
-
-    clean_version_split = version_split.copy()
-    for i, version in enumerate(version_split):
-        clean_version_split[i]  = "".join([ele for ele in version if ele.isdigit()]) # Clean everything but digits from each part of the split
-
-    tracker_version = tuple(int(ele) for ele in clean_version_split)
-    if tracker_version < MIN_UNIVERSAL_TRACKER_VERSION:
-        return True
-
-    return False
-
 def _patch_and_launch(patch_file: str) -> str:
     """Turn a dragged-in .apsnap patch into a ROM and start the emulator on it.
 
@@ -634,28 +617,12 @@ def _launch_pj64(server: str, rom_path: str, emulator_settings: dict[str, Any]):
                 "Debugger -> Scripts in Project64.")
     return server
 
-from worlds._bizhawk.client import BizHawkClient
-
-class PokemonSnapBizHawkClient(BizHawkClient):
-    game = "Pokemon Snap"
-    system = "N64"
-    patch_suffix = ".apsnap"
-
-    async def validate_rom(self, ctx):
-        ctx.game = self.game
-        ctx.items_handling = 0b111
-        ctx.want_slot_data = True
-        ctx.watcher_timeout = 0.125
-        return True
-
-    async def game_watcher(self, ctx):
-        return await super().game_watcher(ctx)
 
 def main(*launch_args: str):
     from settings import get_settings
     snap_options = get_settings()["pokemon_snap_options"]
     if not snap_options['use_pj64']:
-        from .bizhawk_ut_launcher import launch
+        from .clients.bizhawk import launch
         launch(*launch_args)
         return
 
