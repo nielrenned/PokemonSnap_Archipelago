@@ -1,4 +1,4 @@
-from typing import Optional, NamedTuple
+from typing import Optional, NamedTuple, Any
 import base64, os, re, time, asyncio, sys, json, uuid
 from collections import defaultdict
 from datetime import datetime, timezone
@@ -600,18 +600,25 @@ def _patch_and_launch(patch_file: str) -> str:
         Utils.messagebox(f"{CLIENT_NAME} Patch Error", str(ex), True)
         return server
 
+    from settings import get_settings
+    snap_options = get_settings()["pokemon_snap_options"]
+    if snap_options['use_pj64']:
+        _launch_pj64(server, rom_path, snap_options["emulator_settings"])
+    else:
+        logger.error("use_pj64 is set to false, but no other emulator is currently supported")
+
+
+def _launch_pj64(server: str, rom_path: str, emulator_settings: dict[str, Any]):
     try:
         safe_load_pj64_config()
     except Exception as ex:
         logger.warning(f"Could not update the Project64 config automatically: {ex}")
-
-    from settings import get_settings
-    emu = get_settings()["pokemon_snap_options"]["emulator_settings"]
-    if not emu["auto_start"]:
+    
+    if not emulator_settings["auto_start"]:
         logger.info(f"Auto-start is off; open this ROM in your emulator: {rom_path}")
         return server
 
-    exe = str(emu["path"])
+    exe = str(emulator_settings["path"])
     if not os.path.exists(exe):
         exe = Utils.user_path(exe)
     if not os.path.exists(exe):
@@ -627,8 +634,31 @@ def _patch_and_launch(patch_file: str) -> str:
                 "Debugger -> Scripts in Project64.")
     return server
 
+from worlds._bizhawk.client import BizHawkClient
+
+class PokemonSnapBizHawkClient(BizHawkClient):
+    game = "Pokemon Snap"
+    system = "N64"
+    patch_suffix = ".apsnap"
+
+    async def validate_rom(self, ctx):
+        ctx.game = self.game
+        ctx.items_handling = 0b111
+        ctx.want_slot_data = True
+        ctx.watcher_timeout = 0.125
+        return True
+
+    async def game_watcher(self, ctx):
+        return await super().game_watcher(ctx)
 
 def main(*launch_args: str):
+    from settings import get_settings
+    snap_options = get_settings()["pokemon_snap_options"]
+    if not snap_options['use_pj64']:
+        from .bizhawk_ut_launcher import launch
+        launch(*launch_args)
+        return
+
     import colorama
 
     Utils.init_logging(CLIENT_NAME)
