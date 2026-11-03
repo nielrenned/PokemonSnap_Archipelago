@@ -621,7 +621,13 @@ def _launch_pj64(server: str, rom_path: str, emulator_settings: dict[str, Any]):
 def main(*launch_args: str):
     from settings import get_settings
     snap_options = get_settings()["pokemon_snap_options"]
-    if not snap_options['use_pj64']:
+    if snap_options['use_pj64']:
+        # TODO:
+        # from .clients.pj64 import launch
+        # launch(*launch_args)
+        # return
+        pass
+    else:
         from .clients.bizhawk import launch
         launch(*launch_args)
         return

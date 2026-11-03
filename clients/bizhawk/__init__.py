@@ -1,16 +1,21 @@
 import asyncio
+import worlds._bizhawk as bizhawk
 import Utils
+
+from typing import Sequence
 from CommonClient import get_base_parser, server_loop, gui_enabled, logger
-from worlds._bizhawk.context import _game_watcher, _patch_and_run_game
+from worlds._bizhawk.context import BizHawkClientContext, _game_watcher, _patch_and_run_game
 from worlds._bizhawk.client import BizHawkClient
+
 from .ut_context import ContextClass
+from .. import PokemonSnapClient
 from ...constants import GAME_NAME
 
-class PokemonSnapBizHawkClient(BizHawkClient):
+class PokemonSnapBizHawkClient(BizHawkClient, PokemonSnapClient):
     game = GAME_NAME
     system = "N64"
 
-    async def validate_rom(self, ctx):
+    async def validate_rom(self, ctx: BizHawkClientContext):
         # TODO: copy over ROM validation from other client
         ctx.game = self.game
         ctx.items_handling = 0b111
@@ -18,8 +23,18 @@ class PokemonSnapBizHawkClient(BizHawkClient):
         ctx.watcher_timeout = 0.125
         return True
 
-    async def game_watcher(self, ctx):
-        return await super().game_watcher(ctx)
+    async def game_watcher(self, ctx: BizHawkClientContext):
+        ...
+
+    def on_package(self, ctx: BizHawkClientContext, cmd: str, args: dict):
+        ...
+
+    async def read(ctx: BizHawkClientContext, read_list: Sequence[tuple[int, int, str]]):
+        return await bizhawk.read(ctx.bizhawk_ctx, read_list)
+
+    async def write(ctx: BizHawkClientContext, write_list: Sequence[tuple[int, Sequence[int], str]]):
+        return await bizhawk.write(ctx.bizhawk_ctx, write_list)
+
 
 def launch(*launch_args: str) -> None:
     async def main():
