@@ -30,6 +30,12 @@ class PokemonSnapGenericCommandProcessor(ClientCommandProcessor):
         """Gets the path to the photo log."""
         if hasattr(self.ctx, 'client') and isinstance(self.ctx.client, PokemonSnapClient):
             logger.info(self.ctx.client.photo_log_path)
+        if (
+            hasattr(self.ctx, 'client_handler') and 
+            hasattr(self.ctx.client_handler, 'client') and 
+            isinstance(self.ctx.client_handler.client, PokemonSnapClient)
+        ):
+            logger.info(self.ctx.client_handler.client.photo_log_path)
 
     def _cmd_invert_controls(self):
         """Toggles inverted camera controls (Y-axis only)."""
