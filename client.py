@@ -113,25 +113,21 @@ class PokemonSnapClient:
         self.photo_log_path = Utils.user_path("pokemon_snap", f"photo_scores_{self.photo_log_session}.jsonl")
 
     async def check_snap_locations(self, emu: "PokemonSnapGenericEmuClient", ctx: CommonContext):
-        # TODO: condense into one read and split based on addresses
-        level_id = (await emu.read(ctx, [(addr.LEVEL_ID, 4, 's32')]))[0][0]
-        report_scores = (await emu.read(ctx, [(addr.SPECIES_SCORES, addr.NUM_SPECIES_SCORES * SPECIES_DATA_SIZE * 2, 'u16')]))[0]
-        sign_flags = (await emu.read(ctx, [(addr.SIGN_FLAGS, addr.NUM_SIGNS, 'u8')]))[0]
-        secret_exit_flags = (await emu.read(ctx, [(addr.SECRET_EXIT_FLAGS, 1, 'u8')]))[0][0]
+        ((level_id, ), report_scores, sign_flags, (secret_exit_flags, ), (photo_roll_count, )) = await emu.read(ctx, [
+            (addr.LEVEL_ID, 4, 's32'),
+            (addr.SPECIES_SCORES, addr.NUM_SPECIES_SCORES * SPECIES_DATA_SIZE * 2, 'u16'),
+            (addr.SIGN_FLAGS, addr.NUM_SIGNS, 'u8'),
+            (addr.SECRET_EXIT_FLAGS, 1, 'u8'),
+            (addr.ROLL_COUNT, 4, "u32"),
+        ])
 
-        if (await emu.read(ctx, [(addr.ROLL_COUNT, 4, "u32")]))[0][0] != 0:
+        if photo_roll_count != 0:
             await self.log_photo_roll(emu, ctx)
 
         if level_id != self.current_level_id:
             self.current_level_id = level_id
-            await ctx.send_msgs([{
-                "cmd": "Bounce",
-                "slots": [ctx.slot],
-                "data": {
-                    "type": "MapUpdate",
-                    "mapId": level_id
-                }
-            }])
+            data = { "type": "MapUpdate", "mapId": self.current_level_id }
+            await ctx.send_msgs([{"cmd": "Bounce", "slots": [ctx.slot], "data": data}])
 
         all_checks = set()
 
@@ -155,8 +151,6 @@ class PokemonSnapClient:
 
         all_checks |= await self.do_oak_reward_checks(scores, emu, ctx)
 
-        # CommonClient.check_locations filters locations to just those missing 
-        # from the server, so we can send every check we find every time.
         await ctx.check_locations(all_checks)
 
     async def do_oak_reward_checks(self, scores, emu: "PokemonSnapGenericEmuClient", ctx: CommonContext):
