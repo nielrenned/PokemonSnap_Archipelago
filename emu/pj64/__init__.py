@@ -4,9 +4,10 @@ import base64, os, re, time, asyncio
 import Utils
 from CommonClient import logger, server_loop, get_base_parser, gui_enabled
 
-from ...pj64_connector import PJ64Context, pj64connect, pj64disconnect, pj64_read_memory, pj64_write_memory
-from ...constants import *
-from ...update_pj64_config import safe_load_pj64_config
+from .pj64_connector import PJ64Context, pj64connect, pj64disconnect, pj64_read_memory, pj64_write_memory
+from .pj64_constants import *
+from ...constants import CLIENT_NAME, MIN_UNIVERSAL_TRACKER_VERSION
+from .update_pj64_config import safe_load_pj64_config
 from ... import addresses as addr
 from ..ut_helper import has_invalid_universal_tracker, universal_tracker_loaded
 from .. import PokemonSnapGenericEmuClient
@@ -95,7 +96,7 @@ class PokemonSnapContext(CommonContext, PJ64Context, PokemonSnapGenericEmuClient
         if universal_tracker_loaded and has_invalid_universal_tracker(UT_VERSION):
             Utils.messagebox("Universal Tracker needs updated",
             f"Please update your Universal Tracker. The version currently installed is {UT_VERSION}.", error=True)
-            raise ImportError(f"Need to update universal tracker version to at least v{'.'.join(map(str,MIN_UNIVERSAL_TRACKER_VERSION))}.")
+            raise ImportError(f"Need to update universal tracker version to at least v{'.'.join(map(str, MIN_UNIVERSAL_TRACKER_VERSION))}.")
 
         # Performing local import to prevent additional UIs to appear during the patching process.
         # This appears to be occurring if a spawned process does not have a UI element when importing kvui/kivymd.
