@@ -2,7 +2,7 @@
 from configparser import ConfigParser
 import uuid
 from ...constants import CLIENT_NAME
-from .pj64_constants import ADAPTER_SCRIPT_NAME, PJ64_ENCODING, PJ64_PORT_KEY_NAME, INITIAL_STATUS
+from .pj64_constants import ADAPTER_SCRIPT_NAME, PJ64_ENCODING, PJ64_PORT_KEY_NAME
 import Utils
 
 from pathlib import Path

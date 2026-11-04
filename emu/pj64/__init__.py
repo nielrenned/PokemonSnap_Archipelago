@@ -16,7 +16,8 @@ from ...client import PokemonSnapClient
 if universal_tracker_loaded:
     from worlds.tracker.TrackerClient import (TrackerGameContext as CommonContext,
         TrackerCommandProcessor as ClientCommandProcessor, UT_VERSION)
-
+else:
+    from CommonClient import CommonContext, ClientCommandProcessor
 
 class PokemonSnapCommandProcessor(ClientCommandProcessor):
     def __init__(self, ctx: CommonContext, server_address: str = None):
@@ -225,11 +226,7 @@ def _patch_and_launch(patch_file: str) -> str:
 
     from settings import get_settings
     snap_options = get_settings()["pokemon_snap_options"]
-    if snap_options['use_pj64']:
-        return _launch_pj64(server, rom_path, snap_options["emulator_settings"])
-    else:
-        logger.error("use_pj64 is set to false, but no other emulator is currently supported")
-
+    return _launch_pj64(server, rom_path, snap_options["emulator_settings"])
 
 def _launch_pj64(server: str, rom_path: str, emulator_settings: dict[str, Any]):
     try:
