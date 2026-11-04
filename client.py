@@ -1,4 +1,4 @@
-from typing import Optional, NamedTuple, Any
+from typing import Optional, NamedTuple, Any, Sequence
 import base64, os, re, time, asyncio, sys, json, uuid
 from collections import defaultdict
 from datetime import datetime, timezone
@@ -120,7 +120,7 @@ class PokemonSnapCommandProcessor(ClientCommandProcessor):
         if isinstance(self.ctx, PokemonSnapContext):
             logger.info(self.ctx.client.photo_log_path)
 
-class PokemonSnapContext(CommonContext, PJ64Context):
+class PokemonSnapContext(CommonContext, PJ64Context, PokemonSnapGenericEmuClient):
     client: "PokemonSnapClient"
     command_processor = PokemonSnapCommandProcessor
     game = "Pokemon Snap"
@@ -263,8 +263,8 @@ class PokemonSnapContext(CommonContext, PJ64Context):
                         self.pj64_status = CONNECTED_STATUS
                         logger.info(self.pj64_status)
                     if self.slot and await self._expansion_loaded(): 
-                        await self.client.check_snap_locations(None, self)
-                        await self.client.receive_snap_items(None, self)
+                        await self.client.check_snap_locations(self, self)
+                        await self.client.receive_snap_items(self, self)
                     await self.wait_for_next_loop(0.125)
 
                 except Exception as ex:
@@ -276,6 +276,12 @@ class PokemonSnapContext(CommonContext, PJ64Context):
                     continue
         except Exception as threadEx:
             logger.error("Something went horribly wrong with the Pokemon Snap client. Details: " + str(threadEx))
+    
+    async def read(self, ctx: "PokemonSnapContext", read_list: Sequence[tuple[int, int, str]]):
+        return [await pj64_read_memory(ctx, type, address, size) for address, size, type in read_list]
+
+    async def write(self, ctx: "PokemonSnapContext", write_list: Sequence[tuple[int, Sequence[int], str]]):
+        return [await pj64_write_memory(ctx, type, address, values) for address, values, type in write_list]
 
 class PokemonSnapClient:
     should_play_cloud_dialog: bool = True
@@ -300,12 +306,12 @@ class PokemonSnapClient:
 
     async def check_snap_locations(self, emu: PokemonSnapGenericEmuClient, ctx: PokemonSnapContext):
         # TODO: condense into one read and split based on addresses
-        level_id = (await pj64_read_memory(ctx, "s32", addr.LEVEL_ID, 4))[0]
-        report_scores = await pj64_read_memory(ctx, "u16", addr.SPECIES_SCORES, addr.NUM_SPECIES_SCORES * SPECIES_DATA_SIZE * 2)
-        sign_flags = await pj64_read_memory(ctx, "u8", addr.SIGN_FLAGS, addr.NUM_SIGNS)
-        secret_exit_flags = (await pj64_read_memory(ctx, "u8", addr.SECRET_EXIT_FLAGS, 1))[0]
+        level_id = (await emu.read(ctx, [(addr.LEVEL_ID, 4, 's32')]))[0][0]
+        report_scores = (await emu.read(ctx, [(addr.SPECIES_SCORES, addr.NUM_SPECIES_SCORES * SPECIES_DATA_SIZE * 2, 'u16')]))[0]
+        sign_flags = (await emu.read(ctx, [(addr.SIGN_FLAGS, addr.NUM_SIGNS, 'u8')]))[0]
+        secret_exit_flags = (await emu.read(ctx, [(addr.SECRET_EXIT_FLAGS, 1, 'u8')]))[0][0]
 
-        if (await pj64_read_memory(ctx, "u32", addr.ROLL_COUNT, 4))[0] != 0:
+        if (await emu.read(ctx, [(addr.ROLL_COUNT, 4, "u32")]))[0][0] != 0:
             await self.log_photo_roll(emu, ctx)
 
         if level_id != self.current_level_id:
@@ -398,7 +404,7 @@ class PokemonSnapClient:
 
         # Update what flags have been marked as played
         dialog_request_flags = 0
-        dialog_played_flags = (await pj64_read_memory(ctx, "u32", addr.DIALOG_PLAYED_FLAGS, 4))[0]
+        dialog_played_flags = (await emu.read(ctx, [(addr.DIALOG_PLAYED_FLAGS, 4, "u32")]))[0][0]
         for reward, flags in dialog_flags.items():
             # if dialog triggered and flag cleared
             if flags[0] and (dialog_played_flags & (1 << OAK_REWARDS[reward])) != 0:
@@ -425,14 +431,16 @@ class PokemonSnapClient:
                 "operations": [{"operation": "update", "value": dialog_flags}]
             }])
 
-        stored_request_flags = (await pj64_read_memory(ctx, "u32", addr.DIALOG_REQUEST_FLAGS, 4))[0]
-        await pj64_write_memory(ctx, "u32", addr.DIALOG_REQUEST_FLAGS, [dialog_request_flags | stored_request_flags])
+        stored_request_flags = (await emu.read(ctx, [(addr.DIALOG_REQUEST_FLAGS, 4, "u32")]))[0][0]
+        await emu.write(ctx, [(addr.DIALOG_REQUEST_FLAGS, [dialog_request_flags | stored_request_flags], "u32")])
         
         return oak_checks
 
     async def receive_snap_items(self, emu: PokemonSnapGenericEmuClient, ctx: PokemonSnapContext):
-        await pj64_write_memory(ctx, "u32", addr.CAN_USE_OVERRIDE, [0])
-        await pj64_write_memory(ctx, "u32", addr.COURSE_OVERRIDE, [0])
+        await emu.write(ctx, [
+            (addr.CAN_USE_OVERRIDE, [0], "u32"),
+            (addr.COURSE_OVERRIDE, [0], "u32")
+        ])
 
         can_use_mask = 0
         can_use_per_course_mask = [0] * len(ALL_LEVELS)
@@ -446,7 +454,7 @@ class PokemonSnapClient:
             if not ctx.finished_game and net_item.item == VICTORY_ITEM_ID:
                 await ctx.send_msgs([{"cmd": "StatusUpdate", "status": ClientStatus.CLIENT_GOAL}])
                 ctx.finished_game = True
-                await pj64_write_memory(ctx, "u32", addr.DIALOG_REQUEST_FLAGS, [0x80])
+                await emu.write(ctx, [(addr.DIALOG_REQUEST_FLAGS, [0x80], "u32")])
                 if ctx.slot_data['good_technique_mew_photo'] and ctx.slot_data['photo_bonuses'] != PhotoBonusChecks.option_none:
                     logger.info("Mew photographed with good technique - goal complete!")
                 else:
@@ -482,8 +490,8 @@ class PokemonSnapClient:
             course_mask |= 1 << addr.COURSE_IDS[LVL_CLOUD]
             if self.should_play_cloud_dialog:
                 self.should_play_cloud_dialog = False
-                stored_request_flags = (await pj64_read_memory(ctx, "u32", addr.DIALOG_REQUEST_FLAGS, 4))[0]
-                await pj64_write_memory(ctx, "u32", addr.DIALOG_REQUEST_FLAGS, [stored_request_flags | 1])
+                stored_request_flags = (await emu.read(ctx, [(addr.DIALOG_REQUEST_FLAGS, 4, "u32")]))[0][0]
+                await emu.write(ctx, [(addr.DIALOG_REQUEST_FLAGS, [stored_request_flags | 1], "u32")])
 
         if ctx.slot_data['left_bumper_to_start_stop'] == PressLToStop.option_start_with:
             can_use_mask |= addr.CAN_USE_FLAGS[L_TO_STOP]
@@ -500,11 +508,13 @@ class PokemonSnapClient:
         elif ctx.slot_data['photo_scoring'] == PhotoScoring.option_separate_unlocks:
             can_use_mask |= addr.CAN_USE_FLAGS[MULT_WO_WDFL]
 
-        await pj64_write_memory(ctx, "u32", addr.CAN_USE_MASK, [can_use_mask])
-        await pj64_write_memory(ctx, "u32", addr.CAN_USE_PER_COURSE_MASK, can_use_per_course_mask)
-        await pj64_write_memory(ctx, "u32", addr.COURSE_UNLOCK_MASK, [course_mask])
-        await pj64_write_memory(ctx, "u32", addr.MAX_FILM, [film])
-        await pj64_write_memory(ctx, "u32", addr.CAMERA_INVERSION, [ctx.slot_data['camera_inversion'] | 0x02]) # 0x02 is the "performed write" flag
+        await emu.write(ctx, [
+            (addr.CAN_USE_MASK, [can_use_mask], "u32"),
+            (addr.CAN_USE_PER_COURSE_MASK, can_use_per_course_mask, "u32"),
+            (addr.COURSE_UNLOCK_MASK, [course_mask], "u32"),
+            (addr.MAX_FILM, [film], "u32"),
+            (addr.CAMERA_INVERSION, [ctx.slot_data['camera_inversion'] | 0x02], "u32"),  # 0x02 is the "performed write" flag
+        ])
     
     def append_photo_log(self, record: dict) -> None:
         if self.photo_log_path is None: return
@@ -531,16 +541,16 @@ class PokemonSnapClient:
         }
 
     async def log_photo_roll(self, emu: PokemonSnapGenericEmuClient, ctx: PokemonSnapContext):
-        photo_count = min((await pj64_read_memory(ctx, "u32", addr.PHOTO_COUNT, 4))[0], NUM_ROLL_PHOTOS)
+        photo_count = min((await emu.read(ctx, [(addr.PHOTO_COUNT, 4, 'u32')]))[0][0], NUM_ROLL_PHOTOS)
         raw_scores = []
         if photo_count > 0:
-            raw_score_ints = await pj64_read_memory(ctx, "u16", addr.RAW_SCORES, photo_count * RAW_SCORE_SIZE * 2)
+            raw_score_ints = (await emu.read(ctx, [(addr.RAW_SCORES, photo_count * RAW_SCORE_SIZE * 2, "u16")]))[0]
             raw_scores = [PokemonSnapRawScore(*raw_score_ints[i:i+RAW_SCORE_SIZE]) for i in range(0, photo_count * RAW_SCORE_SIZE, RAW_SCORE_SIZE)]
 
-        event_count = min((await pj64_read_memory(ctx, "u32", addr.RUN_EVENT_COUNT, 4))[0], MAX_RUN_EVENTS)
+        event_count = min((await emu.read(ctx, [(addr.RUN_EVENT_COUNT, 4, 'u32')]))[0][0], MAX_RUN_EVENTS)
         run_log = []
         if event_count > 0:
-            run_log_ints = await pj64_read_memory(ctx, "u16", addr.RUN_EVENTS, event_count * RUN_LOG_SIZE * 2)
+            run_log_ints = (await emu.read(ctx, [(addr.RUN_EVENTS, event_count * RUN_LOG_SIZE * 2, "u16")]))[0]
             run_log = [PokemonSnapRunEvent(*run_log_ints[i:i+RUN_LOG_SIZE]) for i in range(0, event_count * RUN_LOG_SIZE, RUN_LOG_SIZE)]
 
         try:
@@ -549,7 +559,7 @@ class PokemonSnapClient:
         except Exception as ex:
             logger.error(f"Failed to write to the photo log: {ex}")
 
-        await pj64_write_memory(ctx, "u32", addr.ROLL_COUNT, [0])
+        await emu.write(ctx, [(addr.ROLL_COUNT, [0], "u32")])
 
 
 def _patch_and_launch(patch_file: str) -> str:
