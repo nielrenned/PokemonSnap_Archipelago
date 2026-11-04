@@ -1,6 +1,6 @@
 
 from .bases import PokemonSnapTestBase
-from ..client import has_invalid_universal_tracker
+from ..emu.ut_helper import has_invalid_universal_tracker
 from ..constants import MIN_UNIVERSAL_TRACKER_VERSION
 
 class TestSparseLocationGeneration(PokemonSnapTestBase):
