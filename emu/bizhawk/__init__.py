@@ -48,12 +48,15 @@ class PokemonSnapBizHawkClient(BizHawkClient, PokemonSnapGenericEmuClient):
         return True
 
     async def game_watcher(self, ctx: BizHawkClientContext):
-        if ctx.slot_data:
+        try:
+            if not (ctx.slot and ctx.slot_data): return
             await self.client.check_snap_locations(self, ctx)
             await self.client.receive_snap_items(self, ctx)
+        except bizhawk.RequestFailedError:
+            pass
 
     def on_package(self, ctx: BizHawkClientContext, cmd: str, args: dict):
-        ...
+        super().on_package(ctx, cmd, args)
 
     async def read(self, ctx: BizHawkClientContext, read_list: Sequence[tuple[int, int, str]]):
         # Convert the read requests
