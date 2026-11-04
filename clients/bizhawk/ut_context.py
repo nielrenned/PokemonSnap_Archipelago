@@ -1,5 +1,5 @@
 from worlds._bizhawk.context import BizHawkClientContext, BizHawkClientCommandProcessor
-from ..ut_helper import TrackerCommandProcessor, TrackerGameContext, universal_tracker_loaded, has_invalid_universal_tracker
+from ..ut_helper import TrackerCommandProcessor, TrackerGameContext, universal_tracker_loaded
 
 if universal_tracker_loaded:
     class BizHawkTrackerCommandProcessor(BizHawkClientCommandProcessor, TrackerCommandProcessor):

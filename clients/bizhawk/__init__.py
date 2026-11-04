@@ -8,10 +8,10 @@ from worlds._bizhawk.context import BizHawkClientContext, _game_watcher, _patch_
 from worlds._bizhawk.client import BizHawkClient
 
 from .ut_context import ContextClass
-from .. import PokemonSnapClient
+from .. import PokemonSnapGenericEmuClient
 from ...constants import GAME_NAME
 
-class PokemonSnapBizHawkClient(BizHawkClient, PokemonSnapClient):
+class PokemonSnapBizHawkClient(BizHawkClient, PokemonSnapGenericEmuClient):
     game = GAME_NAME
     system = "N64"
 
@@ -29,10 +29,10 @@ class PokemonSnapBizHawkClient(BizHawkClient, PokemonSnapClient):
     def on_package(self, ctx: BizHawkClientContext, cmd: str, args: dict):
         ...
 
-    async def read(ctx: BizHawkClientContext, read_list: Sequence[tuple[int, int, str]]):
+    async def read(self, ctx: BizHawkClientContext, read_list: Sequence[tuple[int, int, str]]):
         return await bizhawk.read(ctx.bizhawk_ctx, read_list)
 
-    async def write(ctx: BizHawkClientContext, write_list: Sequence[tuple[int, Sequence[int], str]]):
+    async def write(self, ctx: BizHawkClientContext, write_list: Sequence[tuple[int, Sequence[int], str]]):
         return await bizhawk.write(ctx.bizhawk_ctx, write_list)
 
 

@@ -3,7 +3,7 @@ from ..constants import MIN_UNIVERSAL_TRACKER_VERSION
 try:
     from worlds.tracker.TrackerClient import TrackerGameContext, TrackerCommandProcessor, UT_VERSION
     universal_tracker_loaded = True
-except ModuleNotFoundError:
+except ImportError:
     TrackerGameContext = None
     TrackerCommandProcessor = None
     UT_VERSION = MIN_UNIVERSAL_TRACKER_VERSION

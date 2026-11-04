@@ -16,6 +16,7 @@ from .items import item_dictionary, SIGN_PIC_NAMES, POKEMON_PIC_NAMES, fragment,
 from .options import PhotoScoring, PressLToStop, PhotoBonusChecks
 from . import addresses as addr
 from .clients.ut_helper import has_invalid_universal_tracker
+from .clients import PokemonSnapGenericEmuClient
 
 _code_to_name = {data.ps_code: name for name, data in item_dictionary.items()}
 
@@ -102,6 +103,7 @@ def photo_record(roll_index: int, raw_score: PokemonSnapRawScore, run_log: list[
         **frames_since,
     }
 
+
 class PokemonSnapCommandProcessor(ClientCommandProcessor):
     def __init__(self, ctx: CommonContext, server_address: str = None):
         if server_address:
@@ -116,9 +118,10 @@ class PokemonSnapCommandProcessor(ClientCommandProcessor):
     def _cmd_photo_log(self):
         """Gets the path to the photo log."""
         if isinstance(self.ctx, PokemonSnapContext):
-            logger.info(self.ctx.photo_log_path)
+            logger.info(self.ctx.client.photo_log_path)
 
 class PokemonSnapContext(CommonContext, PJ64Context):
+    client: "PokemonSnapClient"
     command_processor = PokemonSnapCommandProcessor
     game = "Pokemon Snap"
     items_handling = 0b111
@@ -126,22 +129,6 @@ class PokemonSnapContext(CommonContext, PJ64Context):
     instance_id: float | None
     pj64_sync_task: Optional[asyncio.Task[None]] = None
     pj64_status: str
-    finished_game: bool = False
-    should_play_cloud_dialog: bool = True
-    current_level_id: int = -1
-    photo_log_session: str
-    photo_log_path: str | None = None
-    photo_rolls_logged: int = 0
-
-    OAK_REWARD_CHECK_FUNCTIONS = {
-        POKEMON_TOTAL_6:  (lambda slot_data, count, _: count >= 6  and slot_data["report_photo_count"]),
-        POKEMON_TOTAL_22: (lambda slot_data, count, _: count >= 22 and slot_data["report_photo_count"]),
-        POKEMON_TOTAL_40: (lambda slot_data, count, _: count >= 40 and slot_data["report_photo_count"]),
-
-        REPORT_SCORE_24_000:  (lambda slot_data, _, score: score >= 24_000  and slot_data["report_score_total"]),
-        REPORT_SCORE_72_500:  (lambda slot_data, _, score: score >= 72_500  and slot_data["report_score_total"]),
-        REPORT_SCORE_130_000: (lambda slot_data, _, score: score >= 130_000 and slot_data["report_score_total"]),
-    }
 
     def __init__(self, server_address, password, ap_port):
         """
@@ -152,16 +139,12 @@ class PokemonSnapContext(CommonContext, PJ64Context):
         """
         CommonContext.__init__(self, server_address, password)
         PJ64Context.__init__(self, ap_port)
+        self.client = PokemonSnapClient()
         self.instance_id = None
         self.tracker_enabled = _tracker_loaded
         self.pj64_status = INITIAL_STATUS
         self.ap_port = ap_port
         self.slot_data = {}
-        self.goal_type = DEFAULT_GOAL_TYPE
-        self.signs_required = DEFAULT_SIGN_REQUIREMENT
-        self.pokemon_required = DEFAULT_POKEMON_REQUIREMENT
-        self.photo_log_session = str(uuid.uuid4())
-        self.photo_log_path = Utils.user_path("pokemon_snap", f"photo_scores_{self.photo_log_session}.jsonl")
 
     def on_package(self, cmd: str, args: dict):
         """
@@ -180,16 +163,12 @@ class PokemonSnapContext(CommonContext, PJ64Context):
 
             case "Connected":  # On Connect
                 self.slot_data = args.get("slot_data", {})
-                self.goal_type = self.slot_data["goal_type"]
-                self.signs_required = self.slot_data["signs_required"]
-                self.pokemon_required = self.slot_data["pokemon_required"]
 
             case "Bounced":
                 if "tags" not in args:
                     return
                 if not hasattr(self, "instance_id"):
                     self.instance_id = time.time()
-
 
     def _main(self):
         if self.tracker_enabled:
@@ -218,51 +197,6 @@ class PokemonSnapContext(CommonContext, PJ64Context):
                 return container
 
         return UniversalWrapper
-    
-    def append_photo_log(self, record: dict) -> None:
-        if self.photo_log_path is None: return
-        os.makedirs(os.path.dirname(self.photo_log_path), exist_ok=True)
-        with open(self.photo_log_path, 'a', encoding='utf-8') as f:
-            f.write(json.dumps(record) + "\n")
-
-    def build_roll_record(self, raw_scores: list[PokemonSnapRawScore], run_log: list[PokemonSnapRunEvent]) -> dict:
-        level_id = raw_scores[0].level_id if raw_scores else -1
-
-        world = AutoWorldRegister.world_types.get(self.game)
-        return {
-            "timestamp": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-            "session": self.photo_log_session,
-            "roll": self.photo_rolls_logged,
-            "apworld_version": world.world_version.as_simple_string() if world else None,
-            "seed_name": self.seed_name,
-            "slot": self.slot,
-            "level_id": level_id,
-            "photo_scoring": self.slot_data.get("photo_scoring"),
-            "hard_logic": self.slot_data.get("hard_logic"),
-            "events": [{"frame": event.frame, "type": run_event_name(event.type)} for event in run_log],
-            "photos": [photo_record(i, raw_score, run_log) for i, raw_score in enumerate(raw_scores) if raw_score.species_slot > 0],
-        }
-
-    async def log_photo_roll(self):
-        photo_count = min((await pj64_read_memory(self, "u32", addr.PHOTO_COUNT, 4))[0], NUM_ROLL_PHOTOS)
-        raw_scores = []
-        if photo_count > 0:
-            raw_score_ints = await pj64_read_memory(self, "u16", addr.RAW_SCORES, photo_count * RAW_SCORE_SIZE * 2)
-            raw_scores = [PokemonSnapRawScore(*raw_score_ints[i:i+RAW_SCORE_SIZE]) for i in range(0, photo_count * RAW_SCORE_SIZE, RAW_SCORE_SIZE)]
-
-        event_count = min((await pj64_read_memory(self, "u32", addr.RUN_EVENT_COUNT, 4))[0], MAX_RUN_EVENTS)
-        run_log = []
-        if event_count > 0:
-            run_log_ints = await pj64_read_memory(self, "u16", addr.RUN_EVENTS, event_count * RUN_LOG_SIZE * 2)
-            run_log = [PokemonSnapRunEvent(*run_log_ints[i:i+RUN_LOG_SIZE]) for i in range(0, event_count * RUN_LOG_SIZE, RUN_LOG_SIZE)]
-
-        try:
-            self.photo_rolls_logged += 1
-            self.append_photo_log(self.build_roll_record(raw_scores, run_log))
-        except Exception as ex:
-            logger.error(f"Failed to write to the photo log: {ex}")
-
-        await pj64_write_memory(self, "u32", addr.ROLL_COUNT, [0])
 
     async def _expansion_loaded(self) -> bool:
         magic = (await pj64_read_memory(self, "u32", addr.EXPANSION_MAGIC, 4))[0]
@@ -300,222 +234,6 @@ class PokemonSnapContext(CommonContext, PJ64Context):
 
         await self.send_connect()
 
-    async def check_snap_locations(self):
-        if not self.slot or not await self._expansion_loaded():
-            return
-
-        # TODO: condense into one read and split based on addresses
-        level_id = (await pj64_read_memory(self, "s32", addr.LEVEL_ID, 4))[0]
-        report_scores = await pj64_read_memory(self, "u16", addr.SPECIES_SCORES, addr.NUM_SPECIES_SCORES * SPECIES_DATA_SIZE * 2)
-        sign_flags = await pj64_read_memory(self, "u8", addr.SIGN_FLAGS, addr.NUM_SIGNS)
-        secret_exit_flags = (await pj64_read_memory(self, "u8", addr.SECRET_EXIT_FLAGS, 1))[0]
-
-        if (await pj64_read_memory(self, "u32", addr.ROLL_COUNT, 4))[0] != 0:
-            await self.log_photo_roll()
-
-        if level_id != self.current_level_id:
-            self.current_level_id = level_id
-            await self.send_msgs([{
-                "cmd": "Bounce",
-                "slots": [self.slot],
-                "data": {
-                    "type": "MapUpdate",
-                    "mapId": level_id
-                }
-            }])
-
-        all_checks = set()
-
-        scores = [PokemonSnapReportScore(*report_scores[i:i+SPECIES_DATA_SIZE]) 
-                  for i in range(0, addr.NUM_SPECIES_SCORES * SPECIES_DATA_SIZE, SPECIES_DATA_SIZE)]
-        for slot, report in enumerate(scores):
-            if report.total_score == 0: continue
-
-            pokemon_id = slot + 1
-            all_checks.add(pokemon_id)
-            if report.technique_score > 0:    all_checks.add(wdfl_id(pokemon_id))
-            if report.same_pokemon_score > 0: all_checks.add(mult_id(pokemon_id))
-            if report.last_pose_id > 0:       all_checks.add(pose_id(report.last_pose_id, pokemon_id))
-
-            poses_seen_ids = [i+1 for i in range(12) if ((1 << i) & report.special_pose_bits) != 0]
-            all_checks |= {special_pose_id(pose_id) for pose_id in poses_seen_ids}
-        
-        all_checks |= {sign_id(i) for i, f in enumerate(sign_flags) if f != 0}
-        all_checks |= {secret_exit_id(i) for i in range(6) if (secret_exit_flags & (1 << i)) != 0}
-        all_checks |= {bonus_id(id) for id in all_checks}
-
-        all_checks |= await self.do_oak_reward_checks(scores)
-
-        # CommonClient.check_locations filters locations to just those missing 
-        # from the server, so we can send every check we find every time.
-        self.checked_locations |= all_checks
-        await self.check_locations(all_checks)
-
-
-    async def do_oak_reward_checks(self, scores):
-        # TODO: holy, we gotta clean this up
-        REPORT_KEY = f'POKEMON_SNAP_PKMN_REPORT_{self.team}_{self.slot}'
-        REWARD_FLAGS_KEY = f'POKEMON_SNAP_OAK_REWARD_KEYS_{self.team}_{self.slot}'
-
-        if REPORT_KEY not in self.stored_data or len(self.stored_data[REPORT_KEY]) == 0 or \
-           REWARD_FLAGS_KEY not in self.stored_data or len(self.stored_data[REWARD_FLAGS_KEY]) == 0:
-            # Gate updating here to make sure we restore after disconnect
-            await self.send_msgs([
-                {
-                    "cmd": "Set",
-                    "key": REPORT_KEY,
-                    "default": {pokemon_name: 0 for pokemon_name in ALL_INGAME_POKEMON},
-                    "want_reply": True,
-                    "operations": []
-                },
-                {
-                    "cmd": "Set",
-                    "key": REWARD_FLAGS_KEY,
-                    "default": {x: [False, False] for x in OAK_REWARDS},
-                    "want_reply": True,
-                    "operations": []
-                }])
-            return set() # Return nothing
-
-        # Update the report on the server
-        prev_report = self.stored_data[REPORT_KEY]
-        pkmn_report = {
-            pokemon_name: max(
-                prev_report.get(pokemon_name, 0), 
-                max(scores[slot-1].total_score for slot in POKEMON_TO_SLOTS[pokemon_name])
-            )
-            for pokemon_name in ALL_INGAME_POKEMON
-        }
-
-        if pkmn_report != prev_report:
-            await self.send_msgs([{
-                "cmd": "Set",
-                "key": REPORT_KEY,
-                "default": {pokemon_name: 0 for pokemon_name in ALL_INGAME_POKEMON},
-                "want_reply": True,
-                "operations": [{"operation": "update", "value": pkmn_report}]
-            }])
-        
-        prev_dialog_flags = self.stored_data[REWARD_FLAGS_KEY]
-        dialog_flags = {x: flags[:] for x, flags in prev_dialog_flags.items()}
-
-        # Trigger dialog and update trigger flags
-        pokemon_count = sum(1 for value in pkmn_report.values() if value > 0)
-        report_score = sum(value for value in pkmn_report.values())
-
-        # Update what flags have been marked as played
-        dialog_request_flags = 0
-        dialog_played_flags = (await pj64_read_memory(self, "u32", addr.DIALOG_PLAYED_FLAGS, 4))[0]
-        for reward, flags in dialog_flags.items():
-            # if dialog triggered and flag cleared
-            if flags[0] and (dialog_played_flags & (1 << OAK_REWARDS[reward])) != 0:
-                flags[1] = True # mark dialog as played
-
-        oak_checks = set()
-        for oak_reward, reward_index in OAK_REWARDS.items():
-            reward_check_func = self.OAK_REWARD_CHECK_FUNCTIONS[oak_reward]
-            if not reward_check_func(self.slot_data, pokemon_count, report_score): continue
-            
-            triggered, played = dialog_flags[oak_reward]
-            if not triggered:
-                dialog_request_flags |= (1 << reward_index)
-                dialog_flags[oak_reward][0] = True
-            if triggered and played:
-                oak_checks.add(oak_reward_id(reward_index))
-
-        if dialog_flags != prev_dialog_flags:
-            await self.send_msgs([{
-                "cmd": "Set",
-                "key": REWARD_FLAGS_KEY,
-                "default": {x: [False, False] for x in OAK_REWARDS},
-                "want_reply": True,
-                "operations": [{"operation": "update", "value": dialog_flags}]
-            }])
-
-        stored_request_flags = (await pj64_read_memory(self, "u32", addr.DIALOG_REQUEST_FLAGS, 4))[0]
-        await pj64_write_memory(self, "u32", addr.DIALOG_REQUEST_FLAGS, [dialog_request_flags | stored_request_flags])
-        
-        return oak_checks
-
-
-    async def receive_snap_items(self):
-        if not self.slot or not await self._expansion_loaded():
-            return
-
-        await pj64_write_memory(self, "u32", addr.CAN_USE_OVERRIDE, [0])
-        await pj64_write_memory(self, "u32", addr.COURSE_OVERRIDE, [0])
-
-        can_use_mask = 0
-        can_use_per_course_mask = [0] * len(ALL_LEVELS)
-        course_mask = 0
-        film = self.slot_data['starting_film']
-        sign_pic_count = 0
-        pokemon_pic_count = 0
-        prog_scoring_count = 0
-        map_fragments = defaultdict(int)
-        for net_item in self.items_received:
-            if not self.finished_game and net_item.item == VICTORY_ITEM_ID:
-                await self.send_msgs([{"cmd": "StatusUpdate", "status": ClientStatus.CLIENT_GOAL}])
-                self.finished_game = True
-                await pj64_write_memory(self, "u32", addr.DIALOG_REQUEST_FLAGS, [0x80])
-                if self.slot_data['good_technique_mew_photo'] and self.slot_data['photo_bonuses'] != PhotoBonusChecks.option_none:
-                    logger.info("Mew photographed with good technique - goal complete!")
-                else:
-                    logger.info("Mew photographed - goal complete!")
-
-            name = _code_to_name.get(net_item.item)
-            if name is None:
-                continue
-            if name in addr.CAN_USE_FLAGS:
-                can_use_mask |= addr.CAN_USE_FLAGS[name]
-            elif name in addr.CAN_USE_PER_COURSE_FLAGS:
-                i, flag = addr.CAN_USE_PER_COURSE_FLAGS[name]
-                can_use_per_course_mask[i] |= flag
-            elif name in addr.COURSE_IDS:
-                course_mask |= 1 << addr.COURSE_IDS[name]
-            elif name in map(fragment, ALL_MAIN_LEVELS):
-                map_fragments[name] += 1
-                if map_fragments[name] >= self.slot_data['map_fragments']:
-                    course_mask |= (1 << addr.COURSE_IDS[unfragment(name)])
-            elif name == FILM_UPGRADE:
-                film = min(film + self.slot_data['film_upgrade_amount'], self.slot_data['maximum_film'])
-            elif name in SIGN_PIC_NAMES:
-                sign_pic_count += 1
-            elif name in POKEMON_PIC_NAMES:
-                pokemon_pic_count += 1
-            elif name == PROG_SCORING:
-                prog_scoring_count += 1
-
-        met_sign_goal = self.goal_type == GOAL_SIGN_PICS and sign_pic_count >= self.signs_required
-        met_pokemon_goal = self.goal_type == GOAL_POKEMON_PICS and pokemon_pic_count >= self.pokemon_required
-
-        if met_sign_goal or met_pokemon_goal:
-            course_mask |= 1 << addr.COURSE_IDS[LVL_CLOUD]
-            if self.should_play_cloud_dialog:
-                self.should_play_cloud_dialog = False
-                stored_request_flags = (await pj64_read_memory(self, "u32", addr.DIALOG_REQUEST_FLAGS, 4))[0]
-                await pj64_write_memory(self, "u32", addr.DIALOG_REQUEST_FLAGS, [stored_request_flags | 1])
-
-        if self.slot_data['left_bumper_to_start_stop'] == PressLToStop.option_start_with:
-            can_use_mask |= addr.CAN_USE_FLAGS[L_TO_STOP]
-        
-        # Check wonderful/multiple scoring unlocks
-        scoring_type = self.slot_data['photo_scoring']
-        if scoring_type == PhotoScoring.option_vanilla:
-            can_use_mask |= addr.CAN_USE_FLAGS[WDFL_SCORING] | addr.CAN_USE_FLAGS[MULT_SCORING]
-        elif scoring_type == PhotoScoring.option_separate:
-            can_use_mask |= addr.CAN_USE_FLAGS[WDFL_SCORING] | addr.CAN_USE_FLAGS[MULT_SCORING] | addr.CAN_USE_FLAGS[MULT_WO_WDFL]
-        elif self.slot_data['photo_scoring'] == PhotoScoring.option_progressive_unlocks:
-            if prog_scoring_count >= 1: can_use_mask |= addr.CAN_USE_FLAGS[WDFL_SCORING]
-            if prog_scoring_count >= 2: can_use_mask |= addr.CAN_USE_FLAGS[MULT_SCORING]
-        elif self.slot_data['photo_scoring'] == PhotoScoring.option_separate_unlocks:
-            can_use_mask |= addr.CAN_USE_FLAGS[MULT_WO_WDFL]
-
-        await pj64_write_memory(self, "u32", addr.CAN_USE_MASK, [can_use_mask])
-        await pj64_write_memory(self, "u32", addr.CAN_USE_PER_COURSE_MASK, can_use_per_course_mask)
-        await pj64_write_memory(self, "u32", addr.COURSE_UNLOCK_MASK, [course_mask])
-        await pj64_write_memory(self, "u32", addr.MAX_FILM, [film])
-        await pj64_write_memory(self, "u32", addr.CAMERA_INVERSION, [self.slot_data['camera_inversion'] | 0x02]) # 0x02 is the "performed write" flag
 
     async def wait_for_next_loop(self, time_to_wait: float):
         await asyncio.sleep(time_to_wait)
@@ -544,9 +262,9 @@ class PokemonSnapContext(CommonContext, PJ64Context):
 
                         self.pj64_status = CONNECTED_STATUS
                         logger.info(self.pj64_status)
-
-                    await self.check_snap_locations()
-                    await self.receive_snap_items()
+                    if self.slot and await self._expansion_loaded(): 
+                        await self.client.check_snap_locations(None, self)
+                        await self.client.receive_snap_items(None, self)
                     await self.wait_for_next_loop(0.125)
 
                 except Exception as ex:
@@ -558,6 +276,281 @@ class PokemonSnapContext(CommonContext, PJ64Context):
                     continue
         except Exception as threadEx:
             logger.error("Something went horribly wrong with the Pokemon Snap client. Details: " + str(threadEx))
+
+class PokemonSnapClient:
+    should_play_cloud_dialog: bool = True
+    current_level_id: int = -1
+    photo_log_session: str
+    photo_log_path: str | None = None
+    photo_rolls_logged: int = 0
+
+    OAK_REWARD_CHECK_FUNCTIONS = {
+        POKEMON_TOTAL_6:  (lambda slot_data, count, _: count >= 6  and slot_data["report_photo_count"]),
+        POKEMON_TOTAL_22: (lambda slot_data, count, _: count >= 22 and slot_data["report_photo_count"]),
+        POKEMON_TOTAL_40: (lambda slot_data, count, _: count >= 40 and slot_data["report_photo_count"]),
+
+        REPORT_SCORE_24_000:  (lambda slot_data, _, score: score >= 24_000  and slot_data["report_score_total"]),
+        REPORT_SCORE_72_500:  (lambda slot_data, _, score: score >= 72_500  and slot_data["report_score_total"]),
+        REPORT_SCORE_130_000: (lambda slot_data, _, score: score >= 130_000 and slot_data["report_score_total"]),
+    }
+
+    def __init__(self):
+        self.photo_log_session = str(uuid.uuid4())
+        self.photo_log_path = Utils.user_path("pokemon_snap", f"photo_scores_{self.photo_log_session}.jsonl")
+
+    async def check_snap_locations(self, emu: PokemonSnapGenericEmuClient, ctx: PokemonSnapContext):
+        # TODO: condense into one read and split based on addresses
+        level_id = (await pj64_read_memory(ctx, "s32", addr.LEVEL_ID, 4))[0]
+        report_scores = await pj64_read_memory(ctx, "u16", addr.SPECIES_SCORES, addr.NUM_SPECIES_SCORES * SPECIES_DATA_SIZE * 2)
+        sign_flags = await pj64_read_memory(ctx, "u8", addr.SIGN_FLAGS, addr.NUM_SIGNS)
+        secret_exit_flags = (await pj64_read_memory(ctx, "u8", addr.SECRET_EXIT_FLAGS, 1))[0]
+
+        if (await pj64_read_memory(ctx, "u32", addr.ROLL_COUNT, 4))[0] != 0:
+            await self.log_photo_roll(emu, ctx)
+
+        if level_id != self.current_level_id:
+            self.current_level_id = level_id
+            await ctx.send_msgs([{
+                "cmd": "Bounce",
+                "slots": [ctx.slot],
+                "data": {
+                    "type": "MapUpdate",
+                    "mapId": level_id
+                }
+            }])
+
+        all_checks = set()
+
+        scores = [PokemonSnapReportScore(*report_scores[i:i+SPECIES_DATA_SIZE]) 
+                    for i in range(0, addr.NUM_SPECIES_SCORES * SPECIES_DATA_SIZE, SPECIES_DATA_SIZE)]
+        for slot, report in enumerate(scores):
+            if report.total_score == 0: continue
+
+            pokemon_id = slot + 1
+            all_checks.add(pokemon_id)
+            if report.technique_score > 0:    all_checks.add(wdfl_id(pokemon_id))
+            if report.same_pokemon_score > 0: all_checks.add(mult_id(pokemon_id))
+            if report.last_pose_id > 0:       all_checks.add(pose_id(report.last_pose_id, pokemon_id))
+
+            poses_seen_ids = [i+1 for i in range(12) if ((1 << i) & report.special_pose_bits) != 0]
+            all_checks |= {special_pose_id(pose_id) for pose_id in poses_seen_ids}
+        
+        all_checks |= {sign_id(i) for i, f in enumerate(sign_flags) if f != 0}
+        all_checks |= {secret_exit_id(i) for i in range(6) if (secret_exit_flags & (1 << i)) != 0}
+        all_checks |= {bonus_id(id) for id in all_checks}
+
+        all_checks |= await self.do_oak_reward_checks(scores, emu, ctx)
+
+        # CommonClient.check_locations filters locations to just those missing 
+        # from the server, so we can send every check we find every time.
+        await ctx.check_locations(all_checks)
+
+    async def do_oak_reward_checks(self, scores, emu: PokemonSnapGenericEmuClient, ctx: PokemonSnapContext):
+        # TODO: holy, we gotta clean this up
+        REPORT_KEY = f'POKEMON_SNAP_PKMN_REPORT_{ctx.team}_{ctx.slot}'
+        REWARD_FLAGS_KEY = f'POKEMON_SNAP_OAK_REWARD_KEYS_{ctx.team}_{ctx.slot}'
+
+        if REPORT_KEY not in ctx.stored_data or len(ctx.stored_data[REPORT_KEY]) == 0 or \
+            REWARD_FLAGS_KEY not in ctx.stored_data or len(ctx.stored_data[REWARD_FLAGS_KEY]) == 0:
+            # Gate updating here to make sure we restore after disconnect
+            await ctx.send_msgs([
+                {
+                    "cmd": "Set",
+                    "key": REPORT_KEY,
+                    "default": {pokemon_name: 0 for pokemon_name in ALL_INGAME_POKEMON},
+                    "want_reply": True,
+                    "operations": []
+                },
+                {
+                    "cmd": "Set",
+                    "key": REWARD_FLAGS_KEY,
+                    "default": {x: [False, False] for x in OAK_REWARDS},
+                    "want_reply": True,
+                    "operations": []
+                }])
+            return set() # Return nothing
+
+        # Update the report on the server
+        prev_report = ctx.stored_data[REPORT_KEY]
+        pkmn_report = {
+            pokemon_name: max(
+                prev_report.get(pokemon_name, 0), 
+                max(scores[slot-1].total_score for slot in POKEMON_TO_SLOTS[pokemon_name])
+            )
+            for pokemon_name in ALL_INGAME_POKEMON
+        }
+
+        if pkmn_report != prev_report:
+            await ctx.send_msgs([{
+                "cmd": "Set",
+                "key": REPORT_KEY,
+                "default": {pokemon_name: 0 for pokemon_name in ALL_INGAME_POKEMON},
+                "want_reply": True,
+                "operations": [{"operation": "update", "value": pkmn_report}]
+            }])
+        
+        prev_dialog_flags = ctx.stored_data[REWARD_FLAGS_KEY]
+        dialog_flags = {x: flags[:] for x, flags in prev_dialog_flags.items()}
+
+        # Trigger dialog and update trigger flags
+        pokemon_count = sum(1 for value in pkmn_report.values() if value > 0)
+        report_score = sum(value for value in pkmn_report.values())
+
+        # Update what flags have been marked as played
+        dialog_request_flags = 0
+        dialog_played_flags = (await pj64_read_memory(ctx, "u32", addr.DIALOG_PLAYED_FLAGS, 4))[0]
+        for reward, flags in dialog_flags.items():
+            # if dialog triggered and flag cleared
+            if flags[0] and (dialog_played_flags & (1 << OAK_REWARDS[reward])) != 0:
+                flags[1] = True # mark dialog as played
+
+        oak_checks = set()
+        for oak_reward, reward_index in OAK_REWARDS.items():
+            reward_check_func = self.OAK_REWARD_CHECK_FUNCTIONS[oak_reward]
+            if not reward_check_func(ctx.slot_data, pokemon_count, report_score): continue
+            
+            triggered, played = dialog_flags[oak_reward]
+            if not triggered:
+                dialog_request_flags |= (1 << reward_index)
+                dialog_flags[oak_reward][0] = True
+            if triggered and played:
+                oak_checks.add(oak_reward_id(reward_index))
+
+        if dialog_flags != prev_dialog_flags:
+            await ctx.send_msgs([{
+                "cmd": "Set",
+                "key": REWARD_FLAGS_KEY,
+                "default": {x: [False, False] for x in OAK_REWARDS},
+                "want_reply": True,
+                "operations": [{"operation": "update", "value": dialog_flags}]
+            }])
+
+        stored_request_flags = (await pj64_read_memory(ctx, "u32", addr.DIALOG_REQUEST_FLAGS, 4))[0]
+        await pj64_write_memory(ctx, "u32", addr.DIALOG_REQUEST_FLAGS, [dialog_request_flags | stored_request_flags])
+        
+        return oak_checks
+
+    async def receive_snap_items(self, emu: PokemonSnapGenericEmuClient, ctx: PokemonSnapContext):
+        await pj64_write_memory(ctx, "u32", addr.CAN_USE_OVERRIDE, [0])
+        await pj64_write_memory(ctx, "u32", addr.COURSE_OVERRIDE, [0])
+
+        can_use_mask = 0
+        can_use_per_course_mask = [0] * len(ALL_LEVELS)
+        course_mask = 0
+        film = ctx.slot_data['starting_film']
+        sign_pic_count = 0
+        pokemon_pic_count = 0
+        prog_scoring_count = 0
+        map_fragments = defaultdict(int)
+        for net_item in ctx.items_received:
+            if not ctx.finished_game and net_item.item == VICTORY_ITEM_ID:
+                await ctx.send_msgs([{"cmd": "StatusUpdate", "status": ClientStatus.CLIENT_GOAL}])
+                ctx.finished_game = True
+                await pj64_write_memory(ctx, "u32", addr.DIALOG_REQUEST_FLAGS, [0x80])
+                if ctx.slot_data['good_technique_mew_photo'] and ctx.slot_data['photo_bonuses'] != PhotoBonusChecks.option_none:
+                    logger.info("Mew photographed with good technique - goal complete!")
+                else:
+                    logger.info("Mew photographed - goal complete!")
+
+            name = _code_to_name.get(net_item.item)
+            if name is None:
+                continue
+            if name in addr.CAN_USE_FLAGS:
+                can_use_mask |= addr.CAN_USE_FLAGS[name]
+            elif name in addr.CAN_USE_PER_COURSE_FLAGS:
+                i, flag = addr.CAN_USE_PER_COURSE_FLAGS[name]
+                can_use_per_course_mask[i] |= flag
+            elif name in addr.COURSE_IDS:
+                course_mask |= 1 << addr.COURSE_IDS[name]
+            elif name in map(fragment, ALL_MAIN_LEVELS):
+                map_fragments[name] += 1
+                if map_fragments[name] >= ctx.slot_data['map_fragments']:
+                    course_mask |= (1 << addr.COURSE_IDS[unfragment(name)])
+            elif name == FILM_UPGRADE:
+                film = min(film + ctx.slot_data['film_upgrade_amount'], ctx.slot_data['maximum_film'])
+            elif name in SIGN_PIC_NAMES:
+                sign_pic_count += 1
+            elif name in POKEMON_PIC_NAMES:
+                pokemon_pic_count += 1
+            elif name == PROG_SCORING:
+                prog_scoring_count += 1
+
+        met_sign_goal    = ctx.slot_data["goal_type"] == GOAL_SIGN_PICS    and sign_pic_count >= ctx.slot_data["signs_required"]
+        met_pokemon_goal = ctx.slot_data["goal_type"] == GOAL_POKEMON_PICS and pokemon_pic_count >= ctx.slot_data["pokemon_required"]
+
+        if met_sign_goal or met_pokemon_goal:
+            course_mask |= 1 << addr.COURSE_IDS[LVL_CLOUD]
+            if self.should_play_cloud_dialog:
+                self.should_play_cloud_dialog = False
+                stored_request_flags = (await pj64_read_memory(ctx, "u32", addr.DIALOG_REQUEST_FLAGS, 4))[0]
+                await pj64_write_memory(ctx, "u32", addr.DIALOG_REQUEST_FLAGS, [stored_request_flags | 1])
+
+        if ctx.slot_data['left_bumper_to_start_stop'] == PressLToStop.option_start_with:
+            can_use_mask |= addr.CAN_USE_FLAGS[L_TO_STOP]
+        
+        # Check wonderful/multiple scoring unlocks
+        scoring_type = ctx.slot_data['photo_scoring']
+        if scoring_type == PhotoScoring.option_vanilla:
+            can_use_mask |= addr.CAN_USE_FLAGS[WDFL_SCORING] | addr.CAN_USE_FLAGS[MULT_SCORING]
+        elif scoring_type == PhotoScoring.option_separate:
+            can_use_mask |= addr.CAN_USE_FLAGS[WDFL_SCORING] | addr.CAN_USE_FLAGS[MULT_SCORING] | addr.CAN_USE_FLAGS[MULT_WO_WDFL]
+        elif ctx.slot_data['photo_scoring'] == PhotoScoring.option_progressive_unlocks:
+            if prog_scoring_count >= 1: can_use_mask |= addr.CAN_USE_FLAGS[WDFL_SCORING]
+            if prog_scoring_count >= 2: can_use_mask |= addr.CAN_USE_FLAGS[MULT_SCORING]
+        elif ctx.slot_data['photo_scoring'] == PhotoScoring.option_separate_unlocks:
+            can_use_mask |= addr.CAN_USE_FLAGS[MULT_WO_WDFL]
+
+        await pj64_write_memory(ctx, "u32", addr.CAN_USE_MASK, [can_use_mask])
+        await pj64_write_memory(ctx, "u32", addr.CAN_USE_PER_COURSE_MASK, can_use_per_course_mask)
+        await pj64_write_memory(ctx, "u32", addr.COURSE_UNLOCK_MASK, [course_mask])
+        await pj64_write_memory(ctx, "u32", addr.MAX_FILM, [film])
+        await pj64_write_memory(ctx, "u32", addr.CAMERA_INVERSION, [ctx.slot_data['camera_inversion'] | 0x02]) # 0x02 is the "performed write" flag
+    
+    def append_photo_log(self, record: dict) -> None:
+        if self.photo_log_path is None: return
+        os.makedirs(os.path.dirname(self.photo_log_path), exist_ok=True)
+        with open(self.photo_log_path, 'a', encoding='utf-8') as f:
+            f.write(json.dumps(record) + "\n")
+
+    def build_roll_record(self, raw_scores: list[PokemonSnapRawScore], run_log: list[PokemonSnapRunEvent], ctx: PokemonSnapContext) -> dict:
+        level_id = raw_scores[0].level_id if raw_scores else -1
+
+        world = AutoWorldRegister.world_types.get(ctx.game)
+        return {
+            "timestamp": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+            "session": self.photo_log_session,
+            "roll": self.photo_rolls_logged,
+            "apworld_version": world.world_version.as_simple_string() if world else None,
+            "seed_name": ctx.seed_name,
+            "slot": ctx.slot,
+            "level_id": level_id,
+            "photo_scoring": ctx.slot_data.get("photo_scoring"),
+            "hard_logic": ctx.slot_data.get("hard_logic"),
+            "events": [{"frame": event.frame, "type": run_event_name(event.type)} for event in run_log],
+            "photos": [photo_record(i, raw_score, run_log) for i, raw_score in enumerate(raw_scores) if raw_score.species_slot > 0],
+        }
+
+    async def log_photo_roll(self, emu: PokemonSnapGenericEmuClient, ctx: PokemonSnapContext):
+        photo_count = min((await pj64_read_memory(ctx, "u32", addr.PHOTO_COUNT, 4))[0], NUM_ROLL_PHOTOS)
+        raw_scores = []
+        if photo_count > 0:
+            raw_score_ints = await pj64_read_memory(ctx, "u16", addr.RAW_SCORES, photo_count * RAW_SCORE_SIZE * 2)
+            raw_scores = [PokemonSnapRawScore(*raw_score_ints[i:i+RAW_SCORE_SIZE]) for i in range(0, photo_count * RAW_SCORE_SIZE, RAW_SCORE_SIZE)]
+
+        event_count = min((await pj64_read_memory(ctx, "u32", addr.RUN_EVENT_COUNT, 4))[0], MAX_RUN_EVENTS)
+        run_log = []
+        if event_count > 0:
+            run_log_ints = await pj64_read_memory(ctx, "u16", addr.RUN_EVENTS, event_count * RUN_LOG_SIZE * 2)
+            run_log = [PokemonSnapRunEvent(*run_log_ints[i:i+RUN_LOG_SIZE]) for i in range(0, event_count * RUN_LOG_SIZE, RUN_LOG_SIZE)]
+
+        try:
+            self.photo_rolls_logged += 1
+            self.append_photo_log(self.build_roll_record(raw_scores, run_log, ctx))
+        except Exception as ex:
+            logger.error(f"Failed to write to the photo log: {ex}")
+
+        await pj64_write_memory(ctx, "u32", addr.ROLL_COUNT, [0])
+
 
 def _patch_and_launch(patch_file: str) -> str:
     """Turn a dragged-in .apsnap patch into a ROM and start the emulator on it.
@@ -586,7 +579,7 @@ def _patch_and_launch(patch_file: str) -> str:
     from settings import get_settings
     snap_options = get_settings()["pokemon_snap_options"]
     if snap_options['use_pj64']:
-        _launch_pj64(server, rom_path, snap_options["emulator_settings"])
+        return _launch_pj64(server, rom_path, snap_options["emulator_settings"])
     else:
         logger.error("use_pj64 is set to false, but no other emulator is currently supported")
 

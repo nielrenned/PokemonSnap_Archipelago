@@ -1,11 +1,12 @@
 import abc
 from typing import Sequence
+from CommonClient import CommonContext
 
-class PokemonSnapClient(abc.ABC):
+class PokemonSnapGenericEmuClient(abc.ABC):
     @abc.abstractmethod
-    async def read(read_list: Sequence[tuple[int, int, str]]):
+    async def read(self, ctx: CommonContext, read_list: Sequence[tuple[int, int, str]]):
         ...
 
     @abc.abstractmethod
-    async def write(write_list: Sequence[tuple[int, Sequence[int], str]]):
+    async def write(self, ctx: CommonContext, write_list: Sequence[tuple[int, Sequence[int], str]]):
         ...
