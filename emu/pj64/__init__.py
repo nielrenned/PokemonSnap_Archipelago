@@ -6,34 +6,26 @@ from CommonClient import logger, server_loop, get_base_parser, gui_enabled
 
 from .pj64_connector import PJ64Context, pj64connect, pj64disconnect, pj64_read_memory, pj64_write_memory
 from .pj64_constants import *
-from ...constants import CLIENT_NAME, MIN_UNIVERSAL_TRACKER_VERSION
 from .update_pj64_config import safe_load_pj64_config
-from ... import addresses as addr
 from ..ut_helper import has_invalid_universal_tracker, universal_tracker_loaded
-from .. import PokemonSnapGenericEmuClient
+from .. import PokemonSnapGenericEmuClient, PokemonSnapGenericCommandProcessor
+from ... import addresses as addr
 from ...client import PokemonSnapClient
+from ...constants import CLIENT_NAME, MIN_UNIVERSAL_TRACKER_VERSION
 
 if universal_tracker_loaded:
-    from worlds.tracker.TrackerClient import (TrackerGameContext as CommonContext,
-        TrackerCommandProcessor as ClientCommandProcessor, UT_VERSION)
+    from worlds.tracker.TrackerClient import TrackerGameContext as CommonContext, UT_VERSION
 else:
-    from CommonClient import CommonContext, ClientCommandProcessor
+    from CommonClient import CommonContext
 
-class PokemonSnapCommandProcessor(ClientCommandProcessor):
+class PokemonSnapCommandProcessor(PokemonSnapGenericCommandProcessor):
     def __init__(self, ctx: CommonContext, server_address: str = None):
-        if server_address:
-            ctx.server_address = server_address
-        super().__init__(ctx)
+        super().__init__(ctx, server_address)
 
     def _cmd_pj64_status(self):
         """Gets the current status of the Project 64 connection."""
         if isinstance(self.ctx, PokemonSnapContext):
             logger.info(f"Project64 Status: {self.ctx.pj64_status}")
-
-    def _cmd_photo_log(self):
-        """Gets the path to the photo log."""
-        if isinstance(self.ctx, PokemonSnapContext):
-            logger.info(self.ctx.client.photo_log_path)
 
 
 class PokemonSnapContext(CommonContext, PJ64Context, PokemonSnapGenericEmuClient):

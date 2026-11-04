@@ -1,10 +1,11 @@
 from worlds._bizhawk.context import BizHawkClientContext, BizHawkClientCommandProcessor
-from ..ut_helper import TrackerCommandProcessor, TrackerGameContext, universal_tracker_loaded
+from ..ut_helper import TrackerGameContext, universal_tracker_loaded
+from .. import PokemonSnapGenericCommandProcessor
+
+class BizHawkTrackerCommandProcessor(BizHawkClientCommandProcessor, PokemonSnapGenericCommandProcessor):
+    pass
 
 if universal_tracker_loaded:
-    class BizHawkTrackerCommandProcessor(BizHawkClientCommandProcessor, TrackerCommandProcessor):
-        pass
-
     class BizHawkTrackerClientContext(TrackerGameContext, BizHawkClientContext):
         tags = {"AP"}
         command_processor = BizHawkTrackerCommandProcessor
@@ -22,6 +23,8 @@ if universal_tracker_loaded:
     ContextClass = BizHawkTrackerClientContext
 else:
     class BizHawkNoTrackerClientContext(BizHawkClientContext):
+        command_processor = BizHawkTrackerCommandProcessor
+
         def run_generator(self):
             pass
 

@@ -8,7 +8,6 @@ from NetUtils import ClientStatus
 from CommonClient import logger, CommonContext
 from worlds.AutoWorld import AutoWorldRegister
 
-from .emu import PokemonSnapGenericEmuClient
 from .constants import *
 from .locations import wonderful_id as wdfl_id, multiple_id as mult_id, special_pose_id, regular_pose_id as pose_id, secret_exit_id, sign_id, bonus_id, oak_reward_id, OAK_REWARDS, POKEMON_TO_SLOTS, POKEMON_IN_MULTIPLE_LEVELS
 from .items import item_dictionary, SIGN_PIC_NAMES, POKEMON_PIC_NAMES, fragment, unfragment
@@ -113,7 +112,7 @@ class PokemonSnapClient:
         self.photo_log_session = str(uuid.uuid4())
         self.photo_log_path = Utils.user_path("pokemon_snap", f"photo_scores_{self.photo_log_session}.jsonl")
 
-    async def check_snap_locations(self, emu: PokemonSnapGenericEmuClient, ctx: CommonContext):
+    async def check_snap_locations(self, emu: "PokemonSnapGenericEmuClient", ctx: CommonContext):
         # TODO: condense into one read and split based on addresses
         level_id = (await emu.read(ctx, [(addr.LEVEL_ID, 4, 's32')]))[0][0]
         report_scores = (await emu.read(ctx, [(addr.SPECIES_SCORES, addr.NUM_SPECIES_SCORES * SPECIES_DATA_SIZE * 2, 'u16')]))[0]
@@ -160,7 +159,7 @@ class PokemonSnapClient:
         # from the server, so we can send every check we find every time.
         await ctx.check_locations(all_checks)
 
-    async def do_oak_reward_checks(self, scores, emu: PokemonSnapGenericEmuClient, ctx: CommonContext):
+    async def do_oak_reward_checks(self, scores, emu: "PokemonSnapGenericEmuClient", ctx: CommonContext):
         # TODO: holy, we gotta clean this up
         REPORT_KEY = f'POKEMON_SNAP_PKMN_REPORT_{ctx.team}_{ctx.slot}'
         REWARD_FLAGS_KEY = f'POKEMON_SNAP_OAK_REWARD_KEYS_{ctx.team}_{ctx.slot}'
@@ -245,7 +244,7 @@ class PokemonSnapClient:
         
         return oak_checks
 
-    async def receive_snap_items(self, emu: PokemonSnapGenericEmuClient, ctx: CommonContext):
+    async def receive_snap_items(self, emu: "PokemonSnapGenericEmuClient", ctx: CommonContext):
         await emu.write(ctx, [
             (addr.CAN_USE_OVERRIDE, [0], "u32"),
             (addr.COURSE_OVERRIDE, [0], "u32")
@@ -317,12 +316,17 @@ class PokemonSnapClient:
         elif ctx.slot_data['photo_scoring'] == PhotoScoring.option_separate_unlocks:
             can_use_mask |= addr.CAN_USE_FLAGS[MULT_WO_WDFL]
 
+        camera_inversion = (await emu.read(ctx, [(addr.CAMERA_INVERSION, 4, 'u32')]))[0][0]
+        expected_inversion = 1 if ctx.slot_data['camera_inversion'] else 0
+        if camera_inversion & 0x02 == 0 and camera_inversion != expected_inversion:
+            camera_inversion = 0x02 | expected_inversion
+
         await emu.write(ctx, [
             (addr.CAN_USE_MASK, [can_use_mask], "u32"),
             (addr.CAN_USE_PER_COURSE_MASK, can_use_per_course_mask, "u32"),
             (addr.COURSE_UNLOCK_MASK, [course_mask], "u32"),
             (addr.MAX_FILM, [film], "u32"),
-            (addr.CAMERA_INVERSION, [ctx.slot_data['camera_inversion'] | 0x02], "u32"),  # 0x02 is the "performed write" flag
+            (addr.CAMERA_INVERSION, [camera_inversion], "u32"),  # 0x02 is the "performed write" flag
         ])
     
     def append_photo_log(self, record: dict) -> None:
@@ -349,7 +353,7 @@ class PokemonSnapClient:
             "photos": [photo_record(i, raw_score, run_log) for i, raw_score in enumerate(raw_scores) if raw_score.species_slot > 0],
         }
 
-    async def log_photo_roll(self, emu: PokemonSnapGenericEmuClient, ctx: CommonContext):
+    async def log_photo_roll(self, emu: "PokemonSnapGenericEmuClient", ctx: CommonContext):
         photo_count = min((await emu.read(ctx, [(addr.PHOTO_COUNT, 4, 'u32')]))[0][0], NUM_ROLL_PHOTOS)
         raw_scores = []
         if photo_count > 0:
