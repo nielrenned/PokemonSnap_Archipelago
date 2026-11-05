@@ -1,4 +1,4 @@
-import asyncio
+import asyncio, base64
 import worlds._bizhawk as bizhawk
 import Utils
 
@@ -9,6 +9,7 @@ from worlds._bizhawk.client import BizHawkClient
 
 from .ut_context import ContextClass
 from .. import PokemonSnapGenericEmuClient
+from ... import addresses as addr
 from ...constants import GAME_NAME
 from ...client import PokemonSnapClient
 
@@ -38,7 +39,15 @@ class PokemonSnapBizHawkClient(BizHawkClient, PokemonSnapGenericEmuClient):
     system = "N64"
 
     async def validate_rom(self, ctx: BizHawkClientContext):
-        # TODO: copy over ROM validation from other client
+        if await bizhawk.get_memory_size(ctx.bizhawk_ctx, "RDRAM") < 0x800000:
+            logger.error('Please enable the memory expansion pak')
+            return False
+
+        auth_token = self._read_raw_auth_token(ctx)
+        if auth_token == addr.UNPATCHED_AUTH:
+            logger.error('Unpatched ROM')
+            return False
+
         self.client = PokemonSnapClient()
         ctx.game = self.game
         ctx.items_handling = 0b111
@@ -47,9 +56,23 @@ class PokemonSnapBizHawkClient(BizHawkClient, PokemonSnapGenericEmuClient):
         ctx.slot_data = {}
         return True
 
+    async def _read_raw_auth_token(self, ctx: BizHawkClientContext):
+        return (await bizhawk.read(ctx.bizhawk_ctx, [(addr.AUTH_ROM, addr.AUTH_LEN, 'ROM')]))[0]
+
+    async def set_auth(self, ctx):
+        raw_auth_token = await self._read_raw_auth_token(ctx)
+        if raw_auth_token == addr.UNPATCHED_AUTH:
+            return None
+        ctx.auth = base64.b64encode(raw_auth_token).decode('ascii')
+
     async def game_watcher(self, ctx: BizHawkClientContext):
         try:
             if not (ctx.slot and ctx.slot_data): return
+            magic = (await self.read(ctx, [(addr.EXPANSION_MAGIC, 4, 'u32')]))[0][0]
+            if magic != addr.EXPANSION_LOADED:
+                logger.error('Expansion magic not correct') # TODO: better error message
+                return
+
             await self.client.check_snap_locations(self, ctx)
             await self.client.receive_snap_items(self, ctx)
         except bizhawk.RequestFailedError:
