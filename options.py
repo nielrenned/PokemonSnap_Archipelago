@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from .constants import DEFAULT_SIGN_REQUIREMENT, DEFAULT_POKEMON_REQUIREMENT
 from Options import Choice, DefaultOnToggle, PerGameCommonOptions, Toggle, OptionGroup, StartInventoryPool, Range, Visibility
 from .addresses import CAMERA_INVERSION_OPTION_INVERTED, CAMERA_INVERSION_OPTION_NORMAL
 
