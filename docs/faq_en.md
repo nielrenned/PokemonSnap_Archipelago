@@ -1,5 +1,14 @@
 # Pokemon Snap Randomizer FAQ
 
+## Switching to BizHawk
+
+### How do I enable BizHawk instead of Project64?
+
+1. Find your `host.yaml` file in your Archipelago install folder. You can use the `Open host.yaml` button in the Archipelago launcher.
+2. Change the line `use_pj64: true` to `use_pj64: false`
+3. Restart your Archipelago launcher.
+4. If you're using the Mupen core in BizHawk, you may need to enable the Expansion Pak. After loading any N64 game, enable the option under `N64 -> Use Expansion Slot`. Then reboot the core (`Emulation -> Reboot Core`).
+
 ## Troubleshooting
 
 ### My AP won't connect
@@ -14,16 +23,22 @@
 1. Open the Scripts... Window (Debugger > Scripts...)
 1. Select Script `ap_psnap_pj64_adapter_30.js` and press "Run"
 
+**Error:**
+`Waiting to connect to BizHawk...` forever
+
+**Solution: Start the AP script in BizHawk**
+1. Tools → Lua Console → Script → Open Script → data/lua/connector_bizhawk_generic.lua
+
 ---
 
 ### Oak won't Rate my Photos / There is a red dot when taking photos / Pikachu is detected as a Pokemon Sign
 
-**Solution: Troubleshoot your base ROM**
+**Solution: Troubleshoot your emulator**
 
-This likely isn't related to the AP and is an issue with your emulator vs base Pokemon Snap ROM in general. 
+This likely isn't related to the AP and is an issue with Project 64. 
 Confirm by attempting to submit photos in your base ROM. The following steps have all been known to help:
 
- - Ensure you are using Project64 `3.0` NOT `4.0`
+ - Ensure you are using Project64 `3.0.x` NOT `4.0`
  - Swap to a different graphics plugin. Both the [angrylion-plus](https://github.com/ata4/angrylion-rdp-plus/releases) and [Parallel RDP Plugin](https://github.com/ariahiro64/pj64-parallelrdp/releases/tag/1.4) have been reported to work with Parallel having better performance.
 
 <img width="666" height="511" alt="image" src="https://github.com/user-attachments/assets/cbc57f23-8ae3-46bc-a49e-cb075f9065ee" />
