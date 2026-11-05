@@ -37,26 +37,31 @@ class PokemonSnapBizHawkClient(BizHawkClient, PokemonSnapGenericEmuClient):
     client: PokemonSnapClient
     game = GAME_NAME
     system = "N64"
+    _last_validation_error: str | None = None
+
+    def _log_validation_error(self, message: str):
+        if message != self._last_validation_error:
+            logger.error(message)
+            self._last_validation_error = message
 
     async def validate_rom(self, ctx: BizHawkClientContext):
         rom_name_bytes = (await bizhawk.read(ctx.bizhawk_ctx, [(0x20, 12, 'ROM')]))[0]
-        rom_name = rom_name_bytes.decode('ascii')
-        if rom_name != 'POKEMON SNAP':
-            logger.error('Not a Pokemon Snap ROM')
+        if rom_name_bytes != b'POKEMON SNAP':
+            self._log_validation_error('Not a Pokemon Snap ROM')
             return False
 
         rom_size = await bizhawk.get_memory_size(ctx.bizhawk_ctx, 'ROM')
-        auth_token = await self._read_raw_auth_token(ctx)
-        if rom_size < addr.AUTH_ROM + addr.AUTH_LEN or auth_token == addr.UNPATCHED_AUTH:
-            logger.error('Unpatched ROM')
+        if rom_size < addr.AUTH_ROM + addr.AUTH_LEN or (await self._read_raw_auth_token(ctx)) == addr.UNPATCHED_AUTH:
+            self._log_validation_error('Unpatched ROM')
             return False
 
         memory_size = await bizhawk.get_memory_size(ctx.bizhawk_ctx, 'RDRAM')
         if memory_size < 8_000_000:
-            logger.error('In BizHawk, enable the expansion pak (N64 -> Use Expansion Slot). '
-                         'Then reboot the core (Emulation -> Reboot Core).')
+            self._log_validation_error('In BizHawk, enable the expansion pak (N64 -> Use Expansion Slot). '
+                                       'Then reboot the core (Emulation -> Reboot Core).')
             return False
 
+        self._last_validation_error = None
         self.client = PokemonSnapClient()
         ctx.game = self.game
         ctx.items_handling = 0b111
