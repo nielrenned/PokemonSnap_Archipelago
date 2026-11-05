@@ -7,7 +7,7 @@
 1. Find your `host.yaml` file in your Archipelago install folder. You can use the `Open host.yaml` button in the Archipelago launcher.
 2. Change the line `use_pj64: true` to `use_pj64: false`
 3. Restart your Archipelago launcher.
-4. If you're using the Mupen core in BizHawk, you may need to enable the Expansion Pak. After loading any N64 game, enable the option under `N64 -> Use Expansion Slot`.
+4. If you're using the Mupen core in BizHawk, you may need to enable the Expansion Pak. After loading any N64 game, enable the option under `N64 -> Use Expansion Slot`. Then reboot the core (`Emulation -> Reboot Core`).
 
 ## Troubleshooting
 
@@ -22,6 +22,12 @@
 1. Ensure Debug mode is turned on (Options > uncheck "Hide Advanced Settings" > Apply)
 1. Open the Scripts... Window (Debugger > Scripts...)
 1. Select Script `ap_psnap_pj64_adapter_30.js` and press "Run"
+
+**Error:**
+`Waiting to connect to BizHawk...` forever
+
+**Solution: Start the AP script in BizHawk**
+1. Tools → Lua Console → Script → Open Script → data/lua/connector_bizhawk_generic.lua
 
 ---
 

@@ -79,7 +79,8 @@ When the ISO patched, the Pokemon Snap Client should have also automatically lau
 3. If asked, enter your slot name (the name from your YAML file).
 4. (Project64 only) Start the connection script in Project 64: Click `Debugger -> Scripts...`, highlight the `ap_snap_pj64_adapter_30.js` script, and click `Run`.
     - Until you do this, you'll see the message "Unable to connect to Project 64. Attempting again in 5 seconds..."
-5. The client should log that BizHawk/Project64 has been connected. You are now connected and ready to play!
+5. (BizHawk only) If you're using the Mupen core in BizHawk, you may need to enable the Expansion Pak. After loading any N64 game, enable the option under `N64 -> Use Expansion Slot`. Then reboot the core (`Emulation -> Reboot Core`).
+6. The client should log that BizHawk/Project64 has been connected. You are now connected and ready to play!
 
 
 ### Play the game
