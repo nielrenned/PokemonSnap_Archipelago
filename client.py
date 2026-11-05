@@ -93,6 +93,7 @@ def photo_record(roll_index: int, raw_score: PokemonSnapRawScore, run_log: list[
 
 class PokemonSnapClient:
     should_play_cloud_dialog: bool = True
+    camera_inversion: int | None = None
     current_level_id: int = -1
     photo_log_session: str
     photo_log_path: str | None = None
@@ -310,17 +311,21 @@ class PokemonSnapClient:
         elif ctx.slot_data['photo_scoring'] == PhotoScoring.option_separate_unlocks:
             can_use_mask |= addr.CAN_USE_FLAGS[MULT_WO_WDFL]
 
-        camera_inversion = (await emu.read(ctx, [(addr.CAMERA_INVERSION, 4, 'u32')]))[0][0]
-        expected_inversion = 1 if ctx.slot_data['camera_inversion'] else 0
-        if camera_inversion & 0x02 == 0 and camera_inversion != expected_inversion:
-            camera_inversion = 0x02 | expected_inversion
+        if self.camera_inversion is None:
+            self.camera_inversion = 1 if ctx.slot_data['camera_inversion'] else 0
+
+        camera_inversion_flags = (await emu.read(ctx, [(addr.CAMERA_INVERSION, 4, 'u32')]))[0][0]
+        change_pending = camera_inversion_flags & addr.CAMERA_INVERSION_REQUEST_FLAG
+        change_acked = camera_inversion_flags & addr.CAMERA_INVERSION_ACK_FLAG
+        if not change_pending and (not change_acked or (camera_inversion_flags & 0x01) != self.camera_inversion):
+            camera_inversion_flags = self.camera_inversion | addr.CAMERA_INVERSION_REQUEST_FLAG
 
         await emu.write(ctx, [
             (addr.CAN_USE_MASK, [can_use_mask], "u32"),
             (addr.CAN_USE_PER_COURSE_MASK, can_use_per_course_mask, "u32"),
             (addr.COURSE_UNLOCK_MASK, [course_mask], "u32"),
             (addr.MAX_FILM, [film], "u32"),
-            (addr.CAMERA_INVERSION, [camera_inversion], "u32"),  # 0x02 is the "performed write" flag
+            (addr.CAMERA_INVERSION, [camera_inversion_flags], "u32"),
         ])
     
     def append_photo_log(self, record: dict) -> None:

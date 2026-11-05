@@ -25,25 +25,26 @@ class PokemonSnapGenericCommandProcessor(ClientCommandProcessor):
         if server_address:
             ctx.server_address = server_address
         super().__init__(ctx)
-    
-    def _cmd_photo_log(self):
-        """Gets the path to the photo log."""
+
+    def _get_client(self):
         if hasattr(self.ctx, 'client') and isinstance(self.ctx.client, PokemonSnapClient):
-            logger.info(self.ctx.client.photo_log_path)
+            return self.ctx.client
         if (
             hasattr(self.ctx, 'client_handler') and 
             hasattr(self.ctx.client_handler, 'client') and 
             isinstance(self.ctx.client_handler.client, PokemonSnapClient)
         ):
-            logger.info(self.ctx.client_handler.client.photo_log_path)
+            return self.ctx.client_handler.client
+        return None
+
+    def _cmd_photo_log(self):
+        """Gets the path to the photo log."""
+        if (client := self._get_client()) is not None:
+            logger.info(client.photo_log_path)
 
     def _cmd_invert_controls(self):
         """Toggles inverted camera controls (Y-axis only)."""
-        if (
-            hasattr(self.ctx, 'slot_data') and
-            self.ctx.slot_data is not None and
-            'camera_inversion' in self.ctx.slot_data
-        ):
-            self.ctx.slot_data['camera_inversion'] = not self.ctx.slot_data['camera_inversion']
-            inversion = 'Normal' if self.ctx.slot_data['camera_inversion'] else 'Inverted'
+        if (client := self._get_client()) is not None:
+            client.camera_inversion = 1 - client.camera_inversion if client.camera_inversion is not None else 1
+            inversion = 'Inverted' if client.camera_inversion == 0 else 'Normal'
             logger.info(f'Camera controls set to {inversion}')
