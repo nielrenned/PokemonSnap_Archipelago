@@ -70,6 +70,24 @@ This can happen if you accidentally selected the wrong file when initially selec
 1. Navigate to the folder where the ROM lives
 2. Type in the full file name manually, including the suffix
 
+---
+
+### My camera moves way too fast in BizHawk
+
+**Solution: Adjust your BizHawk settings**
+
+1. Go to `Config -> Controllers...`
+2. Unbind `A Up`, `A Down`, `A Left`, and `A Right`. These are for keyboard players only.
+<img width="547" height="607" alt="image" src="https://github.com/user-attachments/assets/ce30ddf8-6c4a-4910-9fdb-21a96219f94b" />
+
+3. Switch to the `Analog Controls` tab.
+4. Unbind `P1 X Axis+`, `P1 X Axis-`, `P1 Y Axis+`, and `P1 Y Axis-`.
+5. Make sure `P1 X Axis` and `P1 Y Axis` are bound.
+6. Lower your sensitivity on both axes. 70% seems to be the sweet spot.
+7. (Optional) Adjust your dead zone. 10% seems to be good.
+<img width="619" height="291" alt="image" src="https://github.com/user-attachments/assets/9ba5449e-7bc0-4f27-935a-7fa22d68bd38" />
+
+
 ## General Questions
 
 ### How Do I Snap (whatever) with just the Dash Engine?
