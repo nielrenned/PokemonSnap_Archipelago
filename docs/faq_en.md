@@ -1,5 +1,14 @@
 # Pokemon Snap Randomizer FAQ
 
+## Switching to BizHawk
+
+### How do I enable BizHawk instead of Project64?
+
+1. Find your `host.yaml` file in your Archipelago install folder. You can use the `Open host.yaml` button in the Archipelago launcher.
+2. Change the line `use_pj64: true` to `use_pj64: false`
+3. Restart your Archipelago launcher.
+4. If you're using the Mupen core in BizHawk, you may need to enable the Expansion Pak. After loading any N64 game, enable the option under `N64 -> Use Expansion Slot`.
+
 ## Troubleshooting
 
 ### My AP won't connect
