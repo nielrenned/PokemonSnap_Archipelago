@@ -11,7 +11,7 @@ from worlds.AutoWorld import AutoWorldRegister
 from .constants import *
 from .locations import wonderful_id as wdfl_id, multiple_id as mult_id, special_pose_id, regular_pose_id as pose_id, secret_exit_id, sign_id, bonus_id, oak_reward_id, OAK_REWARDS, POKEMON_TO_SLOTS, POKEMON_IN_MULTIPLE_LEVELS
 from .items import item_dictionary, SIGN_PIC_NAMES, POKEMON_PIC_NAMES, fragment, unfragment
-from .options import PhotoScoring, PressLToStop, PhotoBonusChecks
+from .options import PhotoScoring, PressLToStop, PhotoBonusChecks, GoalType
 from . import addresses as addr
 
 class PokemonSnapReportScore(NamedTuple):
@@ -286,8 +286,8 @@ class PokemonSnapClient:
             elif name == PROG_SCORING:
                 prog_scoring_count += 1
 
-        met_sign_goal    = ctx.slot_data["goal_type"] == GOAL_SIGN_PICS    and sign_pic_count >= ctx.slot_data["signs_required"]
-        met_pokemon_goal = ctx.slot_data["goal_type"] == GOAL_POKEMON_PICS and pokemon_pic_count >= ctx.slot_data["pokemon_required"]
+        met_sign_goal    = ctx.slot_data["goal_type"] == GoalType.option_signs            and sign_pic_count >= ctx.slot_data["signs_required"]
+        met_pokemon_goal = ctx.slot_data["goal_type"] == GoalType.option_pokemon_pictures and pokemon_pic_count >= ctx.slot_data["pokemon_required"]
 
         if met_sign_goal or met_pokemon_goal:
             course_mask |= 1 << addr.COURSE_IDS[LVL_CLOUD]
