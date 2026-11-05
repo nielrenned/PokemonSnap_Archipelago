@@ -39,13 +39,22 @@ class PokemonSnapBizHawkClient(BizHawkClient, PokemonSnapGenericEmuClient):
     system = "N64"
 
     async def validate_rom(self, ctx: BizHawkClientContext):
-        if await bizhawk.get_memory_size(ctx.bizhawk_ctx, "RDRAM") < 0x800000:
-            logger.error('Please enable the memory expansion pak')
+        rom_name_bytes = (await bizhawk.read(ctx.bizhawk_ctx, [(0x20, 12, 'ROM')]))[0]
+        rom_name = rom_name_bytes.decode('ascii')
+        if rom_name != 'POKEMON SNAP':
+            logger.error('Not a Pokemon Snap ROM')
             return False
 
-        auth_token = self._read_raw_auth_token(ctx)
-        if auth_token == addr.UNPATCHED_AUTH:
+        rom_size = await bizhawk.get_memory_size(ctx.bizhawk_ctx, 'ROM')
+        auth_token = await self._read_raw_auth_token(ctx)
+        if rom_size < addr.AUTH_ROM + addr.AUTH_LEN or auth_token == addr.UNPATCHED_AUTH:
             logger.error('Unpatched ROM')
+            return False
+
+        memory_size = await bizhawk.get_memory_size(ctx.bizhawk_ctx, 'RDRAM')
+        if memory_size < 8_000_000:
+            logger.error('In BizHawk, enable the expansion pak (N64 -> Use Expansion Slot). '
+                         'Then reboot the core (Emulation -> Reboot Core).')
             return False
 
         self.client = PokemonSnapClient()
@@ -70,7 +79,6 @@ class PokemonSnapBizHawkClient(BizHawkClient, PokemonSnapGenericEmuClient):
             if not (ctx.slot and ctx.slot_data): return
             magic = (await self.read(ctx, [(addr.EXPANSION_MAGIC, 4, 'u32')]))[0][0]
             if magic != addr.EXPANSION_LOADED:
-                logger.error('Expansion magic not correct') # TODO: better error message
                 return
 
             await self.client.check_snap_locations(self, ctx)
@@ -98,9 +106,9 @@ class PokemonSnapBizHawkClient(BizHawkClient, PokemonSnapGenericEmuClient):
     async def write(self, ctx: BizHawkClientContext, write_list: Sequence[tuple[int, Sequence[int], str]]):
         # Convert the write requests
         bizhawk_write_list = []
-        for addr, ints, write_type in write_list:
+        for address, ints, write_type in write_list:
             bytes_to_write = b''.join(int.to_bytes(n, length=INT_SIZE[write_type], byteorder='big', signed=SIGNEDNESS[write_type]) for n in ints)
-            bizhawk_write_list.append((addr & ADDR_MASK, bytes_to_write, 'RDRAM'))
+            bizhawk_write_list.append((address & ADDR_MASK, bytes_to_write, 'RDRAM'))
         return await bizhawk.write(ctx.bizhawk_ctx, bizhawk_write_list)
 
 
