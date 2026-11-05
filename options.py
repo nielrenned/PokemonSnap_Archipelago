@@ -136,6 +136,7 @@ class PhotoScoring(Choice):
     option_separate            = 1
     option_progressive_unlocks = 2
     option_separate_unlocks    = 3
+    default = 0
 
 
 class ExtraPhotoScoringItems(Range):
@@ -165,7 +166,7 @@ class MapFragments(Range):
     default = 1
 
 
-class UnlockItemsPerCourse(Toggle):
+class UnlockItemsPerCourse(DefaultOnToggle):
     """
     Unlock the Apple, Pester Ball, and PokeFlute for each level separately, rather than every level at once.
     """
@@ -340,7 +341,7 @@ class UseHardLogic(Toggle):
     display_name = "Hard logic"
 
 
-class StartWithDashEngine(Toggle):
+class StartWithDashEngine(DefaultOnToggle):
     """
     Start with the Dash Engine.
 
@@ -362,10 +363,10 @@ class PressLToStop(Choice):
     option_in_item_pool = 1
     option_disabled     = 2
 
-    default = 2
+    default = 0
 
 
-class DeprecatedPressLToStop(Toggle):
+class DeprecatedPressLToStop(DefaultOnToggle):
     """
     Deprecated. Use the new option `left_bumper_to_start_stop` instead.
     """
