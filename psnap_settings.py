@@ -1,3 +1,4 @@
+from typing import Sequence, Any
 import settings
 
 class UseProject64(settings.Bool):
@@ -18,6 +19,11 @@ class EmulatorSettings(settings.Group):
 class SnapRomPath(settings.UserFilePath):
     """Locate your Pokemon Snap ROM path."""
     description = "Pokemon Snap ROM path"
+
+    def browse(self, filetypes: Sequence[tuple[str, Sequence[str]]] | None = None, **kwargs: Any):
+        if not filetypes:
+            filetypes = [("N64 ROM", ["*.z64"]), ("File", ['*.*'])]
+        return super().browse(filetypes, **kwargs)
 
 class PokemonSnapSettings(settings.Group):
     rom_path: SnapRomPath = SnapRomPath(None)
