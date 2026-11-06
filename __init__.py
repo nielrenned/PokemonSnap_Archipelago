@@ -306,11 +306,24 @@ class PokemonSnapWorld(World):
         patch = PokemonSnapProcedurePatch(player=self.player, player_name=self.player_name)
         patch.write_file("basepatch.bsdiff4", pkgutil.get_data(__name__, "data/basepatch.bsdiff4"))
         patch.write_token(APTokenTypes.WRITE, addr.AUTH_ROM, self.auth)
+        patch.write_token(APTokenTypes.WRITE, addr.NAME_ROM, self.encode_player_name(self.player_name))
         patch.write_file("token_patch.bin", patch.get_token_binary())
         out_path = os.path.join(
             output_directory,
             f"{self.multiworld.get_out_file_name_base(self.player)}{patch.patch_file_ending}")
         patch.write(out_path)
+
+    def encode_player_name(self, name: str) -> bytes:
+        encoded_name = b''.join(self.encode_char(c) for c in name[:7])
+        if len(encoded_name) == 0: return (b'\0' * 16)
+        return encoded_name.ljust(16, b'\0')
+
+    def encode_char(self, c: chr) -> bytes:
+        if c == ' ':
+            return b'\u3000'
+        if c.isascii() and (c.isalnum() or c in '!?'):
+            return chr(ord(c) + 0xFEE0)
+        return chr(ord('?') + 0xFEE0)
 
     def fill_slot_data(self) -> dict[str, Any]:
         options_dict = self.options.as_dict(

@@ -56,6 +56,7 @@ SECRET_EXIT_FLAGS = _addr("symbols", "secretExits")
 # Per-seed auth token: RAM addr (read), ROM offset (write), length.
 AUTH_ADDR, AUTH_ROM, AUTH_LEN = _ident("auth")
 UNPATCHED_AUTH = b"PSAP-UNPATCHED!!"
+NAME_ADDR, NAME_ROM, NAME_LEN = _ident("name")
 
 # gExpansionMagic reads as 'OKAY' once the expansion segment has booted.
 EXPANSION_LOADED = 0x4F4B4159
