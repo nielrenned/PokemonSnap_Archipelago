@@ -354,7 +354,7 @@ LOCATION_RULES = {
         Category.NORMAL_PHOTO:    _NO_ITEMS,
         Category.WONDERFUL_PHOTO: _NO_ITEMS,
         # Without Zapdos you have to ignore the first Buzz and throw at the second - spoiler in doc
-        Category.MULTIPLE_PHOTO:  has(POKEMON_FOOD, LVL_TUNNEL) | has(PESTER_BALL, LVL_TUNNEL)
+        Category.MULTIPLE_PHOTO:  (has(POKEMON_FOOD, LVL_TUNNEL) & has(POKEFLUTE, LVL_TUNNEL)) | ((has(POKEMON_FOOD, LVL_TUNNEL) | has(PESTER_BALL, LVL_TUNNEL)) & _HARD_LOGIC_ON)
     },
     ZAPDOS: {
         Category.NORMAL_PHOTO:    has(POKEMON_FOOD, LVL_TUNNEL) & has(POKEFLUTE, LVL_TUNNEL),
@@ -674,7 +674,7 @@ LOCATION_RULES = {
     },
     SANDSLASH: {
         Category.NORMAL_PHOTO:    _NO_ITEMS,
-        Category.WONDERFUL_PHOTO: Has(DASH_ENGINE) | has(PESTER_BALL, LVL_VALLEY),
+        Category.WONDERFUL_PHOTO: has(PESTER_BALL, LVL_VALLEY) | _HARD_LOGIC_ON,
     },
     MANKEY: {
         Category.NORMAL_PHOTO:    _NO_ITEMS,
@@ -682,8 +682,8 @@ LOCATION_RULES = {
     },
     GEODUDE: {
         Category.NORMAL_PHOTO:    _NO_ITEMS,
-        Category.WONDERFUL_PHOTO: _NO_ITEMS,
-        Category.MULTIPLE_PHOTO:  _NO_ITEMS,
+        Category.WONDERFUL_PHOTO: has(PESTER_BALL, LVL_VALLEY) | _HARD_LOGIC_ON,
+        Category.MULTIPLE_PHOTO:  has(PESTER_BALL, LVL_VALLEY) | _HARD_LOGIC_ON,
     },
     GRAVELER: {
         Category.NORMAL_PHOTO:    _NO_ITEMS,

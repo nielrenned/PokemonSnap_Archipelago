@@ -162,6 +162,9 @@ The soft and hard logic requirements are listed below.
 - Dugtrio: Multiple
   - Soft Logic: 7 Film
   - Hard Logic: 5 Film
+- Electabuzz: Multiple
+  - Soft Logic: Pester Balls and PokéFlute (to hatch Zapdos)
+  - Hard Logic: Pester Balls or Pokemon Food (see above)
 
 #### Volcano
 - Vulpix: Multiple
@@ -173,16 +176,16 @@ The soft and hard logic requirements are listed below.
 
 #### River
 - Poliwag
-  - Soft Logic: Pokemon Food or Pester Ball
+  - Soft Logic: Pokemon Food or Pester Balls
   - Hard Logic: Nothing
 - Shellder: Good Technique / Multiple
   - Soft Logic: Dash Engine
   - Hard Logic: Nothing
 - Metapod: Good Technique / Multiple
-  - Soft Logic: Pester Ball
+  - Soft Logic: Pester Balls
   - Hard Logic: Nothing
 - Speed Pikachu
-  - Soft Logic: 5 Film, Pokemon Food, or Pester Ball
+  - Soft Logic: 5 Film, Pokemon Food, or Pester Balls
   - Hard Logic: 2 Film
 
 #### Cave
@@ -190,24 +193,30 @@ The soft and hard logic requirements are listed below.
   - Soft Logic: 4 Film
   - Hard Logic: 2 Film
 - Muk: Normal / Good Technique
-  - Soft Logic: Pester Ball and 4 Film
-  - Hard Logic: Pester Ball and 2 Film
+  - Soft Logic: Pester Balls and 4 Film
+  - Hard Logic: Pester Balls and 2 Film
 - Pikachu: Normal / Good Technique
-  - Soft Logic: Pokemon Food or Pester Ball
+  - Soft Logic: Pokemon Food or Pester Balls
   - Hard Logic: Nothing
 
 #### Valley
 - Squirtle: Good Technique
-  - Soft Logic: Pester Ball
+  - Soft Logic: Pester Balls
   - Hard Logic: Nothing
 - Squirtle: Multiple
-  - Soft Logic: Pester Ball
+  - Soft Logic: Pester Balls
   - Hard Logic: Dash Engine
+- Sandslash: Good Technique
+  - Soft Logic: Pester Ball
+  - Hard Logic: Nothing
+- Geodude: Multiple
+  - Soft Logic: Pester Balls
+  - Hard Logic: Nothing
 - Graveler: Good Technique
-  - Soft Logic: Pester Ball or PokeFlute
+  - Soft Logic: Pester Balls or PokéFlute
   - Hard Logic: Nothing
 - Graveler: Multiple
-  - Soft Logic: PokeFlute
+  - Soft Logic: PokéFlute
   - Hard Logic: Nothing
 - Starmie
   - Soft Logic: 5 Film
