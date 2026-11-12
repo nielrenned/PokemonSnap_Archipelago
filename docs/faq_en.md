@@ -144,86 +144,35 @@ with fewer items. Some of them are quite difficult, and have had the soft logic 
 
 The soft and hard logic requirements are listed below.
 
-#### Beach
-- Lapras: Good Technique / Multiple
-  - Soft Logic: 5 Film
-  - Hard Logic: 2 Film
-
-#### Tunnel
-- Pikachu on a Ball
-  - Soft Logic: 5 Film
-  - Hard Logic: 3 Film
-- Kakuna: Multiple
-  - Soft Logic: Pester Balls, Pokemon Food, or the Dash Engine
-  - Hard Logic: Nothing
-- Dugtrio: Normal / Good Technique
-  - Soft Logic: 5 Film
-  - Hard Logic: 4 Film
-- Dugtrio: Multiple
-  - Soft Logic: 7 Film
-  - Hard Logic: 5 Film
-- Electabuzz: Multiple
-  - Soft Logic: Pester Balls and PokéFlute (to hatch Zapdos)
-  - Hard Logic: Pester Balls or Pokemon Food (see above)
-
-#### Volcano
-- Vulpix: Multiple
-  - Soft Logic: Pokemon Food
-  - Hard Logic: Dash Engine
-- Charmander: Multiple
-  - Soft Logic: Pokemon Food
-  - Hard Logic: Nothing
-
-#### River
-- Poliwag
-  - Soft Logic: Pokemon Food or Pester Balls
-  - Hard Logic: Nothing
-- Shellder: Good Technique / Multiple
-  - Soft Logic: Dash Engine
-  - Hard Logic: Nothing
-- Metapod: Good Technique / Multiple
-  - Soft Logic: Pester Balls
-  - Hard Logic: Nothing
-- Speed Pikachu
-  - Soft Logic: 5 Film, Pokemon Food, or Pester Balls
-  - Hard Logic: 2 Film
-
-#### Cave
-- Grimer: Good Technique
-  - Soft Logic: 4 Film
-  - Hard Logic: 2 Film
-- Muk: Normal / Good Technique
-  - Soft Logic: Pester Balls and 4 Film
-  - Hard Logic: Pester Balls and 2 Film
-- Pikachu: Normal / Good Technique
-  - Soft Logic: Pokemon Food or Pester Balls
-  - Hard Logic: Nothing
-
-#### Valley
-- Squirtle: Good Technique
-  - Soft Logic: Pester Balls
-  - Hard Logic: Nothing
-- Squirtle: Multiple
-  - Soft Logic: Pester Balls
-  - Hard Logic: Dash Engine
-- Sandslash: Good Technique
-  - Soft Logic: Pester Ball
-  - Hard Logic: Nothing
-- Geodude: Multiple
-  - Soft Logic: Pester Balls
-  - Hard Logic: Nothing
-- Graveler: Good Technique
-  - Soft Logic: Pester Balls or PokéFlute
-  - Hard Logic: Nothing
-- Graveler: Multiple
-  - Soft Logic: PokéFlute
-  - Hard Logic: Nothing
-- Starmie
-  - Soft Logic: 5 Film
-  - Hard Logic: 2 Film
-- Starmie: Good Technique
-  - Soft Logic: 7 Film
-  - Hard Logic: 2 Film
-- Starmie: Multiple
-  - Soft Logic: 9 Film
-  - Hard Logic: 3 Film
+| | Soft Logic | Hard Logic |
+|---|---|---|
+| **Beach** | | |
+| Lapras | 5 Film | 2 Film |
+| **Tunnel** | | |
+| Pikachu on a Ball | 5 Film | 3 Film |
+| Kakuna: Multiple | Pester Balls, Pokemon Food, or the Dash Engine | Nothing |
+| Dugtrio: Normal / Good Technique | 5 Film | 4 Film |
+| Dugtrio: Multiple | 7 Film | 5 Film |
+| Electabuzz: Multiple | Pester Balls and PokéFlute (to hatch Zapdos) | Pester Balls or Pokemon Food (see above) |
+| **Volcano** | | |
+| Vulpix: Multiple | Pokemon Food | Dash Engine |
+| Charmander: Multiple | Pokemon Food | Nothing |
+| **River** | | |
+| Poliwag | Pokemon Food or Pester Balls | Nothing |
+| Shellder: Good Technique / Multiple | Dash Engine | Nothing |
+| Metapod: Good Technique / Multiple | Pester Balls | Nothing |
+| Speed Pikachu | 5 Film, Pokemon Food, or Pester Balls | 2 Film |
+| **Cave** | | |
+| Grimer: Good Technique | 4 Film | 2 Film |
+| Muk: Normal / Good Technique | Pester Balls and 4 Film | Pester Balls and 2 Film |
+| Pikachu: Normal / Good Technique | Pokemon Food or Pester Balls | Nothing |
+| **Valley** | | |
+| Squirtle: Good Technique | Pester Balls | Nothing |
+| Squirtle: Multiple | Pester Balls | Dash Engine |
+| Sandslash: Good Technique | Pester Ball | Nothing |
+| Geodude: Multiple | Pester Balls | Nothing |
+| Graveler: Good Technique | Pester Balls or PokéFlute | Nothing |
+| Graveler: Multiple | PokéFlute | Nothing |
+| Starmie | 5 Film | 2 Film |
+| Starmie: Good Technique | 7 Film | 2 Film |
+| Starmie: Multiple | 9 Film | 3 Film |
