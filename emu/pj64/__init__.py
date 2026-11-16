@@ -7,8 +7,9 @@ from CommonClient import logger, server_loop, get_base_parser, gui_enabled
 from .pj64_connector import PJ64Context, pj64connect, pj64disconnect, pj64_read_memory, pj64_write_memory
 from .pj64_constants import *
 from .update_pj64_config import safe_load_pj64_config
+from .. import PokemonSnapGenericEmuClient
+from ..command_processor import PokemonSnapGenericCommandProcessor
 from ..ut_helper import has_invalid_universal_tracker, universal_tracker_loaded
-from .. import PokemonSnapGenericEmuClient, PokemonSnapGenericCommandProcessor
 from ... import addresses as addr
 from ...client import PokemonSnapClient
 from ...constants import CLIENT_NAME, MIN_UNIVERSAL_TRACKER_VERSION

@@ -1,6 +1,6 @@
 from worlds._bizhawk.context import BizHawkClientContext, BizHawkClientCommandProcessor
 from ..ut_helper import TrackerGameContext, universal_tracker_loaded
-from .. import PokemonSnapGenericCommandProcessor
+from ..command_processor import PokemonSnapGenericCommandProcessor
 
 class BizHawkTrackerCommandProcessor(BizHawkClientCommandProcessor, PokemonSnapGenericCommandProcessor):
     pass
