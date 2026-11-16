@@ -246,7 +246,6 @@ class PokemonSnapWorld(World):
         self.random.shuffle(pokemon_pics)
         for i, item in enumerate(pokemon_pics):
             item_class = ItemClassification.useful
-            # intentionally including an extra progressive pokemon picture here
             if self.options.goal_type == GoalType.option_pokemon_pictures and i < self.options.pokemon_required.value:
                 item_class = ItemClassification.progression
             self.multiworld.itempool.append(self.create_classified_item(item.name, item_class))
@@ -256,7 +255,6 @@ class PokemonSnapWorld(World):
         self.random.shuffle(sign_pics)
         for i, item in enumerate(sign_pics):
             item_class = ItemClassification.useful
-            # intentionally including an extra progressive sign here
             if self.options.goal_type == GoalType.option_signs and i < self.options.signs_required.value:
                 item_class = ItemClassification.progression
             self.multiworld.itempool.append(self.create_classified_item(item.name, item_class))
@@ -276,6 +274,9 @@ class PokemonSnapWorld(World):
         if name in key_item_names:
             return self.create_classified_item(name, ItemClassification.progression)
         elif name in useful_item_names:
+            # This helps with the Universal Tracker Go Mode detection
+            if getattr(self.multiworld, "generation_is_fake", False) and name in POKEMON_PIC_NAMES | SIGN_PIC_NAMES:
+                return self.create_classified_item(name, ItemClassification.progression)
             return self.create_classified_item(name, ItemClassification.useful)
         else:
             return self.create_classified_item(name, ItemClassification.filler)
