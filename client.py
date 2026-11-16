@@ -320,12 +320,18 @@ class PokemonSnapClient:
         if not change_pending and (not change_acked or (camera_inversion_flags & 0x01) != self.camera_inversion):
             camera_inversion_flags = self.camera_inversion | addr.CAMERA_INVERSION_REQUEST_FLAG
 
+        REPORT_KEY = f'POKEMON_SNAP_PKMN_REPORT_{ctx.team}_{ctx.slot}'
+        report_score = sum(score for score in ctx.stored_data.get(REPORT_KEY, {}).values())
+
         await emu.write(ctx, [
             (addr.CAN_USE_MASK, [can_use_mask], "u32"),
             (addr.CAN_USE_PER_COURSE_MASK, can_use_per_course_mask, "u32"),
             (addr.COURSE_UNLOCK_MASK, [course_mask], "u32"),
             (addr.MAX_FILM, [film], "u32"),
             (addr.CAMERA_INVERSION, [camera_inversion_flags], "u32"),
+            (addr.POKEMON_PIC_COUNT, [pokemon_pic_count], "u32"),
+            (addr.SIGN_PIC_COUNT, [sign_pic_count], "u32"),
+            (addr.REPORT_SCORE_TOTAL, [report_score], "u32"),
         ])
     
     def append_photo_log(self, record: dict) -> None:
