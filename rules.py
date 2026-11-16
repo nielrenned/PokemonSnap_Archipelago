@@ -7,7 +7,7 @@ from .locations import wonderful, multiple, secret_exit, course, bonus, regular_
     PokemonSnapLocationCategory as Category, RNG_LOCATIONS, HARD_LOCATIONS, POKEMON_IN_MULTIPLE_LEVELS, POKEMON_LOCATION_TO_SPECIES
 from .constants import *
 from .items import PokemonSnapItemCategory as ItemCategory, fragment, course as course_item
-from .options import GoalType, PhotoScoring, IncludeRNGChecks, UseHardLogic, PhotoBonusChecks
+from .options import GoalType, PhotoScoring, UseHardLogic, IncludeRNGPhotos
 from .poses import *
 from .shots import SHOTS, Shot
 if TYPE_CHECKING:
