@@ -33,6 +33,9 @@ DIALOG_REQUEST_FLAGS = _addr("symbols", "gDialogRequestFlags")
 DIALOG_PLAYED_FLAGS = _addr("symbols", "gDialogPlayedFlags")
 CAMERA_INVERSION = _addr("symbols", "gCameraInversionRequest")
 LEVEL_ID = _addr("symbols", "gLevelID")
+POKEMON_PIC_COUNT = _addr("symbols", "gPokemonPicCount")
+SIGN_PIC_COUNT = _addr("symbols", "gSignPicCount")
+REPORT_SCORE_TOTAL = _addr("symbols", "gReportScore")
 
 # Camera inversion constants from the ROM
 CAMERA_INVERSION_OPTION_INVERTED = 0
