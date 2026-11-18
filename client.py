@@ -217,7 +217,6 @@ class PokemonSnapClient:
         return oak_checks
 
     async def update_pkmn_report(self, emu: PokemonSnapGenericEmuClient, ctx: CommonContext):
-        # TODO: guard against writing during the write from Oak's scoring?
         report_key = f'POKEMON_SNAP_PKMN_REPORT_{ctx.team}_{ctx.slot}'
         if report_key not in ctx.stored_data:
             # Gate updating here to make sure we restore after disconnect
@@ -255,17 +254,19 @@ class PokemonSnapClient:
                 pkmn_report[pokemon_name] = prev_info
             
             if photo_data[slot][1] == -1 and (updated_report := pkmn_report.get(pokemon_name, {'score': 0, 'pic': None}))['score'] > 0:
-                photo_data_ints = self.decode_photo_data(updated_report['pic'])
-                if len(photo_data_ints) * 4 != addr.PHOTO_DATA_SIZE:
-                    logger.error(f'Stored photo data for slot {slot} mismatched with expected photo data size: {len(photo_data_ints)*4} != {addr.PHOTO_DATA_SIZE}')
-                    continue
-                await emu.write(ctx, [
-                    (addr.REPORT_SCORES + slot * 4, [updated_report['score']], 'u32'),
-                    (addr.PHOTO_DATA + slot * addr.PHOTO_DATA_SIZE, photo_data_ints, 's32')
-                ])
+                mailbox_available = (await emu.read(ctx, [(addr.RESTORE_SLOT, 4, 's32')]))[0][0] == -1
+                if mailbox_available:
+                    photo_data_ints = self.decode_photo_data(updated_report['pic'])
+                    if len(photo_data_ints) * 4 != addr.PHOTO_DATA_SIZE:
+                        logger.error(f'Stored photo data for slot {slot} mismatched with expected photo data size: {len(photo_data_ints)*4} != {addr.PHOTO_DATA_SIZE}')
+                        continue
+                    await emu.write(ctx, [
+                        (addr.RESTORE_SCORE, [updated_report['score']], 'u32'),
+                        (addr.RESTORE_DATA, photo_data_ints, 's32'),
+                        (addr.RESTORE_SLOT, [slot], 's32')
+                    ])
 
         if pkmn_report != prev_report:
-            logger.info('Updating PKMN Report')
             await ctx.send_msgs([{
                 "cmd": "Set",
                 "key": report_key,

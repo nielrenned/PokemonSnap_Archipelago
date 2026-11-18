@@ -57,6 +57,10 @@ RUN_EVENT_COUNT = _addr("symbols", "runEventCount")
 SIGN_FLAGS = _addr("symbols", "signsFound")
 SECRET_EXIT_FLAGS = _addr("symbols", "secretExits")
 
+RESTORE_SLOT  = _addr("symbols", "gRestoreSlot")
+RESTORE_SCORE = _addr("symbols", "gRestoreScore")
+RESTORE_DATA  = _addr("symbols", "gRestoreData")
+
 # Per-seed auth token: RAM addr (read), ROM offset (write), length.
 AUTH_ADDR, AUTH_ROM, AUTH_LEN = _ident("auth")
 UNPATCHED_AUTH = b"PSAP-UNPATCHED!!"
