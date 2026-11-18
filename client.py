@@ -249,12 +249,13 @@ class PokemonSnapClient:
             slot = POKEMON_TO_SLOTS[pokemon_name][0] - 1
             prev_info = prev_report.get(pokemon_name, {'score': 0, 'pic': None})
             encoded_photo_data = None if photo_data[slot][1] == -1 else self.encode_photo_data(photo_data[slot])
-            if scores[slot] != prev_info['score'] or encoded_photo_data != prev_info['photo_data']:
+
+            if scores[slot] != prev_info['score'] or encoded_photo_data != prev_info['pic']:
                 pkmn_report[pokemon_name] = {'score': scores[slot], 'pic': encoded_photo_data}
             elif pokemon_name in prev_report and prev_info['score'] > 0:
                 pkmn_report[pokemon_name] = prev_info
             
-            if photo_data[slot][1] == -1 and (updated_report := pkmn_report.get(pokemon_name, {'score': 0, 'pic': None}))['score'] > 0:
+            if photo_data[slot][1] == -1 and pokemon_name in pkmn_report and (updated_report := pkmn_report[pokemon_name])['score'] > 0:
                 mailbox_available = (await emu.read(ctx, [(addr.RESTORE_SLOT, 4, 's32')]))[0][0] == -1
                 if mailbox_available:
                     photo_data_ints = self.decode_photo_data(updated_report['pic'])
