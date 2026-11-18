@@ -259,13 +259,9 @@ class PokemonSnapClient:
                 if len(photo_data_ints) * 4 != addr.PHOTO_DATA_SIZE:
                     logger.error(f'Stored photo data for slot {slot} mismatched with expected photo data size: {len(photo_data_ints)*4} != {addr.PHOTO_DATA_SIZE}')
                     continue
-                # Separated into two writes because asyncio has a 64KiB limit
                 await emu.write(ctx, [
                     (addr.REPORT_SCORES + slot * 4, [updated_report['score']], 'u32'),
-                    (addr.PHOTO_DATA + slot * addr.PHOTO_DATA_SIZE, photo_data_ints[:len(photo_data_ints) // 2], 's32')
-                ])
-                await emu.write(ctx, [
-                    (addr.PHOTO_DATA + slot * addr.PHOTO_DATA_SIZE + addr.PHOTO_DATA_SIZE // 2, photo_data_ints[len(photo_data_ints) // 2:], 's32')
+                    (addr.PHOTO_DATA + slot * addr.PHOTO_DATA_SIZE, photo_data_ints, 's32')
                 ])
 
         if pkmn_report != prev_report:
