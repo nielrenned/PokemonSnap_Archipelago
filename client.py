@@ -246,10 +246,11 @@ class PokemonSnapClient:
 
         pkmn_report = {}
         for pokemon_name in ALL_INGAME_POKEMON:
-            prev_info = prev_report.get(pokemon_name, {'score': 0, 'pic': None})
             slot = POKEMON_TO_SLOTS[pokemon_name][0] - 1
-            if scores[slot] > prev_info['score']:
-                pkmn_report[pokemon_name] = {'score': scores[slot], 'pic': self.encode_photo_data(photo_data[slot])}
+            prev_info = prev_report.get(pokemon_name, {'score': 0, 'pic': None})
+            encoded_photo_data = None if photo_data[slot][1] == -1 else self.encode_photo_data(photo_data[slot])
+            if scores[slot] != prev_info['score'] or encoded_photo_data != prev_info['photo_data']:
+                pkmn_report[pokemon_name] = {'score': scores[slot], 'pic': encoded_photo_data}
             elif pokemon_name in prev_report and prev_info['score'] > 0:
                 pkmn_report[pokemon_name] = prev_info
             
@@ -262,8 +263,8 @@ class PokemonSnapClient:
                         continue
                     await emu.write(ctx, [
                         (addr.RESTORE_SCORE, [updated_report['score']], 'u32'),
-                        (addr.RESTORE_DATA, photo_data_ints, 's32'),
-                        (addr.RESTORE_SLOT, [slot], 's32')
+                        (addr.RESTORE_DATA,  photo_data_ints, 's32'),
+                        (addr.RESTORE_SLOT,  [slot], 's32')
                     ])
 
         if pkmn_report != prev_report:
