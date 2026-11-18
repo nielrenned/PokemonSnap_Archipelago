@@ -1,7 +1,9 @@
+import base64
 import json
 import os
 import Utils
 import uuid
+import zlib
 
 from collections import defaultdict
 from CommonClient import logger, CommonContext
@@ -153,60 +155,32 @@ class PokemonSnapClient:
         all_checks |= {secret_exit_id(i) for i in range(6) if (secret_exit_flags & (1 << i)) != 0}
         all_checks |= {bonus_id(id) for id in all_checks}
 
-        all_checks |= await self.do_oak_reward_checks(scores, emu, ctx)
+        all_checks |= await self.do_oak_reward_checks(emu, ctx)
 
         await ctx.check_locations(all_checks)
 
-    async def do_oak_reward_checks(self, scores, emu: PokemonSnapGenericEmuClient, ctx: CommonContext):
+    async def do_oak_reward_checks(self, emu: PokemonSnapGenericEmuClient, ctx: CommonContext):
         # TODO: holy, we gotta clean this up
-        REPORT_KEY = f'POKEMON_SNAP_PKMN_REPORT_{ctx.team}_{ctx.slot}'
+        pkmn_report = await self.update_pkmn_report(emu, ctx)
+
         REWARD_FLAGS_KEY = f'POKEMON_SNAP_OAK_REWARD_KEYS_{ctx.team}_{ctx.slot}'
-
-        if REPORT_KEY not in ctx.stored_data or len(ctx.stored_data[REPORT_KEY]) == 0 or \
-            REWARD_FLAGS_KEY not in ctx.stored_data or len(ctx.stored_data[REWARD_FLAGS_KEY]) == 0:
+        if len(ctx.stored_data.get(REWARD_FLAGS_KEY, {})) == 0:
             # Gate updating here to make sure we restore after disconnect
-            await ctx.send_msgs([
-                {
-                    "cmd": "Set",
-                    "key": REPORT_KEY,
-                    "default": {pokemon_name: 0 for pokemon_name in ALL_INGAME_POKEMON},
-                    "want_reply": True,
-                    "operations": []
-                },
-                {
-                    "cmd": "Set",
-                    "key": REWARD_FLAGS_KEY,
-                    "default": {x: [False, False] for x in OAK_REWARDS},
-                    "want_reply": True,
-                    "operations": []
-                }])
-            return set() # Return nothing
-
-        # Update the report on the server
-        prev_report = ctx.stored_data[REPORT_KEY]
-        pkmn_report = {
-            pokemon_name: max(
-                prev_report.get(pokemon_name, 0), 
-                max(scores[slot-1].total_score for slot in POKEMON_TO_SLOTS[pokemon_name])
-            )
-            for pokemon_name in ALL_INGAME_POKEMON
-        }
-
-        if pkmn_report != prev_report:
             await ctx.send_msgs([{
                 "cmd": "Set",
-                "key": REPORT_KEY,
-                "default": {pokemon_name: 0 for pokemon_name in ALL_INGAME_POKEMON},
+                "key": REWARD_FLAGS_KEY,
+                "default": {x: [False, False] for x in OAK_REWARDS},
                 "want_reply": True,
-                "operations": [{"operation": "update", "value": pkmn_report}]
+                "operations": []
             }])
+            return set() # Return nothing
         
         prev_dialog_flags = ctx.stored_data[REWARD_FLAGS_KEY]
         dialog_flags = {x: flags[:] for x, flags in prev_dialog_flags.items()}
 
         # Trigger dialog and update trigger flags
-        pokemon_count = sum(1 for value in pkmn_report.values() if value > 0)
-        report_score = sum(value for value in pkmn_report.values())
+        pokemon_count = sum(1 for value in pkmn_report.values() if value['score'] > 0)
+        report_score = sum(value['score'] for value in pkmn_report.values())
 
         # Update what flags have been marked as played
         dialog_request_flags = 0
@@ -241,6 +215,101 @@ class PokemonSnapClient:
         await emu.write(ctx, [(addr.DIALOG_REQUEST_FLAGS, [dialog_request_flags | stored_request_flags], "u32")])
         
         return oak_checks
+
+    async def update_pkmn_report(self, emu: PokemonSnapGenericEmuClient, ctx: CommonContext):
+        report_key = f'POKEMON_SNAP_PKMN_REPORT_{ctx.team}_{ctx.slot}'
+        if report_key not in ctx.stored_data:
+            # Gate updating here to make sure we restore after disconnect
+            await ctx.send_msgs([{
+                "cmd": "Set",
+                "key": report_key,
+                "default": {name: {'score': 0, 'pic': None} for name in ALL_INGAME_POKEMON},
+                "want_reply": True,
+                "operations": []
+            }])
+            return {}
+        prev_report = ctx.stored_data[report_key]
+
+        photo_data_len = addr.NUM_REPORT_SCORES * addr.PHOTO_DATA_SIZE
+        # Separated into two reads because asyncio has a 64KiB limit
+        (scores, photo_data1) = await emu.read(ctx, [
+            (addr.REPORT_SCORES, addr.NUM_REPORT_SCORES * 4, 'u32'),
+            (addr.PHOTO_DATA, photo_data_len // 2, 's32'),
+        ])
+        (photo_data2, ) = await emu.read(ctx, [
+            (addr.PHOTO_DATA + photo_data_len // 2, photo_data_len // 2, 's32'),
+        ])
+
+        photo_data_raw = photo_data1 + photo_data2
+        photo_data_int_count = addr.PHOTO_DATA_SIZE // 4
+        photo_data = [photo_data_raw[i:i+photo_data_int_count] for i in range(0, len(photo_data_raw), photo_data_int_count)]
+
+        pkmn_report = {}
+        mailbox_busy = False
+        for pokemon_name in ALL_INGAME_POKEMON:
+            slot = POKEMON_TO_SLOTS[pokemon_name][0] - 1
+            prev_info = prev_report.get(pokemon_name, {'score': 0, 'pic': None})
+            slot_empty = photo_data[slot][1] == -1
+
+            if slot_empty:
+                # The game does not have a photo
+                pkmn_report[pokemon_name] = prev_info
+                if prev_info['score'] <= 0 or prev_info['pic'] is None: continue
+
+                if mailbox_busy: continue
+                mailbox_busy = (await emu.read(ctx, [(addr.RESTORE_SLOT, 4, 's32')]))[0][0] != -1
+                if mailbox_busy: continue
+
+                try:
+                    photo_data_ints = self.decode_photo_data(prev_info['pic'])
+                except Exception as ex:
+                    logger.error(f'Stored photo data for slot {slot} could not be decoded: {ex}')
+                    pkmn_report[pokemon_name] = {'score': 0, 'pic': None}
+                    continue
+                
+                if len(photo_data_ints) * 4 != addr.PHOTO_DATA_SIZE:
+                    logger.error(f'Stored photo data for slot {slot} mismatched with expected photo data size: {len(photo_data_ints)*4} != {addr.PHOTO_DATA_SIZE}')
+                    pkmn_report[pokemon_name] = {'score': 0, 'pic': None}
+                    continue
+
+                await emu.write(ctx, [
+                    (addr.RESTORE_SCORE, [prev_info['score']], 'u32'),
+                    (addr.RESTORE_DATA,  photo_data_ints, 's32'),
+                    (addr.RESTORE_SLOT,  [slot], 's32'),
+                ])
+                mailbox_busy = True  # one restore per tick
+            else:
+                # The game has a photo
+                try:
+                    prev_ints = self.decode_photo_data(prev_info['pic']) if prev_info['pic'] is not None else None
+                except Exception as ex:
+                    logger.error(f'Stored photo data for slot {slot} could not be decoded: {ex}')
+                    pkmn_report[pokemon_name] = {'score': 0, 'pic': None}
+                    continue
+                    
+                if scores[slot] != prev_info['score'] or photo_data[slot] != prev_ints:
+                    pkmn_report[pokemon_name] = {'score': scores[slot], 'pic': self.encode_photo_data(photo_data[slot])}
+                else:
+                    pkmn_report[pokemon_name] = prev_info
+
+        if pkmn_report != prev_report:
+            await ctx.send_msgs([{
+                "cmd": "Set",
+                "key": report_key,
+                "default": {},
+                "want_reply": True,
+                "operations": [{"operation": "update", "value": pkmn_report}]
+            }])
+
+        return pkmn_report
+
+    def encode_photo_data(self, photo_data: list[int]) -> str:
+        bytes = b''.join(x.to_bytes(4, 'big', signed=True) for x in photo_data)
+        return base64.b64encode(zlib.compress(bytes)).decode('utf-8')
+
+    def decode_photo_data(self, pic_str: str) -> list[int]:
+        bytes = zlib.decompress(base64.b64decode(pic_str.encode('utf-8')))
+        return [int.from_bytes(bytes[i:i+4], 'big', signed=True) for i in range(0, len(bytes), 4)]
 
     async def receive_snap_items(self, emu: PokemonSnapGenericEmuClient, ctx: CommonContext):
         await emu.write(ctx, [
@@ -324,7 +393,7 @@ class PokemonSnapClient:
             camera_inversion_flags = self.camera_inversion | addr.CAMERA_INVERSION_REQUEST_FLAG
 
         REPORT_KEY = f'POKEMON_SNAP_PKMN_REPORT_{ctx.team}_{ctx.slot}'
-        report_score = sum(score for score in ctx.stored_data.get(REPORT_KEY, {}).values())
+        report_score = sum(report_data['score'] for report_data in ctx.stored_data.get(REPORT_KEY, {}).values())
 
         await emu.write(ctx, [
             (addr.CAN_USE_MASK, [can_use_mask], "u32"),
