@@ -182,13 +182,13 @@
     "reportScores": {
       "addr": "0x800C222C",
       "type": "s32[69]",
-      "access": "r",
+      "access": "rw",
       "desc": "best PKMN Report score per species slot"
     },
     "registeredPhotos": {
       "addr": "0x800C2340",
       "type": "PhotoData[69]",
-      "access": "r",
+      "access": "rw",
       "desc": "registered photo per species slot (stride 0x3A0); registered if s32 at +0x04 != -1"
     }
   }

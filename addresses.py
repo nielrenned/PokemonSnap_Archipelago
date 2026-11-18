@@ -47,6 +47,7 @@ CAMERA_INVERSION_ACK_FLAG     = 0x04
 SAVE_BASE = _addr("save", "saveBase")
 RANK = _addr("save", "rank")
 REPORT_SCORES = _addr("save", "reportScores")
+PHOTO_DATA = _addr("save", "registeredPhotos")
 SPECIES_SCORES = _addr("symbols", "speciesScores")
 RAW_SCORES = _addr("symbols", "rawPhotoScores")
 ROLL_COUNT = _addr("symbols", "photoRollCount")
@@ -63,6 +64,8 @@ UNPATCHED_AUTH = b"PSAP-UNPATCHED!!"
 # gExpansionMagic reads as 'OKAY' once the expansion segment has booted.
 EXPANSION_LOADED = 0x4F4B4159
 
+NUM_REPORT_SCORES = 63
+PHOTO_DATA_SIZE = 0x3A0
 # 63 snappable Pokemon + 10 extra for pokemon that appear in multiple levels
 NUM_SPECIES_SCORES = 73
 NUM_SIGNS = 6
