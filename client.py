@@ -223,7 +223,7 @@ class PokemonSnapClient:
             await ctx.send_msgs([{
                 "cmd": "Set",
                 "key": report_key,
-                "default": {},
+                "default": {name: {'score': 0, 'pic': None} for name in ALL_INGAME_POKEMON},
                 "want_reply": True,
                 "operations": []
             }])
@@ -245,28 +245,52 @@ class PokemonSnapClient:
         photo_data = [photo_data_raw[i:i+photo_data_int_count] for i in range(0, len(photo_data_raw), photo_data_int_count)]
 
         pkmn_report = {}
+        mailbox_busy = False
         for pokemon_name in ALL_INGAME_POKEMON:
             slot = POKEMON_TO_SLOTS[pokemon_name][0] - 1
             prev_info = prev_report.get(pokemon_name, {'score': 0, 'pic': None})
-            encoded_photo_data = None if photo_data[slot][1] == -1 else self.encode_photo_data(photo_data[slot])
+            slot_empty = photo_data[slot][1] == -1
 
-            if scores[slot] != prev_info['score'] or encoded_photo_data != prev_info['pic']:
-                pkmn_report[pokemon_name] = {'score': scores[slot], 'pic': encoded_photo_data}
-            elif pokemon_name in prev_report and prev_info['score'] > 0:
+            if slot_empty:
+                # The game does not have a photo
                 pkmn_report[pokemon_name] = prev_info
-            
-            if photo_data[slot][1] == -1 and pokemon_name in pkmn_report and (updated_report := pkmn_report[pokemon_name])['score'] > 0:
-                mailbox_available = (await emu.read(ctx, [(addr.RESTORE_SLOT, 4, 's32')]))[0][0] == -1
-                if mailbox_available:
-                    photo_data_ints = self.decode_photo_data(updated_report['pic'])
-                    if len(photo_data_ints) * 4 != addr.PHOTO_DATA_SIZE:
-                        logger.error(f'Stored photo data for slot {slot} mismatched with expected photo data size: {len(photo_data_ints)*4} != {addr.PHOTO_DATA_SIZE}')
-                        continue
-                    await emu.write(ctx, [
-                        (addr.RESTORE_SCORE, [updated_report['score']], 'u32'),
-                        (addr.RESTORE_DATA,  photo_data_ints, 's32'),
-                        (addr.RESTORE_SLOT,  [slot], 's32')
-                    ])
+                if prev_info['score'] <= 0 or prev_info['pic'] is None: continue
+
+                if mailbox_busy: continue
+                mailbox_busy = (await emu.read(ctx, [(addr.RESTORE_SLOT, 4, 's32')]))[0][0] != -1
+                if mailbox_busy: continue
+
+                try:
+                    photo_data_ints = self.decode_photo_data(prev_info['pic'])
+                except Exception as ex:
+                    logger.error(f'Stored photo data for slot {slot} could not be decoded: {ex}')
+                    pkmn_report[pokemon_name] = {'score': 0, 'pic': None}
+                    continue
+                
+                if len(photo_data_ints) * 4 != addr.PHOTO_DATA_SIZE:
+                    logger.error(f'Stored photo data for slot {slot} mismatched with expected photo data size: {len(photo_data_ints)*4} != {addr.PHOTO_DATA_SIZE}')
+                    pkmn_report[pokemon_name] = {'score': 0, 'pic': None}
+                    continue
+
+                await emu.write(ctx, [
+                    (addr.RESTORE_SCORE, [prev_info['score']], 'u32'),
+                    (addr.RESTORE_DATA,  photo_data_ints, 's32'),
+                    (addr.RESTORE_SLOT,  [slot], 's32'),
+                ])
+                mailbox_busy = True  # one restore per tick
+            else:
+                # The game has a photo
+                try:
+                    prev_ints = self.decode_photo_data(prev_info['pic']) if prev_info['pic'] is not None else None
+                except Exception as ex:
+                    logger.error(f'Stored photo data for slot {slot} could not be decoded: {ex}')
+                    pkmn_report[pokemon_name] = {'score': 0, 'pic': None}
+                    continue
+                    
+                if scores[slot] != prev_info['score'] or photo_data[slot] != prev_ints:
+                    pkmn_report[pokemon_name] = {'score': scores[slot], 'pic': self.encode_photo_data(photo_data[slot])}
+                else:
+                    pkmn_report[pokemon_name] = prev_info
 
         if pkmn_report != prev_report:
             await ctx.send_msgs([{
